@@ -32,13 +32,37 @@
 	  p {
 		  text-indent: 2em; /* 设置段落开头空两格 */
 	  }
+	  @media only screen and (max-width: 600px) {
+      body {
+        font-size: 14px;
+      }
+    }
 	</style>
+	<script>
+    // 检测手机并调整字体大小
+    function detectAndAdjustFontSize() {
+      // 获取屏幕宽度
+      var screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+      if (screenWidth <= 600) {
+        // 如果屏幕宽度小于等于600px，调整字体大小
+        document.body.style.fontSize = "14px";
+      } else {
+        // 如果屏幕宽度大于600px，恢复默认字体大小
+        document.body.style.fontSize = "16px";
+      }
+    }
+
+    // 在页面加载和屏幕旋转时调用检测函数
+    window.addEventListener('load', detectAndAdjustFontSize);
+    window.addEventListener('resize', detectAndAdjustFontSize);
+  </script>
 </head>
 <body>
   <h1>个人事迹</h1>
   <div class="essay">
 	  <p class="essay-title">
-		  第1次提交
+		  第2次提交
 	  </p>
     <p class="essay-content">
       在我小学六年级的时候，我沉迷于游戏，对学习失去了兴趣，迷失在虚拟世界中。·游戏成为了唯一能填补我内心空虚的存在，我如鱼得水。然而，命运安排了一场意外的邂逅，在游戏中我遭遇了所谓的“外挂”，仿佛命运的一记重击，将我打得落花流水。自那一天起，我对外挂心生好奇，夜晚的黑暗交织着我迷茫的内心，辗转反侧，我失眠了……
