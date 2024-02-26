@@ -28,17 +28,17 @@
     }
 
     .book-list li {
-      margin-bottom: 10px;
-      margin-top: 10px;
-      margin-left: 10%;
-      margin-right: 10%;
-      padding: 20px;
+      margin-bottom: 5px;
+      margin-top: 5px;
+      margin-left: 5px;
+      margin-right: 5px;
+      padding: 10px;
       background-color: #fff;
       border-radius: 20px;
       box-shadow: 10px 20px 10px rgba(0, 0, 0, 0.1);
       opacity: 0.85;
     }
-
+	
     .book-title {
       font-weight: bold;
 	  font-size: 26px;
@@ -46,7 +46,7 @@
     }
 
     .book-author {
-      color: #666;
+      color: #333;
 	  font-size: 16px;
       text-align: center; /* 让内容居中显示 */
     }
@@ -54,23 +54,15 @@
     .book-description {
       margin-top: 5px;
 	  font-size: 18px;
-      color: #999;
+      color: #666;
+    }
+    table {
+      border-collapse: separate;
+      border-spacing: 10px; /* 设置行间距为10像素 */
     }
   </style>
 </head>
 <body>
-  <script>
-          var pageWidth = document.documentElement.clientWidth;
-          var pageHeight = document.documentElement.clientHeight;
-          // 输出网页的宽度和高度
-          console.log("Page width: " + pageWidth);
-          console.log("Page height: " + pageHeight);
-          // 如果网页宽度大于网页高度，则将页面放大至175%
-          if (pageWidth > pageHeight) {
-              document.body.style.zoom = "175%";
-              console.log("Page zoomed to 175%");
-          }
-  </script>
   <h1>乔翔的读书计划</h1>
   <ul class="book-list">
     <li>
@@ -78,10 +70,33 @@
       <div class="book-author">作者：罗贯中</div>
       <div class="book-author">每日阅读页数：每天两章</div>
       <div class="book-author">阅读时长：45分钟</div>
-      <div class="book-description" style="text-indent: 2em">我认为《三国演义》是一部具有深远影响的历史小说，被誉为“第一才子书”。它以三国时期的历史为背景，通过精彩纷呈的故事情节和栩栩如生的人物形象，展现了那个时代的英雄豪杰、智勇之战和复杂人性。作者罗贯中巧妙地将历史真实与文学虚构相结合，使得整部作品既具有历史价值，又充满了文学魅力。</div>
-      <div class="book-description" style="text-indent: 2em">在《三国演义》中，读者可以欣赏到曹操的谋略、刘备的仁爱、孙权的果断，以及关羽的忠诚、张飞的勇猛、赵云的机智。这些人物形象栩栩如生，各具特色，让人难以忘怀。同时，书中的诗词歌赋也展现了作者深厚的文学功底，使得整部作品更加具有艺术价值。</div>
-      <div class="book-description" style="text-indent: 2em">《三国演义》是一部值得一读再读的经典之作，它不仅让我们了解了三国时期的历史，更让我们感受到了人性的复杂与丰富，领略到了文学的魅力。</div>
+	  <table style="margin-top: 40px">
+		  <tr style="margin-top: 20px"><td style="width: auto;text-align: center" id="time">时间</td><td style="width: auto;text-align: center" id="count">章节</td><td style="width: auto;text-align: center">概括</td></tr>
+		  <tr><td style="text-align: center">2024年<br>2月26日<br>8：00<br>~<br>8：45</td><td style="text-align: center">第1章<br>第2章</td><td>主要讲述了东汉末年，黄巾起义爆发，汉朝政府和人民陷入混乱。刘备、关羽、张飞三人结义，共同助汉朝和人民度过这场危机。随后，刘备为寻求诸葛亮的帮助，三次亲自上山拜访，尽管前两次都未能与诸葛亮见面，但他并未放弃，最终成功请得诸葛亮出山相助。</td></tr>
+		  <tr><td style="text-align: center">2024年<br>2月27日<br>8：00<br>~<br>8：45</td><td style="text-align: center">第3章<br>第4章</td><td>主要讲述了曹操为报父仇，进攻徐州陶谦，并屠城报复。刘备出兵救援徐州，与陶谦结为盟友。曹操撤军后，陶谦三让徐州给刘备，刘备暂领徐州牧。吕布趁曹操攻打陶谦时攻占兖州，曹操回师与吕布大战，最终收复兖州。</td></tr>
+		  <tr><td style="text-align: center">2024年<br>2月28日<br>8：00<br>~<br>8：45</td><td style="text-align: center">第5章<br>第6章</td><td>主要讲述了曹操发矫诏，召集诸侯讨伐董卓，刘备、关羽、张飞加入，三英战吕布，吕布败逃。董卓废少帝立陈留王为帝，引起朝臣不满，曹操自告奋勇前去刺杀董卓，失败。董卓被王允和吕布所杀，李傕击败吕布，攻占长安，杀死王允，挟持了汉献帝。孙坚得到传国玉玺后离开洛阳，准备回江东发展大业，却在归途中被刘表所杀。</td></tr>
+		  <tr><td style="text-align: center">2024年<br>2月29日<br>8：00<br>~<br>8：45</td><td style="text-align: center">第7章<br>第8章</td><td>主要讲述了袁绍占据冀州后与公孙瓒开战，但公孙瓒得到了猛将赵云，袁绍与战不利。孙坚为报刘表拦路之仇，率部攻打江夏，却被乱箭射杀。董卓暴虐无度，司徒王允利用美女貂蝉离间董卓、吕布，董卓在凤仪亭用画戟掷打吕布，自此二人结仇。</td></tr>
+		  <tr><td style="text-align: center">2024年<br>3月1日<br>8：00<br>~<br>8：45</td><td style="text-align: center">第9章<br>第10章</td><td>主要讲述了王允利用貂蝉的美貌和聪明才智，成功挑拨了吕布和董卓的关系。吕布在王允的协助下，终于诛杀了董卓，为汉朝和人民除去了一大祸害。然而，董卓的余党李傕、郭汜等人听从谋士贾诩的计策，聚集兵力反击吕布，最终攻占了长安，杀死王允，掌控了朝政。李傕、郭汜等人向汉献帝求得官职，并三次改葬董卓。西凉刺史马腾和并州刺史韩遂起兵讨伐李傕、郭汜，双方各有胜负。此外，李傕、郭汜还假借献帝名义使曹操攻打青州黄巾军，曹操成功破黄巾军，并编为“青州兵”，自此威名日重。</td></tr>
+	  </table>
     </li>
+	<li>
+		<div class="book-description" style="text-indent: 2em">我认为《三国演义》是一部具有深远影响的历史小说，被誉为“第一才子书”。它以三国时期的历史为背景，通过精彩纷呈的故事情节和栩栩如生的人物形象，展现了那个时代的英雄豪杰、智勇之战和复杂人性。作者罗贯中巧妙地将历史真实与文学虚构相结合，使得整部作品既具有历史价值，又充满了文学魅力。</div>
+        <div class="book-description" style="text-indent: 2em">在《三国演义》中，读者可以欣赏到曹操的谋略、刘备的仁爱、孙权的果断，以及关羽的忠诚、张飞的勇猛、赵云的机智。这些人物形象栩栩如生，各具特色，让人难以忘怀。同时，书中的诗词歌赋也展现了作者深厚的文学功底，使得整部作品更加具有艺术价值。</div>
+        <div class="book-description" style="text-indent: 2em">《三国演义》是一部值得一读再读的经典之作，它不仅让我们了解了三国时期的历史，更让我们感受到了人性的复杂与丰富，领略到了文学的魅力。</div>
+	</li>
   </ul>
+  <script>
+          var pageWidth = document.documentElement.clientWidth;
+          var pageHeight = document.documentElement.clientHeight;
+	   	  var divElement = document.getElementById('time');
+	   	  var divElement1 = document.getElementById('count');
+          // 输出网页的宽度和高度
+          // 如果网页宽度大于网页高度，则将页面放大至175%
+          if (pageWidth > pageHeight) {
+              document.body.style.zoom = "175%";
+			  divElement.style.width = '70px';
+			  divElement1.style.width = '50px';
+          }
+  </script>
 </body>
 </html>
