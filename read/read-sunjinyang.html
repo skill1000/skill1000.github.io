@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>读书计划</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+	  background-image: url("https://s11.ax1x.com/2024/02/26/pFaT1FU.png");
+      background-size: cover;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0;
+	  font-size: 44px;
+	  color: #fff;
+	  text-shadow: 2px 2px 1px #000000; /* 设置阴影偏移量和颜色 */
+    }
+
+    .book-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .book-list li {
+      margin-bottom: 10px;
+      margin-top: 10px;
+      margin-left: 10%;
+      margin-right: 10%;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 10px 20px 10px rgba(0, 0, 0, 0.1);
+      opacity: 0.85;
+    }
+
+    .book-title {
+      font-weight: bold;
+	  font-size: 26px;
+      text-align: center; /* 让内容居中显示 */
+    }
+
+    .book-author {
+      color: #666;
+	  font-size: 16px;
+      text-align: center; /* 让内容居中显示 */
+    }
+
+    .book-description {
+      margin-top: 5px;
+	  font-size: 18px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <script>
+          var pageWidth = document.documentElement.clientWidth;
+          var pageHeight = document.documentElement.clientHeight;
+          // 输出网页的宽度和高度
+          console.log("Page width: " + pageWidth);
+          console.log("Page height: " + pageHeight);
+          // 如果网页宽度大于网页高度，则将页面放大至175%
+          if (pageWidth > pageHeight) {
+              document.body.style.zoom = "175%";
+              console.log("Page zoomed to 175%");
+          }
+  </script>
+  <h1>孙锦阳的读书计划</h1>
+  <ul class="book-list">
+    <li>
+      <div class="book-title">书目：《西游记》</div>
+      <div class="book-author">作者：吴承恩</div>
+      <div class="book-author">每日阅读页数：10页</div>
+      <div class="book-author">阅读时长：60分钟</div>
+      <div class="book-description" style="text-indent: 2em">我觉得《红岩》不仅是一部革命历史小说，更是一部人性的百科全书。作者通过细腻的笔触，深入刻画了每个人物的内心世界，让我们看到了革命者们在坚定信仰背后所经历的挣扎与痛苦。他们在黑暗中寻找光明，用微弱的星火点燃希望，为了理想和信仰不惜付出生命的代价。这种精神力量让人震撼，也让人深感敬佩。</div>
+      <div class="book-description" style="text-indent: 2em">同时，《红岩》也反映了当时社会的黑暗和残酷，揭示了反动势力的腐朽和堕落。这种对比更加凸显了革命者们的伟大和崇高。他们用自己的行动证明了，只有坚定的信仰和无私的奉献，才能战胜一切困难和敌人。</div>
+      <div class="book-description" style="text-indent: 2em">总的来说，《红岩》是一部值得每个人深入阅读和品味的经典之作。它不仅让我们了解了革命历史的艰辛和伟大，更让我们看到了人性的光辉和力量。它是一部能够激励人心、启迪思想的优秀作品，值得我们珍藏和传承。</div>
+    </li>
+  </ul>
+</body>
+</html>
