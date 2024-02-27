@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>读书计划</title>
+  <title>孙锦阳的读书计划</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,7 +11,8 @@
       padding: 20px;
       background-color: #f5f5f5;
 	  background-image: url("https://s11.ax1x.com/2024/02/26/pFaT1FU.png");
-      background-size: cover;
+      background-size: 100% auto;
+      background-repeat: repeat;
     }
 
     h1 {
@@ -39,6 +40,18 @@
       opacity: 0.85;
     }
 
+	.overlay {
+		position: fixed; /* 将元素固定在视口中，不随页面滚动而移动 */
+		top: 50%; /* 从顶部向下偏移50%，使元素垂直居中 */
+		left: 50%; /* 从左侧向右偏移50%，使元素水平居中 */
+		transform: translate(-50%, -50%); /* 使用transform属性进行偏移，实现垂直和水平居中效果 */
+		width: 90%; /* 设置元素宽度为屏幕宽度的90% */
+		max-width: 600px; /* 设置元素最大宽度为600像素，防止在大屏幕上过分拉伸 */
+		height: 70%; /* 设置元素高度为屏幕高度的70% */
+		background-color: rgba(0, 0, 0, 0.5); /* 设置元素背景色为半透明的黑色 */
+		border-radius: 10px; /* 设置元素边角为10像素的圆角 */
+	}
+	  
     .book-title {
       font-weight: bold;
 	  font-size: 26px;
@@ -59,18 +72,6 @@
   </style>
 </head>
 <body>
-  <script>
-          var pageWidth = document.documentElement.clientWidth;
-          var pageHeight = document.documentElement.clientHeight;
-          // 输出网页的宽度和高度
-          console.log("Page width: " + pageWidth);
-          console.log("Page height: " + pageHeight);
-          // 如果网页宽度大于网页高度，则将页面放大至175%
-          if (pageWidth > pageHeight) {
-              document.body.style.zoom = "175%";
-              console.log("Page zoomed to 175%");
-          }
-  </script>
   <h1>孙锦阳的读书计划</h1>
   <ul class="book-list">
     <li>
@@ -83,5 +84,15 @@
       <div class="book-description" style="text-indent: 2em">总的来说，《红岩》是一部值得每个人深入阅读和品味的经典之作。它不仅让我们了解了革命历史的艰辛和伟大，更让我们看到了人性的光辉和力量。它是一部能够激励人心、启迪思想的优秀作品，值得我们珍藏和传承。</div>
     </li>
   </ul>
+  <div class="overlay"></div>
+  <script>
+	  var pageWidth = document.documentElement.clientWidth;
+	  var pageHeight = document.documentElement.clientHeight;
+	  // 输出网页的宽度和高度
+	  // 如果网页宽度大于网页高度，则将页面放大至175%
+	  if (pageWidth > pageHeight) {
+		  document.body.style.zoom = "175%";
+	  }
+  </script>
 </body>
 </html>
