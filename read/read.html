@@ -23,6 +23,16 @@
 	  text-shadow: 2px 2px 1px #000000; /* 设置阴影偏移量和颜色 */
     }
 
+	.overlay {
+		position: fixed; /* 将元素固定在视口中，不随页面滚动而移动 */
+		top: 0; /* 从顶部向下偏移50%，使元素垂直居中 */
+		left: 0; /* 从左侧向右偏移50%，使元素水平居中 */
+		width: 100px; /* 设置元素宽度为屏幕宽度的90% */
+		height: 50px; /* 设置元素高度为屏幕高度的70% */
+		background-color: rgba(0, 0, 0, 0.5); /* 设置元素背景色为半透明的黑色 */
+		border-radius: 10px; /* 设置元素边角为10像素的圆角 */
+	}
+
     .book-list {
       list-style-type: none;
       padding: 0;
@@ -66,6 +76,14 @@
 	  align-items: center;
 	  justify-content: center;
 	}
+
+	.image-container {
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 50px; /* 指定容器的高度，这里设置为视口高度 */
+   }
+
   </style>
 </head>
 <body>
@@ -116,6 +134,12 @@
 		</div>
 	</li>
   </ul>
+  <div class="overlay">
+	  <div class="image-container">
+		  <img src="https://s11.ax1x.com/2024/02/27/pFdc8IA.png" width="40px" alt=""/>
+		  <p style="margin-left: 10px;color: #FFFFFF">乔翔</p>
+	  </div>
+  </div>
   <script>
         var pageWidth = document.documentElement.clientWidth;
         var pageHeight = document.documentElement.clientHeight;
