@@ -61,6 +61,11 @@
       border-collapse: separate;
       border-spacing: 10px; /* 设置行间距为10像素 */
     }
+	.container {
+      display: block;
+	  align-items: center;
+	  justify-content: center;
+	}
   </style>
 </head>
 <body>
@@ -101,23 +106,34 @@
 	  </table>
     </li>
 	<li>
-		<div class="book-description" style="text-indent: 2em">我认为《三国演义》是一部具有深远影响的历史小说，被誉为“第一才子书”。它以三国时期的历史为背景，通过精彩纷呈的故事情节和栩栩如生的人物形象，展现了那个时代的英雄豪杰、智勇之战和复杂人性。作者罗贯中巧妙地将历史真实与文学虚构相结合，使得整部作品既具有历史价值，又充满了文学魅力。</div>
-        <div class="book-description" style="text-indent: 2em">在《三国演义》中，读者可以欣赏到曹操的谋略、刘备的仁爱、孙权的果断，以及关羽的忠诚、张飞的勇猛、赵云的机智。这些人物形象栩栩如生，各具特色，让人难以忘怀。同时，书中的诗词歌赋也展现了作者深厚的文学功底，使得整部作品更加具有艺术价值。</div>
-        <div class="book-description" style="text-indent: 2em">《三国演义》是一部值得一读再读的经典之作，它不仅让我们了解了三国时期的历史，更让我们感受到了人性的复杂与丰富，领略到了文学的魅力。</div>
+		<div class="container" id="container">
+			<img src="https://s11.ax1x.com/2024/02/26/pFaT3YF.png" id="book" width="90%" alt=""/>
+			<div id="descript">
+				<div class="book-description" style="text-indent: 2em">我认为《三国演义》是一部具有深远影响的历史小说，被誉为“第一才子书”。它以三国时期的历史为背景，通过精彩纷呈的故事情节和栩栩如生的人物形象，展现了那个时代的英雄豪杰、智勇之战和复杂人性。作者罗贯中巧妙地将历史真实与文学虚构相结合，使得整部作品既具有历史价值，又充满了文学魅力。</div>
+        		<div class="book-description" style="text-indent: 2em">在《三国演义》中，读者可以欣赏到曹操的谋略、刘备的仁爱、孙权的果断，以及关羽的忠诚、张飞的勇猛、赵云的机智。这些人物形象栩栩如生，各具特色，让人难以忘怀。同时，书中的诗词歌赋也展现了作者深厚的文学功底，使得整部作品更加具有艺术价值。</div>
+        		<div class="book-description" style="text-indent: 2em">《三国演义》是一部值得一读再读的经典之作，它不仅让我们了解了三国时期的历史，更让我们感受到了人性的复杂与丰富，领略到了文学的魅力。</div>
+			</div>
+		</div>
 	</li>
   </ul>
   <script>
-          var pageWidth = document.documentElement.clientWidth;
-          var pageHeight = document.documentElement.clientHeight;
-	   	  var divElement = document.getElementById('time');
-	   	  var divElement1 = document.getElementById('count');
-          // 输出网页的宽度和高度
-          // 如果网页宽度大于网页高度，则将页面放大至175%
-          if (pageWidth > pageHeight) {
-              document.body.style.zoom = "175%";
-			  divElement.style.width = '70px';
-			  divElement1.style.width = '50px';
-          }
+        var pageWidth = document.documentElement.clientWidth;
+        var pageHeight = document.documentElement.clientHeight;
+  	    var divElement = document.getElementById('time');
+        var divElement1 = document.getElementById('count');
+	    var divElement2 = document.getElementById('book');
+	    var container = document.getElementById("container");
+	    var descript = document.getElementById("descript");
+        // 输出网页的宽度和高度
+        // 如果网页宽度大于网页高度，则将页面放大至175%
+        if (pageWidth > pageHeight) {
+            document.body.style.zoom = "175%";
+			divElement.style.width = '70px';
+			divElement1.style.width = '50px';
+			divElement2.style.width = '15%';
+			container.style.display = "flex";
+			descript.style.marginLeft = "10px";
+		}
   </script>
 </body>
 </html>
