@@ -1,97 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>孙锦阳的读书计划</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f5f5f5;
-	  background-image: url("https://s11.ax1x.com/2024/02/26/pFaT1FU.png");
-      background-size: 100% auto;
-      background-repeat: repeat;
-    }
-
-    h1 {
-      text-align: center;
-      margin-top: 0;
-	  font-size: 44px;
-	  color: #fff;
-	  text-shadow: 2px 2px 1px #000000; /* 设置阴影偏移量和颜色 */
-    }
-
-    .book-list {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .book-list li {
-      margin-bottom: 10px;
-      margin-top: 10px;
-      margin-left: 10%;
-      margin-right: 10%;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 20px;
-      box-shadow: 10px 20px 10px rgba(0, 0, 0, 0.1);
-      opacity: 0.85;
-    }
-
-	.overlay {
-		position: fixed; /* 将元素固定在视口中，不随页面滚动而移动 */
-		top: 50%; /* 从顶部向下偏移50%，使元素垂直居中 */
-		left: 50%; /* 从左侧向右偏移50%，使元素水平居中 */
-		transform: translate(-50%, -50%); /* 使用transform属性进行偏移，实现垂直和水平居中效果 */
-		width: 90%; /* 设置元素宽度为屏幕宽度的90% */
-		max-width: 600px; /* 设置元素最大宽度为600像素，防止在大屏幕上过分拉伸 */
-		height: 70%; /* 设置元素高度为屏幕高度的70% */
-		background-color: rgba(0, 0, 0, 0.5); /* 设置元素背景色为半透明的黑色 */
-		border-radius: 10px; /* 设置元素边角为10像素的圆角 */
-	}
-	  
-    .book-title {
-      font-weight: bold;
-	  font-size: 26px;
-      text-align: center; /* 让内容居中显示 */
-    }
-
-    .book-author {
-      color: #666;
-	  font-size: 16px;
-      text-align: center; /* 让内容居中显示 */
-    }
-
-    .book-description {
-      margin-top: 5px;
-	  font-size: 18px;
-      color: #999;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>孙锦阳的读书计划</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+    background-image: url("https://s11.ax1x.com/2024/02/26/pFaT1FU.png");
+    background-size: 100% auto;
+    background-repeat: repeat;
+}
+h1 {
+    text-align: center;
+    margin-top: 0;
+    font-size: 44px;
+    color: #fff;
+    text-shadow: 2px 2px 1px #000000; /* 设置阴影偏移量和颜色 */
+}
+.book-list {
+    list-style-type: none;
+    padding: 0;
+}
+.book-list li {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 10px 20px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0.85;
+	border: 1px solid black; /* 设置边框样式为黑色实线 */
+}
+.book-title {
+    font-weight: bold;
+    font-size: 26px;
+    text-align: center; /* 让内容居中显示 */
+}
+.book-author {
+    color: #666;
+    font-size: 16px;
+    text-align: center; /* 让内容居中显示 */
+}
+.book-description {
+    margin-top: 5px;
+    font-size: 18px;
+    color: #999;
+}
+.slideshow {
+    position: relative;
+    width: 100%;
+	height: 60px;
+	display: inline-block; /* 设置为内联块级元素，使其宽度只占据内容所需的空间 */
+    min-height: 40px;
+    overflow: hidden;
+}
+.slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s;
+}
+.active {
+    opacity: 1;
+}
+.controls {
+    margin-top: 10px;
+	text-align: center;
+}
+button {
+    padding: 5px 10px;
+    margin: 5px 5px;
+}
+</style>
 </head>
 <body>
-  <h1>孙锦阳的读书计划</h1>
-  <ul class="book-list">
-    <li>
-      <div class="book-title">书目：《红岩》</div>
-      <div class="book-author">作者：罗广斌、杨益言</div>
-      <div class="book-author">每日阅读页数：10页</div>
-      <div class="book-author">阅读时长：60分钟</div>
-      <div class="book-description" style="text-indent: 2em">我觉得《红岩》不仅是一部革命历史小说，更是一部人性的百科全书。作者通过细腻的笔触，深入刻画了每个人物的内心世界，让我们看到了革命者们在坚定信仰背后所经历的挣扎与痛苦。他们在黑暗中寻找光明，用微弱的星火点燃希望，为了理想和信仰不惜付出生命的代价。这种精神力量让人震撼，也让人深感敬佩。</div>
-      <div class="book-description" style="text-indent: 2em">同时，《红岩》也反映了当时社会的黑暗和残酷，揭示了反动势力的腐朽和堕落。这种对比更加凸显了革命者们的伟大和崇高。他们用自己的行动证明了，只有坚定的信仰和无私的奉献，才能战胜一切困难和敌人。</div>
-      <div class="book-description" style="text-indent: 2em">总的来说，《红岩》是一部值得每个人深入阅读和品味的经典之作。它不仅让我们了解了革命历史的艰辛和伟大，更让我们看到了人性的光辉和力量。它是一部能够激励人心、启迪思想的优秀作品，值得我们珍藏和传承。</div>
-    </li>
-  </ul>
-  <div class="overlay"></div>
-  <script>
+<h1>孙锦阳的读书计划</h1>
+<ul class="book-list">
+  <li>
+    <div class="book-title">书目：《红岩》</div>
+    <div class="book-author">作者：罗广斌、杨益言</div>
+    <div class="book-author">每日阅读章数：1章</div>
+    <div class="book-author">阅读时长：60分钟</div>
+    <div class="book-description" style="text-indent: 2em">我觉得《红岩》不仅是一部革命历史小说，更是一部人性的百科全书。作者通过细腻的笔触，深入刻画了每个人物的内心世界，让我们看到了革命者们在坚定信仰背后所经历的挣扎与痛苦。他们在黑暗中寻找光明，用微弱的星火点燃希望，为了理想和信仰不惜付出生命的代价。这种精神力量让人震撼，也让人深感敬佩。</div>
+    <div class="book-description" style="text-indent: 2em">同时，《红岩》也反映了当时社会的黑暗和残酷，揭示了反动势力的腐朽和堕落。这种对比更加凸显了革命者们的伟大和崇高。他们用自己的行动证明了，只有坚定的信仰和无私的奉献，才能战胜一切困难和敌人。</div>
+    <div class="book-description" style="text-indent: 2em">总的来说，《红岩》是一部值得每个人深入阅读和品味的经典之作。它不仅让我们了解了革命历史的艰辛和伟大，更让我们看到了人性的光辉和力量。它是一部能够激励人心、启迪思想的优秀作品，值得我们珍藏和传承。</div>
+	</li>
+	<li>
+    <div class="slideshow">
+      <p class="slide active">第一章：开篇揭示了国民党特务的阴谋，让我深感压抑和愤怒。同时，也展现了革命者的坚韧和决心。</p>
+      <p class="slide">第二章：郑克昌的出现让我开始关注他的角色，期待后续的发展。</p>
+      <p class="slide">第三章：兄妹之间的谈心让我看到了家庭内部的矛盾和冲突，更加期待后续情节的发展。</p>
+      <p class="slide">第四章：江姐到川北工作的情节，让我看到了革命者的坚韧和勇敢，深感敬佩。</p>
+      <p class="slide">第五章：郑克昌骗取甫志高的信任，让我感受到了特务的狡猾和阴险。</p>
+      <p class="slide">第六章：徐鹏飞审问共产党的情节紧张刺激，让我感受到了革命者的坚定信念。</p>
+      <p class="slide">第七章：甫志高的被捕让我深感痛心，同时也看到了革命者的牺牲精神。</p>
+      <p class="slide">第八章：成瑶知道成岗被捕和印刷《挺进报》的情节，让我看到了革命者的坚韧和牺牲精神。</p>
+      <p class="slide">第九章：徐鹏飞了解到《挺进报》的领导人的情节，让我更加期待后续的发展。</p>
+      <p class="slide">第十章：特务用计偷拍的情节紧张刺激，许云峰识破展现了革命者的智慧和警惕性。</p>
+      <p class="slide">第十一章：刘思扬被捕的情节让我深感痛心，渣滓洞敌人用断水折磨革命者的情节更是让我愤怒不已。</p>
+      <p class="slide">第十二章：革命者在狱中的斗争让我看到了他们的信念和勇气，深感敬佩。</p>
+      <p class="slide">第十三章：龙光华牺牲的情节让我深感悲痛，同时也看到了革命者的坚定信念和牺牲精神。</p>
+      <p class="slide">第十四章：江姐来到华为的家里和几个同志交换情况的情节，让我看到了革命者的团结和友爱精神。</p>
+      <p class="slide">第十五章：江姐被抓进渣滓洞的情节让我深感痛心，但她面对酷刑没有屈服的坚韧精神让我深感敬佩。</p>
+      <p class="slide">第十六章：狱中新年大联欢的情节让我看到了革命者的乐观和坚韧精神，战友带来好消息的情节更是让我感到一丝希望。</p>
+      <p class="slide">第十七章：革命者在狱中的斗争和学习让我看到了他们的信念和勇气，同时也感受到了他们的坚韧和牺牲精神。</p>
+      <p class="slide">第十八章：监狱里的人学习地下党秘密送给他们的教科书的情节，让我看到了革命者的学习和进步精神。</p>
+      <p class="slide">第十九章：刘思扬再次被捕的情节让我深感痛心，他被押到白公馆的情节更是让我期待后续的发展。</p>
+      <p class="slide">第二十章：刘思扬被信任、认识小萝卜头的情节让我看到了革命者的团结和友爱精神，同时也感受到了他们的坚韧和牺牲精神。</p>
+      <p class="slide">第二十一章：革命者在狱中的斗争和学习让我更加敬佩他们的信念和勇气，同时也感受到了他们的智慧和策略。</p>
+      <p class="slide">第二十二章：狱中的斗争日益激烈的情节让我深感紧张刺激，革命者们的信念和勇气得到了更大的考验。</p>
+      <p class="slide">第二十三章：革命者们在狱中的斗争和学习让我看到了他们的坚韧和牺牲精神，同时也感受到了他们的智慧和勇气。</p>
+      <p class="slide">第二十四章：狱中的斗争和学习继续进行的情节让我更加敬佩革命者的信念和勇气，他们的坚韧和牺牲精神让我感到震撼。</p>
+      <p class="slide">第二十五章：故事的结尾让我深感感动和震撼，革命者们的信念和勇气得到了最终的体现和肯定。读完《红岩》后，我更加坚定了自己的信念和追求，也更加珍惜当下的生活。</p>
+    </div>
+    <div class="controls">
+      <button onclick="showSlide(0)">1</button>
+      <button onclick="showSlide(1)">2</button>
+      <button onclick="showSlide(2)">3</button>
+      <button onclick="showSlide(3)">4</button>
+      <button onclick="showSlide(4)">5</button>
+      <button onclick="showSlide(5)">6</button>
+      <button onclick="showSlide(6)">7</button>
+      <button onclick="showSlide(7)">8</button>
+      <button onclick="showSlide(8)">9</button>
+      <button onclick="showSlide(9)">10</button>
+      <button onclick="showSlide(10)">11</button>
+      <button onclick="showSlide(11)">12</button>
+      <button onclick="showSlide(12)">13</button>
+      <button onclick="showSlide(13)">14</button>
+      <button onclick="showSlide(14)">15</button>
+      <button onclick="showSlide(15)">16</button>
+      <button onclick="showSlide(16)">17</button>
+      <button onclick="showSlide(17)">18</button>
+      <button onclick="showSlide(18)">19</button>
+      <button onclick="showSlide(19)">20</button>
+      <button onclick="showSlide(20)">21</button>
+      <button onclick="showSlide(21)">22</button>
+      <button onclick="showSlide(22)">23</button>
+      <button onclick="showSlide(23)">24</button>
+      <button onclick="showSlide(24)">25</button>
+    </div>
+  </li>
+</ul>
+<script>
 	  var pageWidth = document.documentElement.clientWidth;
 	  var pageHeight = document.documentElement.clientHeight;
 	  // 输出网页的宽度和高度
 	  // 如果网页宽度大于网页高度，则将页面放大至175%
 	  if (pageWidth > pageHeight) {
 		  document.body.style.zoom = "175%";
+	  }
+	  let slides = document.querySelectorAll('.slide');
+	  function showSlide(index) {
+		  slides.forEach((slide, i) => {
+			  if (i === index) {
+				  slide.classList.add('active');
+			  } else {
+				  slide.classList.remove('active');
+			  }
+		  });
 	  }
   </script>
 </body>
