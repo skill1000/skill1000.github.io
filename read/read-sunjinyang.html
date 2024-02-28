@@ -55,7 +55,7 @@ h1 {
 .slideshow {
     position: relative;
     width: 100%;
-	height: 60px;
+	height: 70px;
 	display: inline-block; /* 设置为内联块级元素，使其宽度只占据内容所需的空间 */
     min-height: 40px;
     overflow: hidden;
@@ -95,7 +95,7 @@ button {
     <div class="book-description" style="text-indent: 2em">总的来说，《红岩》是一部值得每个人深入阅读和品味的经典之作。它不仅让我们了解了革命历史的艰辛和伟大，更让我们看到了人性的光辉和力量。它是一部能够激励人心、启迪思想的优秀作品，值得我们珍藏和传承。</div>
 	</li>
 	<li>
-    <div class="slideshow">
+    <div class="slideshow" id="hty">
       <p class="slide active">第一章：开篇揭示了国民党特务的阴谋，让我深感压抑和愤怒。同时，也展现了革命者的坚韧和决心。</p>
       <p class="slide">第二章：郑克昌的出现让我开始关注他的角色，期待后续的发展。</p>
       <p class="slide">第三章：兄妹之间的谈心让我看到了家庭内部的矛盾和冲突，更加期待后续情节的发展。</p>
@@ -154,10 +154,12 @@ button {
 <script>
 	  var pageWidth = document.documentElement.clientWidth;
 	  var pageHeight = document.documentElement.clientHeight;
+	  var hty = document.getElementById('hty');
 	  // 输出网页的宽度和高度
 	  // 如果网页宽度大于网页高度，则将页面放大至175%
 	  if (pageWidth > pageHeight) {
 		  document.body.style.zoom = "175%";
+		  hty.style.height = '60px';
 	  }
 	  let slides = document.querySelectorAll('.slide');
 	  function showSlide(index) {
