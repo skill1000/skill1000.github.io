@@ -64,7 +64,7 @@ h1 {
 table {
     border-collapse: separate;
     border-spacing: 10px; /* 设置行间距为10像素 */
-	border: 1px solid black; /* 设置边框样式为黑色实线 */
+    border: 1px solid black; /* 设置边框样式为黑色实线 */
 }
 .container {
     display: block;
@@ -76,8 +76,14 @@ table {
     justify-content: center;
     align-items: center;
     height: 50px; /* 指定容器的高度，这里设置为视口高度 */
-	border: 1px solid black; /* 设置边框样式为黑色实线 */
-	border-radius: 10px;
+    border: 1px solid black; /* 设置边框样式为黑色实线 */
+    border-radius: 10px;
+}
+.video-container {
+    text-align: center;
+}
+video {
+    display: inline-block;
 }
 </style>
 </head>
@@ -354,6 +360,13 @@ table {
         <div class="book-description" style="text-indent: 2em">在《三国演义》中，读者可以欣赏到曹操的谋略、刘备的仁爱、孙权的果断，以及关羽的忠诚、张飞的勇猛、赵云的机智。这些人物形象栩栩如生，各具特色，让人难以忘怀。同时，书中的诗词歌赋也展现了作者深厚的文学功底，使得整部作品更加具有艺术价值。</div>
         <div class="book-description" style="text-indent: 2em">《三国演义》是一部值得一读再读的经典之作，它不仅让我们了解了三国时期的历史，更让我们感受到了人性的复杂与丰富，领略到了文学的魅力。</div>
       </div>
+    </div>
+  </li>
+  <li>
+    <div class="video-container">
+      <video width="90%" controls>
+        <source src="https://vip.123pan.cn/1813820143/%E7%BD%91%E5%AE%892201/skill.mp4" type="video/mp4">
+      </video>
     </div>
   </li>
 </ul>
