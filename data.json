@@ -1,8 +1,9 @@
 {
-  "title": "标题",
-  "text": "内容",
-  "button": "按钮",
-  "son": 
+  "version": "1.0",
+  "update_text": "暂无更新",
+  "update_url": "https://cn.bing.com",
+  "Announcement": "本工具仅供娱乐，请勿倒卖！",
+  "list": 
   {
     "woc": "卧槽",
     "woc1": "卧槽1",
