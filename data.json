@@ -8,12 +8,12 @@
     "ls1":   
     {
       "introduce": "登录界面",
-      "file_path": "/storage/emulated/0/Android/data/com.tencent.tmgp.cod/files/ExtractQts/0/Videos/StartVideo.mp4"
+      "file_path": "/storage/emulated/0/Android/data/com.tencent.tmgp.cod/files/ExtractQts/0/Videos/StartVideo.mp4"  
     },
     "ls2":     
     {
       "introduce": "排位赛段位界面",
       "file_path": "/storage/emulated/0/Android/data/com.tencent.tmgp.cod/files/PufferQts/Videos/dynamic/RankedLobbyBG_S24.mp4"  
-    },
+    }
   }
 }
