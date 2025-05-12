@@ -3,60 +3,60 @@
 ## 单选题（每题 3 分，共 30 分）
 
   1. 以下哪个是 Python 的正确安装方式？
-A. 通过浏览器直接下载 Python 安装包，运行安装程序
-B. 在终端输入 “python install”
+     A. 通过浏览器直接下载 Python 安装包，运行安装程序
+     B. 在终端输入 “python install”
 C. 任何方式都能正确安装
 D. 无法自己安装，只能由专业人员安装
 
-  2. Python 中，用于表示一个整数的类型是？
+  3. Python 中，用于表示一个整数的类型是？
 A. int
 B. Integer
 C. float
 D. str
 
-  3. 在 Python 中，如何表示一个字符串？
+  4. 在 Python 中，如何表示一个字符串？
 A. 使用单引号
 B. 使用双引号
 C. 使用三引号
 D. 以上都可以
 
-  4. Python 中，列表的索引是从（）开始的？
+  5. Python 中，列表的索引是从（）开始的？
 A. 1
 B. 0
 C. -1
 D. 任意数字
 
-  5. 以下哪项不是 Python 的数据类型？
+  6. 以下哪项不是 Python 的数据类型？
 A. list
 B. tuple
 C. array
 D. dictionary
 
-  6. 在 Python 中，用于定义函数的关键字是？
+  7. 在 Python 中，用于定义函数的关键字是？
 A. func
 B. def
 C. define
 D. function
 
-  7. Python 中，用于循环的语句不包括？
+  8. Python 中，用于循环的语句不包括？
 A. for
 B. while
 C. loop
 D. repeat
 
-  8. 在 Python 中，如何正确地输出 “Hello, World!”？
+  9. 在 Python 中，如何正确地输出 “Hello, World!”？
 A. print “Hello, World!”B
 . echo “Hello, World!”
 C. printf “Hello, World!”
 D. output “Hello, World!”
 
-  9. Python 中，用于表示布尔类型的值是？
+  10. Python 中，用于表示布尔类型的值是？
 A. bool
 B. True 和 False
 C. 1 和 0
 D. yes 和 no
 
-  10. 在 Python 中，如何正确地导入一个模块？
+  11. 在 Python 中，如何正确地导入一个模块？
 A. include module
 B. import module
 C. use module
