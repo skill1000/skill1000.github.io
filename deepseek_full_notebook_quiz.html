@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>DeepSeek Notebook 模拟盘</title>
+<style>
+body{background:#f5f7fb;font-family:sans-serif;padding:20px;color:#1e293b}
+.container{max-width:1300px;margin:auto}
+.header,.cell,.tablebox{background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.05)}
+.header{padding:30px;margin-bottom:20px}
+.cell{margin-bottom:20px;overflow:hidden}
+.md{padding:20px;border-bottom:1px solid #eee}
+.codehead{background:#1e293b;color:#fff;padding:10px 18px;font-family:monospace}
+.code{background:#0f172a;color:#d1fae5;padding:20px}
+pre{margin:0;white-space:pre-wrap;line-height:1.8}
+.blank{width:140px;background:#1e293b;border:1px dashed #60a5fa;color:#facc15;padding:6px;border-radius:6px;text-align:center}
+button{padding:12px 24px;border:none;border-radius:8px;font-weight:700;cursor:pointer}
+.primary{background:#2563eb;color:#fff}
+.secondary{background:#475569;color:#fff}
+.btns{display:flex;justify-content:center;gap:12px;margin:25px 0}
+.tablebox{padding:20px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #e2e8f0;padding:10px}
+th{background:#f8fafc}
+.badge{display:none;padding:4px 8px;border-radius:999px;font-size:12px}
+.ok{display:inline-block;background:#dcfce7;color:#15803d}
+.err{display:inline-block;background:#fee2e2;color:#b91c1c}
+#score{display:none;background:#eff6ff;padding:15px;border-radius:10px;margin-bottom:20px;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="header">
+<h1>🚀 DeepSeek 大模型 Notebook 模拟盘</h1>
+<p>严格按比赛工程结构设计｜8 大模块｜31 个挖空｜每模块 4 空</p>
+</div>
+
+
+<div class="cell">
+<div class="md">
+<h2>模块1：环境检测与数据准备</h2>
+<p>CUDA、os、json 基础 API（每模块 4 空）</p>
+</div>
+<div class="codehead">In [1]</div>
+<div class="code"><pre>
+import torch
+import os
+import json
+
+if torch.cuda.<input class="blank" id="b1" oninput="syncAnswer(1)" placeholder="1">():
+    print("CUDA 可用")
+
+os.<input class="blank" id="b2" oninput="syncAnswer(2)" placeholder="2">("./data", exist_ok=True)
+
+raw_text = raw_text.<input class="blank" id="b3" oninput="syncAnswer(3)" placeholder="3">()
+
+json.<input class="blank" id="b4" oninput="syncAnswer(4)" placeholder="4">(data, f)
+</pre></div>
+</div>
+
+<div class="cell">
+<div class="md">
+<h2>模块2：数据清洗</h2>
+<p>regex、hashlib、jsonl（每模块 4 空）</p>
+</div>
+<div class="codehead">In [2]</div>
+<div class="code"><pre>
+text = "".join(re.<input class="blank" id="b5" oninput="syncAnswer(5)" placeholder="5">(
+    r"[一-龥a-zA-Z0-9]+", text
+))
+
+md5 = hashlib.md5(text.<input class="blank" id="b6" oninput="syncAnswer(6)" placeholder="6">("utf-8"))
+
+dialogues = raw_content.<input class="blank" id="b7" oninput="syncAnswer(7)" placeholder="7">("---")
+
+f.write(json.dumps(obj) + <input class="blank" id="b8" oninput="syncAnswer(8)" placeholder="8">)
+</pre></div>
+</div>
+
+<div class="cell">
+<div class="md">
+<h2>模块3：RAG 向量库</h2>
+<p>SentenceTransformer + FAISS（每模块 4 空）</p>
+</div>
+<div class="codehead">In [3]</div>
+<div class="code"><pre>
+reader = PdfReader(pdf_path)
+
+text += page.<input class="blank" id="b9" oninput="syncAnswer(9)" placeholder="9">()
+
+embeddings = model.<input class="blank" id="b10" oninput="syncAnswer(10)" placeholder="10">(chunks)
+
+index = faiss.<input class="blank" id="b11" oninput="syncAnswer(11)" placeholder="11">(768)
+
+scores, idx = index.<input class="blank" id="b12" oninput="syncAnswer(12)" placeholder="12">(query, 3)
+</pre></div>
+</div>
+
+<div class="cell">
+<div class="md">
+<h2>模块4：LoRA 微调</h2>
+<p>PEFT、Trainer、Dataset（每模块 4 空）</p>
+</div>
+<div class="codehead">In [4]</div>
+<div class="code"><pre>
+dataset = <input class="blank" id="b13" oninput="syncAnswer(13)" placeholder="13">(
+    "json", data_files="train.jsonl"
+)
+
+tokenizer = AutoTokenizer.<input class="blank" id="b14" oninput="syncAnswer(14)" placeholder="14">(model_id)
+
+config = LoraConfig(
+    r=<input class="blank" id="b15" oninput="syncAnswer(15)" placeholder="15">,
+    lora_alpha=32
+)
+
+model = get_peft_model(model, config)
+</pre></div>
+</div>
+
+<div class="cell">
+<div class="md">
+<h2>模块5：训练流程</h2>
+<p>Loss Mask、Dataset Map、Trainer（每模块 4 空）</p>
+</div>
+<div class="codehead">In [5]</div>
+<div class="code"><pre>
+labels = [<input class="blank" id="b16" oninput="syncAnswer(16)" placeholder="16">] * len(prompt_ids)
+
+tokenized_dataset = dataset.<input class="blank" id="b17" oninput="syncAnswer(17)" placeholder="17">(
+    tokenize_function,
+    batched=True
+)
+
+trainer.<input class="blank" id="b18" oninput="syncAnswer(18)" placeholder="18">()
+
+trainer.<input class="blank" id="b19" oninput="syncAnswer(19)" placeholder="19">("./output")
+</pre></div>
+</div>
+
+<div class="cell">
+<div class="md">
+<h2>模块6：推理与并发</h2>
+<p>generate、decode、多线程（每模块 4 空）</p>
+</div>
+<div class="codehead">In [6]</div>
+<div class="code"><pre>
+with torch.<input class="blank" id="b20" oninput="syncAnswer(20)" placeholder="20">():
+
+    outputs = model.<input class="blank" id="b21" oninput="syncAnswer(21)" placeholder="21">(
+        **inputs,
+        max_new_tokens=32
+    )
+
+text = tokenizer.<input class="blank" id="b22" oninput="syncAnswer(22)" placeholder="22">(outputs[0])
+
+with <input class="blank" id="b23" oninput="syncAnswer(23)" placeholder="23">(max_workers=4) as executor:
+    pass
+</pre></div>
+</div>
+
+<div class="cell">
+<div class="md">
+<h2>模块7：QLoRA 与量化</h2>
+<p>BitsAndBytesConfig（每模块 4 空）</p>
+</div>
+<div class="codehead">In [7]</div>
+<div class="code"><pre>
+bnb_config = BitsAndBytesConfig(
+
+    load_in_4bit=<input class="blank" id="b24" oninput="syncAnswer(24)" placeholder="24">,
+
+    bnb_4bit_quant_type=<input class="blank" id="b25" oninput="syncAnswer(25)" placeholder="25">,
+
+    bnb_4bit_compute_dtype=torch.<input class="blank" id="b26" oninput="syncAnswer(26)" placeholder="26">
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    model_id,
+    <input class="blank" id="b27" oninput="syncAnswer(27)" placeholder="27">=bnb_config
+)
+</pre></div>
+</div>
+
+<div class="cell">
+<div class="md">
+<h2>模块8：评测与可视化</h2>
+<p>BLEU、ROUGE、matplotlib（每模块 4 空）</p>
+</div>
+<div class="codehead">In [8]</div>
+<div class="code"><pre>
+ref_tokens = list(jieba.<input class="blank" id="b28" oninput="syncAnswer(28)" placeholder="28">(reference))
+
+score = sentence_bleu(
+    [ref_tokens],
+    hyp_tokens,
+    <input class="blank" id="b29" oninput="syncAnswer(29)" placeholder="29">=smooth
+)
+
+similarity = np.<input class="blank" id="b30" oninput="syncAnswer(30)" placeholder="30">(emb1, emb2)
+
+plt.<input class="blank" id="b31" oninput="syncAnswer(31)" placeholder="31">("./chart.png")
+</pre></div>
+</div>
+
+
+<div class="btns">
+<button class="primary" onclick="checkAnswers()">✔ 一键核对答案</button>
+<button class="secondary" onclick="resetQuiz()">🔄 清空重做</button>
+</div>
+
+<div class="tablebox">
+<h2>📊 答题统计</h2>
+<div id="score"></div>
+
+<table>
+<thead>
+<tr>
+<th>题号</th>
+<th>你的答案</th>
+<th>标准答案</th>
+<th>结果</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>1</td>
+<td id="user-1">(未填写)</td>
+<td>is_available</td>
+<td><span id="status-1" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>2</td>
+<td id="user-2">(未填写)</td>
+<td>makedirs</td>
+<td><span id="status-2" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td id="user-3">(未填写)</td>
+<td>strip</td>
+<td><span id="status-3" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td id="user-4">(未填写)</td>
+<td>dump</td>
+<td><span id="status-4" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td id="user-5">(未填写)</td>
+<td>findall</td>
+<td><span id="status-5" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>6</td>
+<td id="user-6">(未填写)</td>
+<td>encode</td>
+<td><span id="status-6" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>7</td>
+<td id="user-7">(未填写)</td>
+<td>split</td>
+<td><span id="status-7" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>8</td>
+<td id="user-8">(未填写)</td>
+<td>'\n'</td>
+<td><span id="status-8" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>9</td>
+<td id="user-9">(未填写)</td>
+<td>extract_text</td>
+<td><span id="status-9" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>10</td>
+<td id="user-10">(未填写)</td>
+<td>encode</td>
+<td><span id="status-10" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>11</td>
+<td id="user-11">(未填写)</td>
+<td>IndexFlatIP</td>
+<td><span id="status-11" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>12</td>
+<td id="user-12">(未填写)</td>
+<td>search</td>
+<td><span id="status-12" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>13</td>
+<td id="user-13">(未填写)</td>
+<td>load_dataset</td>
+<td><span id="status-13" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>14</td>
+<td id="user-14">(未填写)</td>
+<td>from_pretrained</td>
+<td><span id="status-14" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>15</td>
+<td id="user-15">(未填写)</td>
+<td>16</td>
+<td><span id="status-15" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>16</td>
+<td id="user-16">(未填写)</td>
+<td>-100</td>
+<td><span id="status-16" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>17</td>
+<td id="user-17">(未填写)</td>
+<td>map</td>
+<td><span id="status-17" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>18</td>
+<td id="user-18">(未填写)</td>
+<td>train</td>
+<td><span id="status-18" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>19</td>
+<td id="user-19">(未填写)</td>
+<td>save_model</td>
+<td><span id="status-19" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>20</td>
+<td id="user-20">(未填写)</td>
+<td>no_grad</td>
+<td><span id="status-20" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>21</td>
+<td id="user-21">(未填写)</td>
+<td>generate</td>
+<td><span id="status-21" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>22</td>
+<td id="user-22">(未填写)</td>
+<td>decode</td>
+<td><span id="status-22" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>23</td>
+<td id="user-23">(未填写)</td>
+<td>ThreadPoolExecutor</td>
+<td><span id="status-23" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>24</td>
+<td id="user-24">(未填写)</td>
+<td>True</td>
+<td><span id="status-24" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>25</td>
+<td id="user-25">(未填写)</td>
+<td>'nf4'</td>
+<td><span id="status-25" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>26</td>
+<td id="user-26">(未填写)</td>
+<td>bfloat16</td>
+<td><span id="status-26" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>27</td>
+<td id="user-27">(未填写)</td>
+<td>quantization_config</td>
+<td><span id="status-27" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>28</td>
+<td id="user-28">(未填写)</td>
+<td>cut</td>
+<td><span id="status-28" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>29</td>
+<td id="user-29">(未填写)</td>
+<td>smoothing_function</td>
+<td><span id="status-29" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>30</td>
+<td id="user-30">(未填写)</td>
+<td>dot</td>
+<td><span id="status-30" class="badge"></span></td>
+</tr>
+
+<tr>
+<td>31</td>
+<td id="user-31">(未填写)</td>
+<td>savefig</td>
+<td><span id="status-31" class="badge"></span></td>
+</tr>
+
+</tbody>
+
+</table>
+</div>
+
+</div>
+
+<script>
+
+const answers = {1: 'is_available', 2: 'makedirs', 3: 'strip', 4: 'dump', 5: 'findall', 6: 'encode', 7: 'split', 8: "'\\n'", 9: 'extract_text', 10: 'encode', 11: 'IndexFlatIP', 12: 'search', 13: 'load_dataset', 14: 'from_pretrained', 15: '16', 16: '-100', 17: 'map', 18: 'train', 19: 'save_model', 20: 'no_grad', 21: 'generate', 22: 'decode', 23: 'ThreadPoolExecutor', 24: 'True', 25: "'nf4'", 26: 'bfloat16', 27: 'quantization_config', 28: 'cut', 29: 'smoothing_function', 30: 'dot', 31: 'savefig'};
+
+function syncAnswer(i){
+    const v = document.getElementById(`b${i}`).value.trim();
+    document.getElementById(`user-${i}`).textContent = v || "(未填写)";
+}
+
+function checkAnswers(){
+    let score = 0;
+
+    for(let i=1;i<=31;i++){
+
+        const user = document.getElementById(`b${i}`).value.trim();
+        const std = answers[i];
+        const badge = document.getElementById(`status-${i}`);
+
+        if(user === std){
+            score++;
+            badge.textContent = "正确";
+            badge.className = "badge ok";
+        } else {
+            badge.textContent = "错误";
+            badge.className = "badge err";
+        }
+    }
+
+    const percent = ((score / 31) * 100).toFixed(1);
+
+    const scoreBox = document.getElementById("score");
+    scoreBox.style.display = "block";
+    scoreBox.innerHTML = `🎉 得分：${score} / 31（正确率 ${percent}%）`;
+}
+
+function resetQuiz(){
+    for(let i=1;i<=31;i++){
+
+        document.getElementById(`b${i}`).value = "";
+        document.getElementById(`user-${i}`).textContent = "(未填写)";
+        document.getElementById(`status-${i}`).className = "badge";
+    }
+
+    document.getElementById("score").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
