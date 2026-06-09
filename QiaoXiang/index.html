@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QIAO XIANG | 数字孪生控制台</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --cyber-bg: #0a0e17;
+            --cyber-glow: #00f2fe;
+            --cyber-card: rgba(16, 24, 48, 0.75);
+            --cyber-text: #e2e8f0;
+        }
+        body {
+            background-color: var(--cyber-bg);
+            color: var(--cyber-text);
+            font-family: 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+            background-image: radial-gradient(rgba(0, 242, 254, 0.05) 2px, transparent 0);
+            background-size: 30px 30px;
+        }
+        /* 玻璃拟态导航栏 */
+        .navbar-cyber {
+            background: rgba(10, 14, 23, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--cyber-glow) !important;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+        .nav-link {
+            color: #94a3b8 !important;
+            transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--cyber-glow) !important;
+            text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+        }
+        /* 赛博卡片 */
+        .cyber-card {
+            background: var(--cyber-card);
+            border: 1px solid rgba(0, 242, 254, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            backdrop-filter: blur(4px);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 254, 0.1), transparent);
+            transition: 0.5s;
+        }
+        .cyber-card:hover::before {
+            left: 100%;
+        }
+        .cyber-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyber-glow);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+        }
+        .glow-text {
+            color: var(--cyber-glow);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+        }
+        /* 终端动态效果 */
+        .terminal-header {
+            background: #1e293b;
+            padding: 6px 12px;
+            border-top-left-radius: 11px;
+            border-top-right-radius: 11px;
+            display: flex;
+            align-items: center;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; display: inline-block;}
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+        .terminal-body {
+            background: #0f172a;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 15px;
+            border-bottom-left-radius: 11px;
+            border-bottom-right-radius: 11px;
+            height: 180px;
+            overflow-y: hidden;
+        }
+        .btn-cyber {
+            background: transparent;
+            border: 1px solid var(--cyber-glow);
+            color: var(--cyber-glow);
+            box-shadow: 0 0 8px rgba(0, 242, 254, 0.2);
+            transition: 0.3s;
+        }
+        .btn-cyber:hover {
+            background: var(--cyber-glow);
+            color: #000;
+            box-shadow: 0 0 15px var(--cyber-glow);
+        }
+		.text-muted {
+			color: #a6b4c9 !important; /* 替换原本暗淡的灰色，提升暗色背景下的可读性 */
+		}
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-cyber sticky-top px-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fa-solid fa-microchip me-2"></i>QX-GATEWAY v1.0</a>
+            <button class="navbar-toggler btn-cyber" type="button" data-bs-toggle="collapse" data-bs-target="#cyberNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="cyberNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">控制台首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="profile.html">生命矩阵档案</a></li>
+                    <li class="nav-item"><a class="nav-link" href="awards.html">荣誉粒子库</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">量子通信港</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="cyber-card p-4 h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <h1 class="display-5 fw-bold glow-text mb-3">欢迎接入，开发者 乔翔</h1>
+                        <p class="fs-5 text-muted">本节点是由前端高阶组件与嵌入式概念逻辑融合打造的个人虚拟空间，用于全面映射实体硬件、核心算法栈以及个人荣誉模型。</p>
+                        <div class="d-flex flex-wrap gap-3 my-4">
+                            <span class="badge bg-dark border border-info text-info px-3 py-2"><i class="fa-solid fa-user-clock me-2"></i>节点年龄: 18脉冲周期</span>
+                            <span class="badge bg-dark border border-success text-success px-3 py-2"><i class="fa-solid fa-network-wired me-2"></i>所属链路: 北京信息职业技术学院</span>
+                            <span class="badge bg-dark border border-warning text-warning px-3 py-2"><i class="fa-solid fa-gamepad me-2"></i>核心线程: 游戏/算法/硬件解构</span>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="profile.html" class="btn btn-cyber px-4 py-2"><i class="fa-solid fa-satellite-dish me-2"></i>初始化全息档案展示</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="w-100">
+                    <div class="terminal-header">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                        <small class="text-muted ms-2" style="font-family: monospace;">RTOS_Kernel_Log.sh</small>
+                    </div>
+                    <div class="terminal-body text-success" id="logTerminal">
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 class="glow-text mt-5 mb-4"><i class="fa-solid fa-cubes me-2"></i>矩阵子系统入口</h3>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="cyber-card p-4 text-center">
+                    <i class="fa-solid fa-chart-pie fa-3x text-info mb-3"></i>
+                    <h5 class="fw-bold">生命矩阵档案 (Profile)</h5>
+                    <p class="text-muted small">部署了基于Chart.js的多维解析模型，直观映射各项技术研发和策略思维权重。</p>
+                    <a href="profile.html" class="btn btn-sm btn-cyber w-100 mt-2">远程调用</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="cyber-card p-4 text-center">
+                    <i class="fa-solid fa-trophy fa-3x text-warning mb-3"></i>
+                    <h5 class="fw-bold">荣誉粒子库 (Awards)</h5>
+                    <p class="text-muted small">高交互性数字证书陈列室，封装了自适应画廊架构，支持全息大图一键溯源。</p>
+                    <a href="awards.html" class="btn btn-sm btn-cyber w-100 mt-2">调取库存</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="cyber-card p-4 text-center">
+                    <i class="fa-solid fa-terminal fa-3x text-success mb-3"></i>
+                    <h5 class="fw-bold">量子通信港 (Contact)</h5>
+                    <p class="text-muted small">内嵌虚拟嵌入式Shell解释器，支持标准的命令行式终端会话与物理实体取得建连。</p>
+                    <a href="contact.html" class="btn btn-sm btn-cyber w-100 mt-2">同步链路</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 模拟嵌入式系统开机日志流交互
+        const logs = [
+            "[INFO] Initialize QiaoXiang OS Kernel...",
+            "[OK] Loading Driver: Hardware_Gaming_Core... Loaded.",
+            "[OK] Connecting School Node: BITC Dongba Campus...",
+            "[INFO] Port 8080 open. Listening for personal requests...",
+            "[WARN] CPU Temp: 38.6°C - System running perfectly.",
+            "[INFO] Status: Ready. Awaiting user redirection..."
+        ];
+        let line = 0;
+        const terminal = document.getElementById("logTerminal");
+        function printLog() {
+            if(line < logs.length) {
+                terminal.innerHTML += `<div><span style="color: #00f2fe;">$</span> ${logs[line]}</div>`;
+                line++;
+                setTimeout(printLog, 800);
+            }
+        }
+        window.onload = printLog;
+    </script>
+</body>
+</html>

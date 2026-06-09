@@ -3,789 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>大语言模型全流程实战代码模拟盘 - 高职组</title>
+    <title>团队作品提呈总览</title>
     <style>
+        /* 全局样式重置与科技风背景 */
         * {
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f8fafc;
-            color: #1e293b;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1a1f36 0%, #0a0d1a 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        /* 页面流光背景装饰 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.1) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 头部标题区 */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            z-index: 1;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        header p {
+            color: #718096;
+            font-size: 1rem;
+            letter-spacing: 1px;
+        }
+
+        /* 6板块网格布局 */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+            z-index: 1;
+        }
+
+        /* 个人卡片基础样式（毛玻璃效果） */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .container {
+
+        /* 卡片悬停特效（核心科技感转换） */
+        .card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #00f2fe;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.15);
+        }
+
+        /* 悬停时的流光边框线提示 */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            max-width: 1100px;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 25px rgba(0,0,0,0.04);
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
         }
-        h1 {
-            text-align: center;
-            color: #0f172a;
-            margin-top: 0;
-            margin-bottom: 5px;
-            font-size: 26px;
-            font-weight: 700;
+        .card:hover::after {
+            left: 100%;
         }
-        .meta-info {
-            text-align: center;
-            color: #64748b;
-            margin-bottom: 25px;
-            font-size: 14px;
-        }
-        .tag-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 8px;
-        }
-        .tag {
-            background: #e2e8f0;
-            color: #475569;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .tag-highlight {
-            background: #dbeafe;
-            color: #1d4ed8;
-        }
-        .instruction-card {
-            background-color: #f0fdf4;
-            border-left: 4px solid #16a34a;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 30px;
-            font-size: 14px;
-            color: #14532d;
-            line-height: 1.6;
-        }
-        .code-header {
-            background: #2d3748;
-            color: #e2e8f0;
-            padding: 10px 20px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
-            font-size: 13px;
-            font-family: monospace;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        pre {
-            background-color: #1e2530;
-            color: #deede6;
-            padding: 20px;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            overflow-x: auto;
-            font-family: "Consolas", "Courier New", Courier, monospace;
-            font-size: 13.5px;
-            line-height: 1.7;
-            margin-top: 0;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.15);
-        }
-        .code-input {
-            background-color: #2e384d;
-            border: 1px dashed #60a5fa;
-            color: #facc15;
-            border-radius: 4px;
-            padding: 2px 6px;
-            font-family: inherit;
-            font-size: 13px;
-            width: 170px;
-            text-align: center;
-            outline: none;
-            transition: all 0.2s;
-            font-weight: bold;
-        }
-        .code-input:focus {
-            background-color: #3b4866;
-            border-color: #60a5fa;
-            border-style: solid;
-            box-shadow: 0 0 8px rgba(96, 165, 250, 0.6);
-            color: #ffffff;
-        }
-        .code-input::placeholder {
-            color: #64748b;
-            font-weight: normal;
-        }
-        .table-section {
-            margin-top: 45px;
-            border-top: 2px solid #f1f5f9;
-            padding-top: 30px;
-        }
-        h2 {
-            color: #0f172a;
-            font-size: 20px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .table-container {
-            width: 100%;
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        th, td {
-            border: 1px solid #e2e8f0;
-            padding: 12px 14px;
-            text-align: left;
-        }
-        th {
-            background-color: #f1f5f9;
-            color: #334155;
-            font-weight: 600;
-        }
-        tr:nth-child(even) td {
-            background-color: #f8fafc;
-        }
-        .center-text {
-            text-align: center;
-        }
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 35px;
-            gap: 15px;
-            position: sticky;
-            bottom: 20px;
-            background: rgba(248, 250, 252, 0.9);
-            padding: 15px;
-            border-radius: 8px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
-        }
-        .btn {
-            padding: 12px 30px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            font-size: 15px;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .btn-primary {
-            background-color: #2563eb;
-            color: white;
-        }
-        .btn-primary:hover {
-            background-color: #1d4ed8;
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background-color: #475569;
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: #334155;
-            transform: translateY(-1px);
-        }
-        .correct-ans {
-            color: #16a34a;
-            font-weight: 700;
-            font-family: monospace;
-            display: none;
-        }
-        .status-badge {
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
-            display: none;
-        }
-        .status-correct {
-            background-color: #dcfce7;
-            color: #15803d;
-            display: inline-block;
-        }
-        .status-incorrect {
-            background-color: #fee2e2;
-            color: #b91c1c;
-            display: inline-block;
-        }
-        #score-summary {
-            display: none;
-            background-color: #eff6ff;
-            border: 1px solid #bfdbfe;
-            color: #1e40af;
-            padding: 15px;
-            border-radius: 6px;
+
+        /* 头像样式及科技感外圈 */
+        .avatar-wrapper {
+            position: relative;
+            width: 90px;
+            height: 90px;
             margin-bottom: 20px;
-            font-size: 16px;
-            font-weight: 600;
-            text-align: center;
         }
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: #1e293b;
+        }
+
+        /* 头像呼吸灯效果 */
+        .card:hover .avatar {
+            border-color: #00f2fe;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+        }
+
+        /* 文字排版 */
+        .name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .card:hover .name {
+            color: #00f2fe;
+        }
+
+        .info-tag {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin: 4px 0;
+            font-weight: 300;
+        }
+
+        /* 学号采用等宽字体增强数字化风格 */
+        .student-id {
+            font-family: 'Courier New', Courier, monospace;
+            background: rgba(0, 242, 254, 0.1);
+            color: #00f2fe;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-top: 12px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        /* 响应式适配：平板端 2 列，手机端 1 列 */
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
             }
-            .container {
-                padding: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-container {
+                grid-template-columns: 1fr;
             }
-            .code-input {
-                width: 120px;
-                padding: 1px 4px;
-                font-size: 12px;
-            }
-            pre {
-                font-size: 12px;
-                padding: 10px;
-            }
-            .btn-container {
-                flex-direction: column;
-                position: static;
-                gap: 10px;
-            }
-            .btn {
-                width: 100%;
+            header h1 {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>大语言模型全流程实战代码模拟盘</h1>
-    <div class="meta-info">
-        适用赛项：人工智能大模型全流程开发与应用（高职组）
-        <div class="tag-group">
-            <span class="tag tag-highlight">总计: 40 空</span>
-            <span class="tag">基础模块: 4 空</span>
-            <span class="tag">核心微调+部署: 36 空</span>
-            <span class="tag">适配移动端/PC</span>
-        </div>
+    <header>
+        <h1>TEAM PORTFOLIO</h1>
+        <p>点击成员卡片进入个人专属作品空间</p>
+    </header>
+
+    <div class="grid-container">
+
+        <a href="./QiaoXiang/index.html" class="card">
+            <div class="avatar-wrapper">
+                <img src="./QiaoXiang/images/icon.jpg" alt="头像" class="avatar">
+            </div>
+            <div class="name">乔翔</div>
+            <div class="info-tag">专业：信息安全技术应用</div>
+            <div class="info-tag">班级：2533035</div>
+            <div class="student-id">学号: 38</div>
+        </a>
+
+        <a href="#" class="card">
+            <div class="avatar-wrapper">
+                <img src="https://via.placeholder.com/90/1a1f36/00f2fe?text=Avatar" alt="头像" class="avatar">
+            </div>
+            <div class="name">成员姓名二</div>
+            <div class="info-tag">专业：人工智能</div>
+            <div class="info-tag">班级：2026级02班</div>
+            <div class="student-id">ID: 2026020002</div>
+        </a>
+
+        <a href="#" class="card">
+            <div class="avatar-wrapper">
+                <img src="https://via.placeholder.com/90/1a1f36/00f2fe?text=Avatar" alt="头像" class="avatar">
+            </div>
+            <div class="name">成员姓名三</div>
+            <div class="info-tag">专业：软件工程</div>
+            <div class="info-tag">班级：2026级01班</div>
+            <div class="student-id">ID: 2026010003</div>
+        </a>
+
+        <a href="#" class="card">
+            <div class="avatar-wrapper">
+                <img src="https://via.placeholder.com/90/1a1f36/00f2fe?text=Avatar" alt="头像" class="avatar">
+            </div>
+            <div class="name">成员姓名四</div>
+            <div class="info-tag">专业：数据科学</div>
+            <div class="info-tag">班级：2026级03班</div>
+            <div class="student-id">ID: 2026030004</div>
+        </a>
+
+        <a href="#" class="card">
+            <div class="avatar-wrapper">
+                <img src="https://via.placeholder.com/90/1a1f36/00f2fe?text=Avatar" alt="头像" class="avatar">
+            </div>
+            <div class="name">成员姓名五</div>
+            <div class="info-tag">专业：网络安全</div>
+            <div class="info-tag">班级：2026级01班</div>
+            <div class="student-id">ID: 2026010005</div>
+        </a>
+
+        <a href="#" class="card">
+            <div class="avatar-wrapper">
+                <img src="https://via.placeholder.com/90/1a1f36/00f2fe?text=Avatar" alt="头像" class="avatar">
+            </div>
+            <div class="name">成员姓名六</div>
+            <div class="info-tag">专业：数字媒体技术</div>
+            <div class="info-tag">班级：2026级02班</div>
+            <div class="student-id">ID: 2026020006</div>
+        </a>
+
     </div>
-
-    <div class="instruction-card">
-        <strong>💡 模拟盘操作指南：</strong><br>
-        1. 请在下方代码框中的黄色虚线框 <code>___X___</code> 处直接填写你的答案代码或关键参数。<br>
-        2. 当你在代码中输入答案时，内容会<strong>实时同步</strong>到页面最底部的【答题对照及核对表】对应的“你的答案”列中。<br>
-        3. 答题完成后，点击页面最下方的 <strong>“一键核对答案”</strong> 按钮，系统会自动判定正误、计算得分，并完整展示标准官方参考答案。
-    </div>
-
-    <div class="code-header">
-        <span>📄 llm_full_pipeline_quiz.py</span>
-        <span style="color: #a0aec0;">Python 3.11+</span>
-    </div>
-    <pre><code>import torch
-import sys
-import os
-import json
-import re
-import hashlib
-import time
-from concurrent.futures import ThreadPoolExecutor
-from peft import LoraConfig, get_peft_model, TaskType, PeftModel
-from transformers import TrainingArguments, Trainer, AutoModelForCausalLM, AutoTokenizer, TrainerCallback, BitsAndBytesConfig
-from datasets import load_dataset
-from PyPDF2 import PdfReader
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
-import matplotlib.pyplot as plt
-import jieba
-from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
-from rouge_chinese import Rouge
-import warnings
-warnings.filterwarnings("ignore")
-
-# ==========================================
-# 模块 1: 环境与硬件检测及数据准备 (基础题 - 4 空)
-# ==========================================
-print(f"Python版本: {sys.version}")
-
-if torch.cuda.<input type="text" class="code-input" id="blank-1" data-index="1" oninput="syncAnswer(1)" placeholder=" 1 ">(): # 判断当前环境是否成功安装了 CUDA 且 GPU 可用
-    print(f"显卡数量: {torch.cuda.device_count()}")
-else:
-    print("没有可用的 CUDA 显卡")
-
-def create_mock_data():
-    os.<input type="text" class="code-input" id="blank-2" data-index="2" oninput="syncAnswer(2)" placeholder=" 2 ">("./data", exist_ok=True) # 创建 data 文件夹，存在则不抛出异常
-    raw_text = "你好，我的订单 123456 还没有发货\n客服：您好，实在抱歉...\n"
-    
-    with open("./data/customer_service_raw.txt", "w", encoding="utf-8") as f:
-        f.write(raw_text.<input type="text" class="code-input" id="blank-3" data-index="3" oninput="syncAnswer(3)" placeholder=" 3 ">()) # 移除字符串首尾的空白字符
-        
-    test_queries = ["退货流程是什么？", "我的衣服洗完缩水了怎么办？"]
-    with open("./data/inference_test.json", "w", encoding="utf-8") as f:
-        # 将列表序列化为 JSON 写入文件
-        json.<input type="text" class="code-input" id="blank-4" data-index="4" oninput="syncAnswer(4)" placeholder=" 4 ">(test_queries, f, ensure_ascii=False, indent=2)
-
-# ==========================================
-# 模块 2: 数据清洗与合并 (语法与参数 - 6 空)
-# ==========================================
-class DataCleaner:
-    def __init__(self, min_length=5, max_length=1000):
-        self.min_length = min_length
-        self.max_length = max_length
-        self.seen_hashes = set()
-
-    def clean_text(self, text):
-        if not text: return ""
-        # 使用正则提取所有中英文、数字及常用标点
-        text = "".join(re.<input type="text" class="code-input" id="blank-5" data-index="5" oninput="syncAnswer(5)" placeholder=" 5 ">(r"[一-龥a-zA-Z0-9，。！？、：；“”]+", text))
-        return text.strip() if self.min_length &lt;= len(text.strip()) &lt;= self.max_length else ""
-
-    def is_duplicate(self, text):
-        # 文本摘要计算前需转换为字节流
-        text_hash = hashlib.md5(text.<input type="text" class="code-input" id="blank-6" data-index="6" oninput="syncAnswer(6)" placeholder=" 6 ">('utf-8')).hexdigest()
-        if text_hash in self.seen_hashes:
-            return True
-        self.seen_hashes.add(text_hash)
-        return False
-
-    def process_raw_txt(self, txt_path, jsonl_output_path):
-        with open(txt_path, 'r', encoding='utf-8') as f:
-            raw_content = f.read()
-        
-        # 按照赛题指定的 '---' 分隔符切分对话
-        raw_dialogues = raw_content.<input type="text" class="code-input" id="blank-7" data-index="7" oninput="syncAnswer(7)" placeholder=" 7 ">('---')
-        cleaned_records = []
-        for block in raw_dialogues:
-            cleaned_text = self.clean_text(block)
-            if cleaned_text and not self.is_duplicate(cleaned_text):
-                cleaned_records.append({"instruction": "回答问题", "input": cleaned_text, "output": "收到反馈"})
-
-        with open(jsonl_output_path, 'w', encoding='utf-8') as f:
-            for rec in cleaned_records:
-                # 序列化为 JSONL 格式（必须强制加换行符）
-                f.write(json.dumps(rec, ensure_ascii=False) + <input type="text" class="code-input" id="blank-8" data-index="8" oninput="syncAnswer(8)" placeholder=" 8 ">)
-        return cleaned_records
-
-    def merge_domains(self, csv_jsonl_path, huanhuan_json_path, merged_output_path):
-        merged_data = []
-        with open(csv_jsonl_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                if line.strip():
-                    merged_data.append(json.<input type="text" class="code-input" id="blank-9" data-index="9" oninput="syncAnswer(9)" placeholder=" 9 ">(line.strip())) # 反序列化 JSON 字符串
-                    
-        with open(huanhuan_json_path, 'r', encoding='utf-8') as f:
-            huanhuan_data = json.<input type="text" class="code-input" id="blank-10" data-index="10" oninput="syncAnswer(10)" placeholder=" 10 ">(f) # 一次性读取整个 JSON 文件对象
-            merged_data.extend(huanhuan_data)
-
-# ==========================================
-# 模块 3: RAG 知识库集成 (语法与参数 - 5 空)
-# ==========================================
-class RAGPipeline:
-    def __init__(self, model_path="BAAI/bge-large-zh-v1.5"):
-        self.tokenizer_and_model = SentenceTransformer(model_path)
-        self.chunks = []
-        self.index = None
-
-    def load_pdf(self, pdf_path):
-        reader = PdfReader(pdf_path)
-        full_text = ""
-        for page in reader.pages:
-            full_text += page.<input type="text" class="code-input" id="blank-11" data-index="11" oninput="syncAnswer(11)" placeholder=" 11 ">() + "\n" # 提取 PDF 纯文本
-        return full_text
-
-    def split_documents(self, text):
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=300,
-            chunk_overlap=<input type="text" class="code-input" id="blank-12" data-index="12" oninput="syncAnswer(12)" placeholder=" 12 ">, # 设定滑动窗口重叠量为 30
-            separators=["\n\n", "\n", "。", "！", "？", " "]
-        )
-        self.chunks = splitter.split_text(text)
-
-    def build_vector_store(self):
-        # 批量向量化块内容，开启归一化
-        embeddings = self.tokenizer_and_model.<input type="text" class="code-input" id="blank-13" data-index="13" oninput="syncAnswer(13)" placeholder=" 13 ">(self.chunks, normalize_embeddings=True)
-        dimension = embeddings.shape[1]
-        self.index = faiss.<input type="text" class="code-input" id="blank-14" data-index="14" oninput="syncAnswer(14)" placeholder=" 14 ">(dimension) # 构建基于内积的暴力检索索引
-        self.index.add(np.array(embeddings).astype('float32'))
-
-    def query(self, user_question, top_k=3):
-        query_embedding = self.tokenizer_and_model.encode([user_question], normalize_embeddings=True)
-        # 在 FAISS 库中检索最相似的 Top-K 向量
-        scores, indices = self.index.<input type="text" class="code-input" id="blank-15" data-index="15" oninput="syncAnswer(15)" placeholder=" 15 ">(np.array(query_embedding).astype('float32'), top_k)
-        return "\n".join([self.chunks[idx] for idx in indices[0]])
-
-# ==========================================
-# 模块 4: LoRA 核心微调 (实战核心考点 - 10 空)
-# ==========================================
-def run_lora_training():
-    model_id = "DeepSeek-R1-Distill-Qwen-1.5B"
-    # 加载统一数据集
-    dataset = <input type="text" class="code-input" id="blank-16" data-index="16" oninput="syncAnswer(16)" placeholder=" 16 ">("json", data_files="./data/merged_train.jsonl") 
-    
-    peft_config = LoraConfig(
-        task_type=TaskType.CAUSAL_LM,
-        r=16,
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
-    )
-
-    # 实例化分词器，开启信任远程代码
-    tokenizer = AutoTokenizer.<input type="text" class="code-input" id="blank-17" data-index="17" oninput="syncAnswer(17)" placeholder=" 17 ">(model_id, trust_remote_code=True)
-    if tokenizer.pad_token is None: tokenizer.pad_token = tokenizer.eos_token
-    
-    # 自动分配显存并加载模型
-    model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16, device_map=<input type="text" class="code-input" id="blank-18" data-index="18" oninput="syncAnswer(18)" placeholder=" 18 ">)
-    
-    # 将基础模型包装为 PEFT/LoRA 模型
-    model = <input type="text" class="code-input" id="blank-19" data-index="19" oninput="syncAnswer(19)" placeholder=" 19 ">(model, peft_config)
-    
-    # 【避坑必考点】：冻结基座参数时，强制使输入具备梯度属性，否则报错无梯度！
-    model.<input type="text" class="code-input" id="blank-20" data-index="20" oninput="syncAnswer(20)" placeholder=" 20 ">() 
-
-    def tokenize_function(examples):
-        batch_input_ids, batch_labels, batch_attention_mask = [], [], []
-        for inst, inp, out in zip(examples['instruction'], examples['input'], examples['output']):
-            prompt = f"{inst} {inp}".strip()
-            prompt_ids = tokenizer.encode(prompt, add_special_tokens=True)
-            answer_ids = tokenizer.encode(out, add_special_tokens=False) + [tokenizer.eos_token_id]
-            input_ids = prompt_ids + answer_ids
-            
-            # 【掩码必考点】：Prompt 区域不参与 Loss 计算，需屏蔽
-            labels = [<input type="text" class="code-input" id="blank-21" data-index="21" oninput="syncAnswer(21)" placeholder=" 21 ">] * len(prompt_ids) + answer_ids 
-            
-            # ... Padding 与截断逻辑 ...
-            batch_input_ids.append(input_ids)
-            batch_labels.append(labels)
-            
-        return {"input_ids": batch_input_ids, "labels": batch_labels}
-
-    # 使用 HuggingFace 数据集方法，执行批量格式化映射
-    tokenized_dataset = dataset['train'].<input type="text" class="code-input" id="blank-22" data-index="22" oninput="syncAnswer(22)" placeholder=" 22 ">(tokenize_function, batched=True)
-
-    training_args = TrainingArguments(output_dir="./lora_output", max_steps=3)
-    
-    # 实例化 Trainer
-    trainer = Trainer(
-        model=model, 
-        args=training_args, 
-        train_dataset=tokenized_dataset
-    )
-    
-    trainer.<input type="text" class="code-input" id="blank-23" data-index="23" oninput="syncAnswer(23)" placeholder=" 23 ">() # 正式启动训练
-    trainer.<input type="text" class="code-input" id="blank-24" data-index="24" oninput="syncAnswer(24)" placeholder=" 24 ">("./lora_output") # 保存最终模型
-
-# ==========================================
-# 模块 5: 并发推理性能测试 (推理 API 考点 - 6 空)
-# ==========================================
-class ConcurrentEngine:
-    def __init__(self, model, tokenizer, device="cuda"):
-        self.model = model
-        self.tokenizer = tokenizer
-        self.device = device
-        # 【对齐考点】：生成任务的多序列并行运算，必须向左填充！
-        self.tokenizer.padding_side = <input type="text" class="code-input" id="blank-25" data-index="25" oninput="syncAnswer(25)" placeholder=" 25 "> 
-
-    def _generate(self, text):
-        inputs = self.tokenizer(text, return_tensors="pt", padding=True).to(self.device)
-        # 推理阶段关闭梯度跟踪以降低显存和提速
-        with torch.<input type="text" class="code-input" id="blank-26" data-index="26" oninput="syncAnswer(26)" placeholder=" 26 ">(): 
-            # 执行模型生成逻辑
-            outputs = self.model.<input type="text" class="code-input" id="blank-27" data-index="27" oninput="syncAnswer(27)" placeholder=" 27 ">(**inputs, max_new_tokens=32)
-            
-        # 将产生的张量反向解码成人类文本
-        return self.tokenizer.<input type="text" class="code-input" id="blank-28" data-index="28" oninput="syncAnswer(28)" placeholder=" 28 ">(outputs[0], skip_special_tokens=True)
-
-    def run_threaded(self, texts, max_workers=4):
-        # 开启内置并发工作池
-        with <input type="text" class="code-input" id="blank-29" data-index="29" oninput="syncAnswer(29)" placeholder=" 29 ">(max_workers=max_workers) as executor:
-            results = list(executor.map(self._generate, texts))
-        return results
-
-    def run_batched(self, texts):
-        inputs = self.tokenizer(texts, return_tensors="pt", padding=True).to(self.device)
-        with torch.no_grad():
-            # 【批量解码】：利用 tokenizer 批量处理整个 outputs 矩阵
-            return self.tokenizer.<input type="text" class="code-input" id="blank-30" data-index="30" oninput="syncAnswer(30)" placeholder=" 30 ">(self.model.generate(**inputs, max_new_tokens=32), skip_special_tokens=True)
-
-# ==========================================
-# 模块 6: 部署显存优化与量化 (量化策略参数 - 4 空)
-# ==========================================
-class QuantizationManager:
-    def __init__(self, model_id="DeepSeek-R1-Distill-Qwen-1.5B"):
-        self.model_id = model_id
-
-    def build_qlora_config(self):
-        bnb_config = BitsAndBytesConfig(
-            load_in_4bit=<input type="text" class="code-input" id="blank-31" data-index="31" oninput="syncAnswer(31)" placeholder=" 31 ">, # 开启 4-bit 量化加载
-            bnb_4bit_quant_type=<input type="text" class="code-input" id="blank-32" data-index="32" oninput="syncAnswer(32)" placeholder=" 32 ">, # 选择最高精度的 NF4 正态分布类型
-            bnb_4bit_use_double_quant=True,
-            bnb_4bit_compute_dtype=torch.<input type="text" class="code-input" id="blank-33" data-index="33" oninput="syncAnswer(33)" placeholder=" 33 "> # 反量化计算时选用 bfloat16 防溢出
-        )
-        return bnb_config
-
-    def load_quantized_model(self):
-        bnb_config = self.build_qlora_config()
-        # 加载量化模型参数注入点
-        model = AutoModelForCausalLM.from_pretrained(
-            self.model_id,
-            <input type="text" class="code-input" id="blank-34" data-index="34" oninput="syncAnswer(34)" placeholder=" 34 ">=bnb_config,
-            device_map="auto"
-        )
-        return model
-
-# ==========================================
-# 模块 7: 多维能力评估与可视化 (评测与作图 API - 6 空)
-# ==========================================
-class LLMEvaluator:
-    def calculate_bleu4(self, reference, hypothesis):
-        # 使用结巴将标准答案进行分词打断
-        ref_tokens = list(jieba.<input type="text" class="code-input" id="blank-35" data-index="35" oninput="syncAnswer(35)" placeholder=" 35 ">(reference))
-        hyp_tokens = list(jieba.cut(hypothesis))
-        
-        smooth = SmoothingFunction().method1
-        # BLEU 计分 API 平滑函数传入
-        return sentence_bleu([ref_tokens], hyp_tokens, weights=(0.25, 0.25, 0.25, 0.25), <input type="text" class="code-input" id="blank-36" data-index="36" oninput="syncAnswer(36)" placeholder=" 36 ">=smooth)
-
-    def calculate_rouge_l(self, reference, hypothesis):
-        ref_spaced = " ".join(jieba.cut(reference))
-        hyp_spaced = " ".join(jieba.cut(hypothesis))
-        # 获取 ROUGE 评测全部打分数据字典
-        scores = self.rouge.<input type="text" class="code-input" id="blank-37" data-index="37" oninput="syncAnswer(37)" placeholder=" 37 ">(hyp_spaced, ref_spaced)
-        return scores[0]['rouge-l']['f']
-
-    def calculate_semantic_similarity(self, reference, hypothesis):
-        embeddings = self.embedding_model.encode([reference, hypothesis], normalize_embeddings=True)
-        # 归一化后，余弦相似度等价于 Numpy 计算前向点乘运算
-        similarity = np.<input type="text" class="code-input" id="blank-38" data-index="38" oninput="syncAnswer(38)" placeholder=" 38 ">(embeddings[0], embeddings[1])
-        return float(similarity)
-
-    def draw_radar_chart(self, metrics_data, save_path="./evaluation_radar.png"):
-        angles = np.linspace(0, 2 * np.pi, 5, endpoint=False).tolist()
-        angles += angles[:1]
-        
-        # 使用 matplotlib 创建极坐标面板
-        fig, ax = plt.<input type="text" class="code-input" id="blank-39" data-index="39" oninput="syncAnswer(39)" placeholder=" 39 ">(figsize=(6, 6), subplot_kw=dict(polar=True))
-        
-        for model_name, scores in metrics_data.items():
-            data = scores + scores[:1]
-            ax.plot(angles, data, linewidth=2, label=model_name)
-            
-        # 将图片保存至指定磁盘位置
-        plt.<input type="text" class="code-input" id="blank-40" data-index="40" oninput="syncAnswer(40)" placeholder=" 40 ">(save_path, bbox_inches='tight', dpi=150)
-        plt.close()</code></pre>
-
-    <div class="table-section" id="quiz-table-section">
-        <h2>📊 答题对照及核对表</h2>
-        
-        <div id="score-summary"></div>
-
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 80px;" class="center-text">题号</th>
-                        <th style="width: 250px;">核心考点分类</th>
-                        <th>你的答案（实时同步）</th>
-                        <th id="th-correct" style="width: 250px; display: none;">官方标准答案</th>
-                        <th style="width: 120px;" class="center-text">实时判定</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                    <!-- JavaScript 将在此处动态注入 40 行数据 -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="btn-container">
-        <button class="btn btn-primary" onclick="checkAnswers()">✔️ 一键核对答案</button>
-        <button class="btn btn-secondary" onclick="resetForm()">🔄 清空重新测验</button>
-    </div>
-</div>
-
-<script>
-    const answersData = {
-        1: { ans: "is_available", topic: "GPU检测API (基础题)" },
-        2: { ans: "makedirs", topic: "OS文件操作 (基础题)" },
-        3: { ans: "strip", topic: "字符串清洗 (基础题)" },
-        4: { ans: "dump", topic: "JSON序列化 (基础题)" },
-        5: { ans: "findall", topic: "正则匹配提取" },
-        6: { ans: "encode", topic: "MD5计算前转码" },
-        7: { ans: "split", topic: "文本切分" },
-        8: { ans: "'\\n'", alt: '"\\n"', topic: "JSONL格式强要求" },
-        9: { ans: "loads", topic: "反序列化单行字符串" },
-        10: { ans: "load", topic: "读取加载整个JSON文件" },
-        11: { ans: "extract_text", topic: "PyPDF2 文本解析" },
-        12: { ans: "30", topic: "文本滑窗重叠量参数" },
-        13: { ans: "encode", topic: "句子向量化方法" },
-        14: { ans: "IndexFlatIP", topic: "FAISS内积/余弦索引" },
-        15: { ans: "search", topic: "FAISS 搜索 API" },
-        16: { ans: "load_dataset", topic: "Datasets 库加载API" },
-        17: { ans: "from_pretrained", topic: "Transformers 核心加载API" },
-        18: { ans: '"auto"', alt: "'auto'", topic: "显存自适应分布策略" },
-        19: { ans: "get_peft_model", topic: "LoRA旁路包装转换函数" },
-        20: { ans: "enable_input_require_grads", topic: "冻结基座下，防求导报错" },
-        21: { ans: "-100", topic: "PyTorch 交叉熵掩码常识" },
-        22: { ans: "map", topic: "Dataset 高效批处理API" },
-        23: { ans: "train", topic: "HuggingFace 启动训练方法" },
-        24: { ans: "save_model", topic: "HuggingFace 模型保存方法" },
-        25: { ans: '"left"', alt: "'left'", topic: "批推理最左侧 Padding 对齐策略" },
-        26: { ans: "no_grad", topic: "推理期切断计算图节省显存" },
-        27: { ans: "generate", topic: "LLM 自回归生成 API" },
-        28: { ans: "decode", topic: "张量解码回人类文本" },
-        29: { ans: "ThreadPoolExecutor", topic: "并发线程池 API" },
-        30: { ans: "batch_decode", topic: "批量张量解码 API" },
-        31: { ans: "True", topic: "开启 4-Bit 量化加载开关" },
-        32: { ans: '"nf4"', alt: "'nf4'", topic: "QLoRA最优量化存储类型" },
-        33: { ans: "bfloat16", topic: "防计算溢出精度类型" },
-        34: { ans: "quantization_config", topic: "量化挂载配置参数名" },
-        35: { ans: "cut", topic: "结巴分词基础 API" },
-        36: { ans: "smoothing_function", topic: "BLEU 计算平滑参数" },
-        37: { ans: "get_scores", topic: "Rouge评估方法" },
-        38: { ans: "dot", topic: "Numpy 矩阵点乘（等同余弦）" },
-        39: { ans: "subplots", topic: "matplotlib 画板构建 API" },
-        40: { ans: "savefig", topic: "matplotlib 保存图片API" }
-    };
-
-    // 初始化表格
-    function initTable() {
-        const tbody = document.getElementById('table-body');
-        tbody.innerHTML = '';
-
-        for (let i = 1; i <= 40; i++) {
-            const tr = document.createElement('tr');
-
-            tr.innerHTML = `
-                <td class="center-text" style="font-weight: 600;">${i}</td>
-                <td style="color: #475569; font-size: 13px;">${answersData[i].topic}</td>
-                <td id="user-ans-${i}" style="font-family: monospace; color: #64748b; font-weight: bold; font-size: 14px;">(未填写)</td>
-                <td id="correct-ans-${i}" class="correct-ans">${answersData[i].ans}</td>
-                <td class="center-text">
-                    <span id="status-${i}" class="status-badge"></span>
-                </td>
-            `;
-
-            tbody.appendChild(tr);
-        }
-    }
-
-    // 实时同步输入答案
-    function syncAnswer(index) {
-        const inputEl = document.getElementById(`blank-${index}`);
-        const displayCell = document.getElementById(`user-ans-${index}`);
-
-        if (!inputEl || !displayCell) return;
-
-        const value = inputEl.value.trim();
-
-        if (value === '') {
-            displayCell.textContent = '(未填写)';
-            displayCell.style.color = '#64748b';        } else {
-            displayCell.textContent = value;
-            displayCell.style.color = '#2563eb';
-        }
-    }
-
-    // 一键核对答案
-    function checkAnswers() {
-        let score = 0;
-
-        document.getElementById('th-correct').style.display = 'table-cell';
-
-        for (let i = 1; i <= 40; i++) {
-            const inputEl = document.getElementById(`blank-${i}`);
-            const statusBadge = document.getElementById(`status-${i}`);
-            const correctCell = document.getElementById(`correct-ans-${i}`);
-
-            if (!inputEl) continue;
-
-            const userAnswer = inputEl.value.trim();
-            const standard = answersData[i].ans;
-            const alt = answersData[i].alt;
-
-            correctCell.style.display = 'table-cell';
-
-            const normalize = str => str.replace(/'/g, '"');
-
-            let isCorrect = false;
-
-            if (userAnswer === standard) {
-                isCorrect = true;
-            } else if (alt && normalize(userAnswer) === normalize(alt)) {
-                isCorrect = true;
-            }
-
-            if (isCorrect) {
-                score++;
-                statusBadge.textContent = '✅ 正确';
-                statusBadge.className = 'status-badge status-correct';
-            } else {
-                statusBadge.textContent = '❌ 错误';
-                statusBadge.className = 'status-badge status-incorrect';
-            }
-        }
-
-        const percent = ((score / 40) * 100).toFixed(1);
-
-        const summary = document.getElementById('score-summary');
-        summary.style.display = 'block';
-
-        summary.innerHTML = `
-            🎉 测验完成！
-            你答对了
-            <span style="font-size: 24px; color: #16a34a;">
-                ${score}
-            </span>
-            / 40 题
-            （正确率 ${percent}%）
-        `;
-
-        document.getElementById('quiz-table-section')
-            .scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // 重置
-    function resetForm() {
-        const ok = confirm('确定要清空全部答案吗？');
-
-        if (!ok) return;
-
-        for (let i = 1; i <= 40; i++) {
-            const inputEl = document.getElementById(`blank-${i}`);
-
-            if (inputEl) {
-                inputEl.value = '';
-            }
-        }
-
-        document.getElementById('th-correct').style.display = 'none';
-        document.getElementById('score-summary').style.display = 'none';
-
-        initTable();
-
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    }
-
-    // 页面初始化
-    window.onload = () => {
-        initTable();
-
-        for (let i = 1; i <= 40; i++) {
-            const inputEl = document.getElementById(`blank-${i}`);
-
-            if (inputEl) {
-                inputEl.addEventListener('input', () => {
-                    syncAnswer(i);
-                });
-            }
-        }
-    };
-</script>
 
 </body>
 </html>

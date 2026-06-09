@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子通信港 | 终端交互</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --cyber-bg: #0a0e17; --cyber-glow: #00f2fe; --cyber-text: #e2e8f0; }
+        body { background-color: var(--cyber-bg); color: var(--cyber-text); }
+        .navbar-cyber { background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0, 242, 254, 0.2); }
+        .navbar-brand { font-weight: 800; color: var(--cyber-glow) !important; }
+        .nav-link { color: #94a3b8 !important; }
+        .nav-link:hover { color: var(--cyber-glow) !important; }
+        .glow-text { color: var(--cyber-glow); text-shadow: 0 0 10px rgba(0, 242, 254, 0.4); }
+        .btn-cyber { background: transparent; border: 1px solid var(--cyber-glow); color: var(--cyber-glow); }
+        .btn-cyber:hover { background: var(--cyber-glow); color: #000; box-shadow: 0 0 15px var(--cyber-glow); }
+
+        /* 全尺寸交互终端 */
+        .full-terminal {
+            background: #020617;
+            border: 1px solid #10b981;
+            border-radius: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.15);
+        }
+        .term-header { background: #0f172a; padding: 10px; border-bottom: 1px solid rgba(16,185,129,0.2); }
+        .term-output { height: 350px; overflow-y: auto; padding: 20px; color: #10b981; }
+        .term-input-line { background: #070f1e; padding: 10px 20px; display: flex; align-items: center; }
+        .cmd-input {
+            background: transparent; border: none; color: #fff; width: 100%; outline: none;
+            font-family: 'Courier New', Courier, monospace; font-size: 16px;
+        }
+		.text-muted {
+			color: #a6b4c9 !important; /* 替换原本暗淡的灰色，提升暗色背景下的可读性 */
+		}
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-cyber sticky-top px-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fa-solid fa-microchip me-2"></i>QX-GATEWAY v1.0</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li><a class="nav-link" href="index.html">控制台首页</a></li>
+                    <li><a class="nav-link" href="profile.html">生命矩阵档案</a></li>
+                    <li><a class="nav-link" href="awards.html">荣誉粒子库</a></li>
+                    <li><a class="nav-link active" href="contact.html">量子通信港</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold" style="color:#10b981; text-shadow: 0 0 10px rgba(16,185,129,0.3);"><i class="fa-solid fa-terminal me-2"></i>模拟嵌入式命令终端交互区</h2>
+            <p class="text-muted">支持输入标准指令：<span class="text-warning">help</span> (查看指令)、<span class="text-warning">info</span> (获取通讯录)、<span class="text-warning">clear</span> (清屏)</p>
+        </div>
+
+        <div class="full-terminal">
+            <div class="term-header text-muted small"><i class="fa-solid fa-ethernet me-2"></i>Terminal connection established via secure layer...</div>
+            <div class="term-output" id="outputBox">
+                <div>欢迎使用嵌入式创新终端。请输入 <span class="text-warning">help</span> 开始探寻串行链路...</div>
+            </div>
+            <div class="term-input-line">
+                <span class="text-success me-2 fw-bold">root@qiaoxiang:~#</span>
+                <input type="text" class="cmd-input" id="cmdField" placeholder="输入命令后回车..." autofocus>
+            </div>
+        </div>
+        
+        <div class="text-start mt-4">
+            <a href="index.html" class="btn btn-cyber"><i class="fa-solid fa-angles-left me-2"></i>返回首页控制台</a>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById("cmdField");
+        const output = document.getElementById("outputBox");
+
+        input.addEventListener("keydown", function(e) {
+            if (e.key === "Enter") {
+                const cmd = input.value.trim().toLowerCase();
+                executeCommand(cmd);
+                input.value = "";
+            }
+        });
+
+        function executeCommand(cmd) {
+            output.innerHTML += `<div><span class="text-light">root@qiaoxiang:~#</span> ${cmd}</div>`;
+            
+            if (cmd === "help") {
+                output.innerHTML += `<div class="text-muted">可用指令列表：<br>
+                                     - <span class='text-warning'>info</span>  : 调出宿主乔翔的物理通讯链路密匙<br>
+                                     - <span class='text-warning'>clear</span> : 格式化终端输出屏幕</div>`;
+            } else if (cmd === "info") {
+                output.innerHTML += `<div class="text-info">[通讯链路载配成功]<br>
+                                     • 电子邮箱 : skill1000@163.com<br>
+                                     • 即时通信 : QQ/微信: 19217093472<br>
+                                     • 地理位置 : 北京信息职业技术学院东坝校区物理中转站</div>`;
+            } else if (cmd === "clear") {
+                output.innerHTML = "<div>终端已格式化复位。</div>";
+            } else if (cmd === "") {
+                // 空输入不处理
+            } else {
+                output.innerHTML += `<div class="text-danger">错误: 未知系统指令 '${cmd}'。请输入 help 查看规范。</div>`;
+            }
+            output.scrollTop = output.scrollHeight;
+        }
+    </script>
+</body>
+</html>
