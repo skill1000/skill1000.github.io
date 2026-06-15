@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脑机接口认知康复 | 全域康养数字生命系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/chart.js/4.4.8/chart.umd.min.js"></script>
+    <style>
+        * { scroll-behavior: smooth; }
+        body {
+            background: #f5f7fa;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        /* 悬浮返回首页 */
+        .back-home {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #4a88f4;
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 15px rgba(74,136,244,0.4);
+            font-size: 22px;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .back-home:hover { transform: scale(1.1); }
+        .card {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .card:hover { transform: translateY(-6px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+        .train-item {
+            padding: 15px;
+            border-radius: 12px;
+            background: #f8f9ff;
+            border: 1px solid #e1e6ff;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .train-item:hover { background: #eef2ff; border-color: #4a88f4; }
+        .brain-wave {
+            height: 120px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fade-in { animation: fadeIn 0.8s ease forwards; opacity: 0; transform: translateY(15px); }
+        @keyframes fadeIn { to { opacity:1; transform: translateY(0); } }
+        .btn-active:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+    <!-- 悬浮返回首页 -->
+    <button class="back-home" onclick="location.href='index.html'" title="返回首页">
+        <i class="fa fa-home"></i>
+    </button>
+
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary px-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fa fa-heart-pulse me-2"></i>虚实融合康养系统
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">首页</a></li>
+                    <li class="nav-item"><a class="nav-link" href="digital-life.html">数字生命档案</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="brain-rehab.html">脑机认知康复</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <div class="text-center mb-5 fade-in">
+            <h2 class="fw-bold text-primary"><i class="fa fa-brain me-2"></i>脑机接口认知康复模块</h2>
+            <p class="text-muted">脑波实时采集、认知能力训练、专注力康复、数据可视化分析</p>
+        </div>
+
+        <!-- 脑波实时监测 -->
+        <div class="row g-4 mb-5 fade-in">
+            <div class="col-12">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3"><i class="fa fa-wave-square text-purple me-2"></i>实时脑波监测（脑机设备已连接）</h5>
+                    <div class="brain-wave mb-3" id="waveBox">
+                        <canvas id="waveChart" width="100%" height="100"></canvas>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <p class="mb-1">α脑波（放松）</p>
+                            <h4 class="text-success">18 Hz</h4>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="mb-1">β脑波（专注）</p>
+                            <h4 class="text-primary">14 Hz</h4>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="mb-1">θ脑波（浅眠）</p>
+                            <h4 class="text-warning">6 Hz</h4>
+                        </div>
+                        <div class="col-md-3">
+                            <p class="mb-1">综合专注力</p>
+                            <h4 class="text-info">良好</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 认知训练区域 -->
+        <div class="row g-4 mb-5 fade-in">
+            <div class="col-lg-6">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-4"><i class="fa fa-gamepad text-warning me-2"></i>认知康复训练库</h5>
+                    <div class="train-item mb-3" onclick="startTrain(1)">
+                        <h6 class="fw-bold">记忆力训练</h6>
+                        <p class="text-muted mb-0">短时记忆、图形记忆训练，改善认知衰退</p>
+                    </div>
+                    <div class="train-item mb-3" onclick="startTrain(2)">
+                        <h6 class="fw-bold">专注力训练</h6>
+                        <p class="text-muted mb-0">结合脑波反馈，提升持续专注能力</p>
+                    </div>
+                    <div class="train-item mb-3" onclick="startTrain(3)">
+                        <h6 class="fw-bold">反应力训练</h6>
+                        <p class="text-muted mb-0">视觉+听觉联动，训练神经反应速度</p>
+                    </div>
+                    <div class="train-item" onclick="startTrain(4)">
+                        <h6 class="fw-bold">逻辑思维训练</h6>
+                        <p class="text-muted mb-0">简单逻辑推理，锻炼大脑思维能力</p>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button class="btn btn-primary btn-active" data-bs-toggle="modal" data-bs-target="#trainRecord">
+                            <i class="fa fa-history me-2"></i>查看训练记录
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3"><i class="fa fa-bar-chart text-info me-2"></i>7天认知康复数据</h5>
+                    <canvas id="cogChart" height="240"></canvas>
+                    <div class="mt-4">
+                        <p class="text-muted"><i class="fa fa-check-circle text-success me-2"></i>近7天认知能力整体提升 8%</p>
+                        <p class="text-muted"><i class="fa fa-check-circle text-success me-2"></i>每日训练时长达标，康复效果稳定</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 康复方案 & 设备状态 -->
+        <div class="row g-4 fade-in">
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3"><i class="fa fa-list-alt text-primary me-2"></i>个性化康复方案</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">每日专注力训练 15分钟 <span class="badge bg-success float-end">已完成</span></li>
+                        <li class="list-group-item">记忆力训练 10分钟 <span class="badge bg-secondary float-end">待完成</span></li>
+                        <li class="list-group-item">虚实结合冥想 20分钟 <span class="badge bg-secondary float-end">待完成</span></li>
+                        <li class="list-group-item">每周脑机数据复盘 <span class="badge bg-primary float-end">每周日</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3"><i class="fa fa-microchip text-danger me-2"></i>脑机设备连接状态</h5>
+                    <div class="d-flex justify-content-around text-center">
+                        <div>
+                            <i class="fa fa-headphones fa-3x text-success"></i>
+                            <p class="mt-2">脑机头环 <span class="text-success">在线</span></p>
+                        </div>
+                        <div>
+                            <i class="fa fa-bluetooth-b fa-3x text-primary"></i>
+                            <p class="mt-2">蓝牙连接 <span class="text-success">正常</span></p>
+                        </div>
+                        <div>
+                            <i class="fa fa-battery-full fa-3x text-warning"></i>
+                            <p class="mt-2">设备电量 <span class="text-warning">82%</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 训练记录弹窗 -->
+    <div class="modal fade" id="trainRecord" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>历史训练记录</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>训练日期</th>
+                                <th>训练项目</th>
+                                <th>时长</th>
+                                <th>完成评分</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2026-06-14</td>
+                                <td>专注力训练</td>
+                                <td>15分钟</td>
+                                <td>86分</td>
+                                <td><span class="badge bg-success">优秀</span></td>
+                            </tr>
+                            <tr>
+                                <td>2026-06-13</td>
+                                <td>记忆力训练</td>
+                                <td>10分钟</td>
+                                <td>78分</td>
+                                <td><span class="badge bg-warning">良好</span></td>
+                            </tr>
+                            <tr>
+                                <td>2026-06-12</td>
+                                <td>反应力训练</td>
+                                <td>12分钟</td>
+                                <td>82分</td>
+                                <td><span class="badge bg-success">优秀</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 脑波动态图表
+        const waveCtx = document.getElementById('waveChart').getContext('2d');
+        const waveChart = new Chart(waveCtx, {
+            type: 'line',
+            data: {
+                labels: Array(30).fill(''),
+                datasets: [{
+                    label: '实时脑波',
+                    data: Array(30).fill(0).map(()=>Math.random()*20+5),
+                    borderColor: '#7b43f5',
+                    backgroundColor: 'rgba(123,67,245,0.1)',
+                    fill:true,
+                    tension:0.4
+                }]
+            },
+            options: { responsive:true, maintainAspectRatio:false, scales:{x:{display:false},y:{display:false}}, plugins:{legend:{display:false}} }
+        });
+        // 动态刷新脑波
+        setInterval(()=>{
+            waveChart.data.datasets[0].data.shift();
+            waveChart.data.datasets[0].data.push(Math.random()*20+5);
+            waveChart.update();
+        },500);
+
+        // 认知数据图表
+        const cogCtx = document.getElementById('cogChart').getContext('2d');
+        new Chart(cogCtx, {
+            type: 'bar',
+            data: {
+                labels: ['6.8','6.9','6.10','6.11','6.12','6.13','6.14'],
+                datasets: [{
+                    label: '认知得分',
+                    data: [72,75,74,78,80,83,86],
+                    backgroundColor: 'rgba(74,136,244,0.7)',
+                    borderRadius: 6
+                }]
+            },
+            options: { responsive:true, maintainAspectRatio:false }
+        });
+
+        // 训练点击交互
+        function startTrain(id){
+            const names = ['记忆力训练','专注力训练','反应力训练','逻辑思维训练'];
+            alert(`已启动【${names[id-1]}】，请佩戴脑机头环开始训练！`);
+        }
+    </script>
+</body>
+</html>
