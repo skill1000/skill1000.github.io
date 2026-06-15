@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>刘晏豪 · 个人主页</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ===== HERO ===== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 24px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      color: var(--accent-cyan);
+      border: 1px solid var(--border);
+      padding: 6px 18px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+      background: rgba(0,229,255,0.06);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+
+    .hero-name .char-liu { color: var(--text-primary); }
+    .hero-name .char-yan { color: var(--accent-cyan); text-shadow: 0 0 30px rgba(0,229,255,0.6); }
+    .hero-name .char-hao { color: var(--text-primary); }
+
+    .hero-en {
+      font-family: var(--font-display);
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      letter-spacing: 0.4em;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    .hero-typewriter-wrap {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-muted);
+      margin-bottom: 48px;
+      min-height: 2em;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+
+    #hero-type {
+      color: var(--accent-cyan);
+      font-weight: 500;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s ease 0.4s both;
+    }
+
+    /* ===== STATS STRIP ===== */
+    .stats-strip {
+      position: relative;
+      z-index: 2;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 48px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat-item {
+      padding: 32px 24px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-item:hover { background: rgba(0,229,255,0.04); }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      text-shadow: 0 0 20px rgba(0,229,255,0.4);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== QUICK INTRO ===== */
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .intro-text p {
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+
+    .intro-text p strong { color: var(--text-primary); }
+
+    .intro-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .intro-highlights {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .highlight-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: var(--transition);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .highlight-card:hover {
+      border-color: var(--border-glow);
+      background: var(--bg-card2);
+      transform: translateX(4px);
+    }
+
+    .hi-icon {
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .hi-title {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      color: var(--accent-cyan);
+      margin-bottom: 4px;
+    }
+
+    .hi-desc { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* ===== SCROLL INDICATOR ===== */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.65rem;
+      font-family: var(--font-display);
+      letter-spacing: 0.2em;
+      animation: fadeUp 1s ease 0.8s both;
+    }
+
+    .scroll-hint .arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 1.5px solid var(--accent-cyan);
+      border-bottom: 1.5px solid var(--accent-cyan);
+      transform: rotate(45deg);
+      animation: bounce 1.4s ease infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: rotate(45deg) translateY(0); }
+      50% { transform: rotate(45deg) translateY(5px); }
+    }
+
+    @media (max-width: 768px) {
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .intro-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">LYH<span>.DEV</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">主页</a></li>
+      <li><a href="about.html">关于我</a></li>
+      <li><a href="skills.html">技能</a></li>
+      <li><a href="awards.html">荣誉</a></li>
+      <li><a href="contact.html">联系</a></li>
+    </ul>
+  </nav>
+
+  <div class="page">
+    <!-- HERO -->
+    <section class="hero">
+      <canvas id="particle-canvas" width="1920" height="1080"></canvas>
+
+      <div class="hero-content">
+        <div class="hero-badge">EMBEDDED SYSTEMS · IOT · AI</div>
+
+        <h1 class="hero-name">
+          <span class="char-liu">刘</span><span class="char-yan">晏</span><span class="char-hao">豪</span>
+        </h1>
+
+        <p class="hero-en">LIU &nbsp; YAN &nbsp; HAO</p>
+
+        <div class="hero-typewriter-wrap">
+          我是一名&ensp;<span id="hero-type"></span>
+        </div>
+
+        <div class="hero-cta">
+          <a href="about.html" class="btn btn-primary">了解我</a>
+          <a href="awards.html" class="btn btn-outline">查看荣誉</a>
+          <a href="contact.html" class="btn btn-outline">联系我</a>
+        </div>
+      </div>
+
+      <div class="scroll-hint">
+        <span>SCROLL</span>
+        <div class="arrow"></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-strip">
+      <div class="stats-inner">
+        <div class="stat-item" data-reveal>
+          <div class="stat-num" id="cnt-awards">0</div>
+          <div class="stat-label">获奖证书</div>
+        </div>
+        <div class="stat-item" data-reveal>
+          <div class="stat-num" id="cnt-intl">0</div>
+          <div class="stat-label">国际赛项</div>
+        </div>
+        <div class="stat-item" data-reveal>
+          <div class="stat-num" id="cnt-certs">0</div>
+          <div class="stat-label">专业证书</div>
+        </div>
+        <div class="stat-item" data-reveal>
+          <div class="stat-num" id="cnt-years">0</div>
+          <div class="stat-label">在校年数</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK INTRO -->
+    <section class="section">
+      <p class="section-label">WHO AM I</p>
+      <h2 class="section-title">嵌入式与物联网<em>技术探索者</em></h2>
+      <div class="glow-line"></div>
+
+      <div class="intro-grid">
+        <div class="intro-text" data-reveal>
+          <p>
+            你好，我是<strong>刘晏豪</strong>，19岁，现就读于
+            <strong>北京信息职业技术学院（东坝校区）</strong>，专注于嵌入式系统、物联网应用与人工智能方向。
+          </p>
+          <p>
+            从中职到高职，我在竞技赛场上摸爬滚打，斩获包括
+            <strong>金砖国家职业技能大赛</strong>、<strong>丝路工匠国际技能大赛</strong>在内的多项国内外荣誉，
+            也担任过学生干部，热爱实践与创新。
+          </p>
+          <p>
+            课余时间，我喜欢打羽毛球、游泳，以及钻研各种数码好物与编程项目。
+          </p>
+          <div class="intro-tags">
+            <span class="tag tag-cyan">物联网</span>
+            <span class="tag tag-cyan">嵌入式</span>
+            <span class="tag tag-cyan">Python</span>
+            <span class="tag tag-cyan">AI训练</span>
+            <span class="tag tag-cyan">5G网络</span>
+            <span class="tag tag-cyan">Datacom</span>
+          </div>
+        </div>
+
+        <div class="intro-highlights" data-reveal>
+          <a href="awards.html" class="highlight-card">
+            <span class="hi-icon">🏆</span>
+            <div>
+              <div class="hi-title">国际荣誉</div>
+              <div class="hi-desc">金砖国家职业技能大赛国际总决赛优秀奖，丝路工匠国际大赛二等奖等多项国际舞台奖项</div>
+            </div>
+          </a>
+          <a href="awards.html" class="highlight-card">
+            <span class="hi-icon">🎓</span>
+            <div>
+              <div class="hi-title">国家奖学金</div>
+              <div class="hi-desc">荣获中等职业教育国家奖学金，由教育部与人力资源和社会保障部联合颁发</div>
+            </div>
+          </a>
+          <a href="skills.html" class="highlight-card">
+            <span class="hi-icon">📡</span>
+            <div>
+              <div class="hi-title">华为认证</div>
+              <div class="hi-desc">持有华为 HCIP-Datacom 认证及 5G 网络技术与应用结课证书</div>
+            </div>
+          </a>
+          <a href="contact.html" class="highlight-card">
+            <span class="hi-icon">🚀</span>
+            <div>
+              <div class="hi-title">持续成长</div>
+              <div class="hi-desc">挑战杯创业大赛银奖得主，正探索新质生产力与人形机器人前沿领域</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      &copy; 2026 <span>刘晏豪</span> · 北京信息职业技术学院 · All Rights Reserved
+    </footer>
+  </div>
+
+  <script>
+    /* ===== PARTICLE CANVAS ===== */
+    (function () {
+      const canvas = document.getElementById('particle-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+
+      function Particle() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.r = Math.random() * 2 + 0.5;
+        this.alpha = Math.random() * 0.6 + 0.2;
+      }
+
+      Particle.prototype.update = function () {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0) this.x = W;
+        if (this.x > W) this.x = 0;
+        if (this.y < 0) this.y = H;
+        if (this.y > H) this.y = 0;
+      };
+
+      function init() {
+        resize();
+        particles = Array.from({ length: 100 }, () => new Particle());
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Draw connections
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 120) {
+              ctx.beginPath();
+              ctx.strokeStyle = `rgba(0,229,255,${0.15 * (1 - dist / 120)})`;
+              ctx.lineWidth = 0.5;
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Draw particles
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0,229,255,${p.alpha})`;
+          ctx.fill();
+          p.update();
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', init);
+      init();
+      draw();
+    })();
+
+    /* ===== TYPEWRITER ===== */
+    (function () {
+      const el = document.getElementById('hero-type');
+      const phrases = ['嵌入式开发者', '物联网工程师', 'AI 应用探索者', '竞赛选手', '终身学习者'];
+      let idx = 0;
+
+      function type(text, cb) {
+        let i = 0;
+        el.textContent = '';
+        const t = setInterval(() => {
+          el.textContent += text[i++];
+          if (i >= text.length) { clearInterval(t); setTimeout(cb, 1400); }
+        }, 75);
+      }
+
+      function erase(cb) {
+        const t = setInterval(() => {
+          el.textContent = el.textContent.slice(0, -1);
+          if (!el.textContent.length) { clearInterval(t); cb(); }
+        }, 40);
+      }
+
+      function loop() {
+        type(phrases[idx % phrases.length], () => {
+          erase(() => { idx++; loop(); });
+        });
+      }
+      loop();
+    })();
+
+    /* ===== COUNT-UP ===== */
+    (function () {
+      const targets = { 'cnt-awards': 27, 'cnt-intl': 6, 'cnt-certs': 3, 'cnt-years': 3 };
+      const suffix = { 'cnt-awards': '+', 'cnt-intl': '+', 'cnt-certs': '+', 'cnt-years': '+' };
+
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          Object.entries(targets).forEach(([id, target]) => {
+            const el = document.getElementById(id);
+            if (!el || el.dataset.counted) return;
+            el.dataset.counted = true;
+            let n = 0;
+            const step = Math.ceil(target / 50);
+            const t = setInterval(() => {
+              n = Math.min(n + step, target);
+              el.textContent = n + (suffix[id] || '');
+              if (n >= target) clearInterval(t);
+            }, 28);
+          });
+          obs.disconnect();
+        });
+      }, { threshold: 0.5 });
+
+      const strip = document.querySelector('.stats-strip');
+      if (strip) obs.observe(strip);
+    })();
+
+    /* ===== SCROLL REVEAL ===== */
+    const revealObserver = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('revealed'); }),
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+
+    /* ===== NAV ACTIVE ===== */
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      if (a.getAttribute('href') === 'index.html') a.classList.add('active');
+    });
+
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.nav');
+      nav.style.borderBottomColor = window.scrollY > 20 ? 'rgba(0,229,255,0.25)' : 'rgba(0,229,255,0.1)';
+    });
+  </script>
+</body>
+</html>

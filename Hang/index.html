@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脑机健康调控系统 | 虚实融合全域康养数字生命系统</title>
+    <!-- 引入外部资源 -->
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcdn.net/ajax/libs/chart.js/4.4.8/chart.umd.min.js"></script>
+    <style>
+        * {
+            scroll-behavior: smooth;
+            box-sizing: border-box;
+        }
+        body {
+            background: linear-gradient(120deg, #f0f4ff, #f5f7fa);
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        /* 卡片通用样式 */
+        .card {
+            border-radius: 18px;
+            border: none;
+            box-shadow: 0 4px 24px rgba(74, 136, 244, 0.12);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: #ffffff;
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 32px rgba(74, 136, 244, 0.18);
+        }
+        /* 头部渐变栏 */
+        .top-banner {
+            background: linear-gradient(90deg, #4a88f4, #6fd8ff);
+            border-radius: 0 0 20px 20px;
+        }
+        /* 脑机状态指示灯 */
+        .status-light {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            animation: blink 1.8s infinite;
+        }
+        .light-online {
+            background-color: #198754;
+        }
+        .light-warn {
+            background-color: #ffc107;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        /* 功能模块项 */
+        .func-item {
+            padding: 16px;
+            border-radius: 14px;
+            background: #f8faff;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: 1px solid transparent;
+        }
+        .func-item:hover {
+            background: #eef5ff;
+            border-color: #4a88f4;
+            transform: scale(1.02);
+        }
+        /* 体征/脑电数据项 */
+        .data-item {
+            padding: 18px 12px;
+            border-radius: 14px;
+            background: #fff;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e9edf5;
+        }
+        .data-item:active {
+            transform: scale(0.96);
+        }
+        /* 动画入场 */
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 0.7s ease forwards;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        /* 时间轴 */
+        .record-timeline {
+            border-left: 3px solid #6fd8ff;
+            padding-left: 20px;
+            position: relative;
+            margin-left: 8px;
+        }
+        .record-timeline::before {
+            content: "";
+            width: 12px;
+            height: 12px;
+            background: #4a88f4;
+            border-radius: 50%;
+            position: absolute;
+            left: -7px;
+            top: 4px;
+        }
+        /* 进度条美化 */
+        .progress {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        /* 回到首页悬浮按钮 */
+        .back-home {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #4a88f4;
+            color: #fff;
+            border: none;
+            box-shadow: 0 4px 16px rgba(74, 136, 244, 0.3);
+            font-size: 18px;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        .back-home:hover {
+            background: #3976e0;
+            transform: scale(1.1);
+        }
+        /* 延迟入场动画 */
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- 悬浮回到首页按钮 -->
+    <button class="back-home" onclick="goHome()">
+        <i class="fas fa-home"></i>
+    </button>
+
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark top-banner px-4 shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="index.html">
+                <i class="fa-solid fa-brain me-2"></i>虚实融合全域康养系统
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="digital-life.html">个人数字生命档案</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="bci-health.html">脑机健康调控系统</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#cognitive">认知康复训练</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#emotion">情感状态监测</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <!-- 标题区域 -->
+        <div class="text-center mb-5 fade-in">
+            <h2 class="fw-bold text-primary">
+                <i class="fa-solid fa-microchip me-2"></i>全域人体生理-认知-情感一体化脑机健康调控系统
+            </h2>
+            <p class="text-muted mt-2 fs-6">植入式脑机接口 | 脑电实时采集 | 认知康复 | 情绪干预 | 生理体征联动调控</p>
+            <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
+                <span class="status-light light-online"></span>
+                <span class="text-success">脑机设备在线 · 数据实时传输中</span>
+            </div>
+        </div>
+
+        <!-- 第一模块：脑机设备总览 & 连接状态 -->
+        <div class="row g-4 mb-5 fade-in delay-1">
+            <div class="col-md-5">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fa-solid fa-head-side-virus text-primary me-2"></i>植入式脑机设备状态
+                    </h5>
+                    <div class="text-center py-3">
+                        <i class="fa-solid fa-brain text-primary" style="font-size: 80px;"></i>
+                        <h4 class="mt-3 fw-bold">BCI-Pro 全域调控终端</h4>
+                        <p class="text-muted">多通道脑电采集 + 神经信号双向调控</p>
+                    </div>
+                    <div class="mt-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>设备连接状态</span>
+                            <span class="text-success">已正常连接</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>信号采集通道</span>
+                            <span>24 通道全开启</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>数据同步频率</span>
+                            <span>500Hz 实时采样</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>设备电量</span>
+                            <span class="text-primary">89%</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-primary w-100 mt-4" data-bs-toggle="modal" data-bs-target="#deviceModal">
+                        <i class="fa-solid fa-cog me-1"></i>设备参数设置
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-7">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fa-solid fa-layer-group text-info me-2"></i>三大核心调控维度
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="func-item" onclick="showTip('生理调控模块：联动心率、血压、睡眠等体征，神经信号辅助调节躯体状态')">
+                                <i class="fa-solid fa-heart-pulse text-danger fs-4"></i>
+                                <h6 class="mt-2 fw-bold">生理调控</h6>
+                                <p class="text-muted small mb-0">躯体体征智能干预</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="func-item" onclick="showTip('认知康复模块：针对记忆力、注意力、思维能力进行脑机训练与修复')">
+                                <i class="fa-solid fa-lightbulb text-warning fs-4"></i>
+                                <h6 class="mt-2 fw-bold">认知康复</h6>
+                                <p class="text-muted small mb-0">脑功能训练修复</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="func-item" onclick="showTip('情感调控模块：识别脑电波情绪特征，舒缓焦虑、抑郁、失眠等情绪问题')">
+                                <i class="fa-solid fa-face-smile text-success fs-4"></i>
+                                <h6 class="mt-2 fw-bold">情感调节</h6>
+                                <p class="text-muted small mb-0">情绪感知与疏导</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-muted">系统运行模式：<span class="badge bg-primary">全域一体化联动模式</span></p>
+                        <p class="text-muted">当前调控方案：<span class="badge bg-success">中老年康养定制方案</span></p>
+                    </div>
+                    <button class="btn btn-primary w-100 mt-3" data-bs-toggle="modal" data-bs-target="#planModal">
+                        查看/切换调控方案
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二模块：脑电信号 + 人体实时生理数据 -->
+        <div class="row g-4 mb-5 fade-in delay-2">
+            <div class="col-12">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="fa-solid fa-wave-square text-danger me-2"></i>脑电信号 & 全域生理实时数据
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="data-item" onclick="dataClick(this, '脑电波主频：反映大脑活跃度，当前状态平稳')">
+                                <i class="fa-solid fa-brain text-primary fs-3"></i>
+                                <h6 class="mt-2">脑电波主频</h6>
+                                <h5 class="text-primary fw-bold">8.6 Hz</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="data-item" onclick="dataClick(this, '心率数据正常，神经调控后节律稳定')">
+                                <i class="fa-solid fa-heart text-danger fs-3"></i>
+                                <h6 class="mt-2">实时心率</h6>
+                                <h5 class="text-danger fw-bold">71 次/分</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="data-item" onclick="dataClick(this, '血氧饱和度处于健康标准区间')">
+                                <i class="fa-solid fa-lungs text-info fs-3"></i>
+                                <h6 class="mt-2">血氧浓度</h6>
+                                <h5 class="text-info fw-bold">97 %</h5>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="data-item" onclick="dataClick(this, '大脑疲劳指数偏低，精神状态良好')">
+                                <i class="fa-solid fa-moon text-secondary fs-3"></i>
+                                <h6 class="mt-2">脑疲劳指数</h6>
+                                <h5 class="text-secondary fw-bold">18 分</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三模块：脑电&健康趋势图表 -->
+        <div class="row g-4 mb-5 fade-in delay-3">
+            <div class="col-md-7">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fa-solid fa-chart-area text-primary me-2"></i>24小时脑电波动趋势
+                    </h5>
+                    <canvas id="brainChart" height="220"></canvas>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fa-solid fa-chart-pie text-warning me-2"></i>大脑状态占比分析
+                    </h5>
+                    <canvas id="stateChart" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第四模块：认知康复训练区域 -->
+        <div class="row g-4 mb-5 fade-in delay-4" id="cognitive">
+            <div class="col-md-6">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fa-solid fa-puzzle-piece text-success me-2"></i>认知康复训练中心
+                    </h5>
+                    <div class="mb-3">
+                        <p class="mb-1">注意力训练完成度</p>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-success" style="width: 68%"></div>
+                        </div>
+                        <small class="text-muted">今日已完成 68% 训练任务</small>
+                    </div>
+                    <div class="mb-3">
+                        <p class="mb-1">记忆力修复进度</p>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-info" style="width: 52%"></div>
+                        </div>
+                        <small class="text-muted">周期修复进度：52%</small>
+                    </div>
+                    <div class="mb-3">
+                        <p class="mb-1">思维反应能力</p>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-warning" style="width: 75%"></div>
+                        </div>
+                        <small class="text-muted">优于同期平均水平</small>
+                    </div>
+                    <div class="d-grid gap-2 mt-4">
+                        <button class="btn btn-success" onclick="alert('即将启动：沉浸式注意力训练')">开始注意力训练</button>
+                        <button class="btn btn-info" onclick="alert('即将启动：情景记忆力训练')">开始记忆力训练</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" id="emotion">
+                <div class="card p-4 h-100">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fa-solid fa-heart text-danger me-2"></i>情感状态监测 & 情绪调控
+                    </h5>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <span>焦虑指数</span>
+                            <span class="text-success">偏低</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 10px;">
+                            <div class="progress-bar bg-warning" style="width: 22%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <span>抑郁情绪指数</span>
+                            <span class="text-success">正常</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 10px;">
+                            <div class="progress-bar bg-info" style="width: 15%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between">
+                            <span>情绪稳定度</span>
+                            <span class="text-primary">良好</span>
+                        </div>
+                        <div class="progress mt-1" style="height: 10px;">
+                            <div class="progress-bar bg-primary" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger w-100 mt-2" onclick="alert('已启动脑机情绪舒缓模式，请放松身心...')">
+                        一键启动情绪神经舒缓
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第五模块：历史调控记录 -->
+        <div class="row g-4 mb-5 fade-in">
+            <div class="col-12">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3">
+                        <i class="fa-solid fa-clock-rotate-left text-secondary me-2"></i>脑机调控历史记录
+                    </h5>
+                    <div class="record-timeline mb-3">
+                        <strong>今日 14:20</strong>
+                        <p class="mb-0 text-muted">完成情绪舒缓调控，脑电波趋于平稳</p>
+                    </div>
+                    <div class="record-timeline mb-3">
+                        <strong>今日 09:10</strong>
+                        <p class="mb-0 text-muted">认知注意力训练，大脑活跃度提升12%</p>
+                    </div>
+                    <div class="record-timeline mb-3">
+                        <strong>昨日 21:00</strong>
+                        <p class="mb-0 text-muted">睡眠神经辅助调控，深度睡眠时长增加</p>
+                    </div>
+                    <div class="record-timeline">
+                        <strong>昨日 16:30</strong>
+                        <p class="mb-0 text-muted">全域生理+认知一体化综合调控</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部联动提示 -->
+        <div class="card p-4 text-center fade-in">
+            <p class="mb-2">本系统已与 <a href="digital-life.html" class="text-primary text-decoration-none">个人数字生命档案</a> 数据互通</p>
+            <p class="text-muted small">虚实融合全域康养数字生命系统 · 脑机接口专项模块 v1.0 商业版</p>
+        </div>
+    </div>
+
+    <!-- 弹窗1：设备参数设置 -->
+    <div class="modal fade" id="deviceModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">脑机设备参数配置</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">信号采样频率</label>
+                            <select class="form-select">
+                                <option selected>500Hz (推荐)</option>
+                                <option>250Hz</option>
+                                <option>1000Hz</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">调控强度</label>
+                            <select class="form-select">
+                                <option selected>温和模式(康养专用)</option>
+                                <option>标准模式</option>
+                                <option>强化模式</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">通道开关设置</label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">额叶通道</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">顶叶通道</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" checked>
+                                <label class="form-check-label">枕叶通道</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" onclick="alert('参数保存成功！')">保存配置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 弹窗2：调控方案切换 -->
+    <div class="modal fade" id="planModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">选择康养调控方案</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="plan" id="plan1" checked>
+                        <label class="form-check-label" for="plan1">中老年全域康养方案（当前使用）</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="plan" id="plan2">
+                        <label class="form-check-label" for="plan2">认知障碍专项康复方案</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="plan" id="plan3">
+                        <label class="form-check-label" for="plan3">情绪焦虑舒缓专项方案</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="plan" id="plan4">
+                        <label class="form-check-label" for="plan4">睡眠神经调理方案</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button class="btn btn-success" onclick="alert('调控方案切换成功，系统已重新适配！')">确认切换</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示弹窗 -->
+    <div class="modal fade" id="tipModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center" id="tipText"></div>
+                <div class="modal-footer justify-content-center">
+                    <button class="btn btn-sm btn-primary" data-bs-dismiss="modal">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 1. 回到首页跳转
+        function goHome() {
+            window.location.href = "index.html";
+        }
+
+        // 2. 模块点击提示
+        const tipModal = new bootstrap.Modal(document.getElementById('tipModal'));
+        function showTip(text) {
+            document.getElementById('tipText').innerText = text;
+            tipModal.show();
+        }
+
+        // 3. 数据项点击交互
+        function dataClick(el, text) {
+            el.style.transform = "scale(0.96)";
+            setTimeout(() => {
+                el.style.transform = "scale(1)";
+            }, 180);
+            showTip(text);
+        }
+
+        // 4. 24小时脑电趋势折线图
+        const brainCtx = document.getElementById('brainChart').getContext('2d');
+        new Chart(brainCtx, {
+            type: 'line',
+            data: {
+                labels: ['0点','4点','8点','12点','16点','20点','24点'],
+                datasets: [{
+                    label: '脑电波强度',
+                    data: [62, 45, 78, 85, 76, 68, 55],
+                    borderColor: '#4a88f4',
+                    backgroundColor: 'rgba(74, 136, 244, 0.15)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'top' } }
+            }
+        });
+
+        // 5. 大脑状态饼图
+        const stateCtx = document.getElementById('stateChart').getContext('2d');
+        new Chart(stateCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['清醒活跃','放松休息','浅疲劳','深度休息'],
+                datasets: [{
+                    data: [45, 30, 15, 10],
+                    backgroundColor: ['#4a88f4','#198754','#ffc107','#6c757d']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+</body>
+</html>
