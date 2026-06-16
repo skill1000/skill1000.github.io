@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚实融合全域康养数字生命系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav" id="topNav">
+        <div class="nav-brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 40 40" width="36" height="36">
+                    <circle cx="20" cy="20" r="18" fill="none" stroke="#1890ff" stroke-width="2"/>
+                    <path d="M20 8 L20 20 L28 28" fill="none" stroke="#1890ff" stroke-width="2.5" stroke-linecap="round"/>
+                    <circle cx="20" cy="12" r="3" fill="#52c41a"/>
+                    <circle cx="14" cy="22" r="2" fill="#fa8c16"/>
+                    <circle cx="26" cy="18" r="2" fill="#eb2f96"/>
+                </svg>
+            </div>
+            <span class="brand-text">数字生命系统</span>
+        </div>
+        <nav class="nav-links" id="navLinks">
+            <a href="#" class="nav-item active" data-page="dashboard">首页概览</a>
+            <a href="#" class="nav-item" data-page="health-archive">健康档案</a>
+            <a href="#" class="nav-item" data-page="vital-signs">体征监测</a>
+            <a href="#" class="nav-item" data-page="digital-twin">数字孪生</a>
+            <a href="#" class="nav-item" data-page="cognitive-training">认知康复</a>
+            <a href="#" class="nav-item" data-page="report-management">体检报告</a>
+        </nav>
+        <button class="nav-toggle" id="navToggle" aria-label="菜单切换">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">张</div>
+            <span class="user-name" id="userName">张建国</span>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="main-content" id="mainContent">
+
+        <!-- ==================== 首页Dashboard ==================== -->
+        <section class="page-section active" id="page-dashboard">
+            <div class="page-header">
+                <h1>健康概览</h1>
+                <p class="page-subtitle">今日是2026年6月16日 星期二，祝您身体健康，心情愉快！</p>
+            </div>
+
+            <!-- 健康评分卡片 -->
+            <div class="health-score-card">
+                <div class="score-ring-container">
+                    <canvas id="healthScoreRing" width="200" height="200"></canvas>
+                    <div class="score-center">
+                        <span class="score-value" id="healthScoreValue">86</span>
+                        <span class="score-label">综合健康分</span>
+                    </div>
+                </div>
+                <div class="score-details">
+                    <div class="score-item">
+                        <span class="score-dot green"></span>
+                        <span>体征指标</span>
+                        <strong id="scoreVital">92</strong>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-dot blue"></span>
+                        <span>认知能力</span>
+                        <strong id="scoreCognitive">78</strong>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-dot orange"></span>
+                        <span>康复进度</span>
+                        <strong id="scoreRehab">85</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快捷入口 -->
+            <div class="quick-entry-grid">
+                <div class="quick-entry-card" data-goto="vital-signs">
+                    <div class="entry-icon vital-icon">
+                        <svg viewBox="0 0 48 48"><path d="M24 44C12.95 44 4 35.05 4 24S12.95 4 24 4s20 8.95 20 20-8.95 20-20 20z" fill="none" stroke="#1890ff" stroke-width="2.5"/><path d="M16 28h4l3-10 5 20 3-14h4" fill="none" stroke="#1890ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <span>体征监测</span>
+                </div>
+                <div class="quick-entry-card" data-goto="cognitive-training">
+                    <div class="entry-icon brain-icon">
+                        <svg viewBox="0 0 48 48"><ellipse cx="24" cy="26" rx="17" ry="15" fill="none" stroke="#722ed1" stroke-width="2.5"/><path d="M14 20c2-4 6-7 10-7s8 3 10 7" fill="none" stroke="#722ed1" stroke-width="2"/><path d="M18 24l3 4 3-4 3 4 3-4" fill="none" stroke="#722ed1" stroke-width="1.5"/></svg>
+                    </div>
+                    <span>认知训练</span>
+                </div>
+                <div class="quick-entry-card" data-goto="digital-twin">
+                    <div class="entry-icon twin-icon">
+                        <svg viewBox="0 0 48 48"><rect x="6" y="8" width="16" height="32" rx="3" fill="none" stroke="#13c2c2" stroke-width="2"/><rect x="26" y="8" width="16" height="32" rx="3" fill="none" stroke="#13c2c2" stroke-width="2" stroke-dasharray="4 2"/><line x1="22" y1="24" x2="26" y2="24" stroke="#13c2c2" stroke-width="1.5" stroke-dasharray="3 2"/></svg>
+                    </div>
+                    <span>数字孪生</span>
+                </div>
+                <div class="quick-entry-card" data-goto="report-management">
+                    <div class="entry-icon report-icon">
+                        <svg viewBox="0 0 48 48"><rect x="8" y="6" width="32" height="36" rx="3" fill="none" stroke="#fa8c16" stroke-width="2.5"/><line x1="14" y1="16" x2="34" y2="16" stroke="#fa8c16" stroke-width="2"/><line x1="14" y1="23" x2="30" y2="23" stroke="#fa8c16" stroke-width="2"/><line x1="14" y1="30" x2="26" y2="30" stroke="#fa8c16" stroke-width="2"/></svg>
+                    </div>
+                    <span>体检报告</span>
+                </div>
+            </div>
+
+            <!-- 今日体征数据卡片组 -->
+            <div class="section-title-bar">
+                <h2>今日体征数据</h2>
+                <span class="update-time" id="dashboardUpdateTime">最后更新：09:30</span>
+            </div>
+            <div class="vitals-cards-grid">
+                <div class="vital-mini-card heart-rate">
+                    <div class="vital-header">
+                        <span class="vital-label">心率</span>
+                        <span class="vital-unit">次/分</span>
+                    </div>
+                    <div class="vital-value" id="dashHeartRate">72</div>
+                    <div class="vital-status normal">正常</div>
+                    <div class="vital-trend up">
+                        <svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,9 6,3 10,9" fill="none" stroke="#52c41a" stroke-width="2"/></svg>
+                        较昨日 +2
+                    </div>
+                </div>
+                <div class="vital-mini-card blood-pressure">
+                    <div class="vital-header">
+                        <span class="vital-label">血压</span>
+                        <span class="vital-unit">mmHg</span>
+                    </div>
+                    <div class="vital-value" id="dashBloodPressure">125/82</div>
+                    <div class="vital-status normal">正常偏高</div>
+                    <div class="vital-trend stable">
+                        <svg width="12" height="12" viewBox="0 0 12 12"><line x1="2" y1="6" x2="10" y2="6" stroke="#999" stroke-width="2"/></svg>
+                        持平
+                    </div>
+                </div>
+                <div class="vital-mini-card blood-oxygen">
+                    <div class="vital-header">
+                        <span class="vital-label">血氧</span>
+                        <span class="vital-unit">%</span>
+                    </div>
+                    <div class="vital-value" id="dashBloodOxygen">98</div>
+                    <div class="vital-status good">优秀</div>
+                    <div class="vital-trend stable">
+                        <svg width="12" height="12" viewBox="0 0 12 12"><line x1="2" y1="6" x2="10" y2="6" stroke="#999" stroke-width="2"/></svg>
+                        持平
+                    </div>
+                </div>
+                <div class="vital-mini-card body-temp">
+                    <div class="vital-header">
+                        <span class="vital-label">体温</span>
+                        <span class="vital-unit">°C</span>
+                    </div>
+                    <div class="vital-value" id="dashBodyTemp">36.5</div>
+                    <div class="vital-status good">正常</div>
+                    <div class="vital-trend down">
+                        <svg width="12" height="12" viewBox="0 0 12 12"><polyline points="2,3 6,9 10,3" fill="none" stroke="#1890ff" stroke-width="2"/></svg>
+                        较昨日 -0.1
+                    </div>
+                </div>
+            </div>
+
+            <!-- 趋势图表区域 -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>近7日心率趋势</h3>
+                        <select id="dashHeartRatePeriod" class="mini-select">
+                            <option value="7">近7天</option>
+                            <option value="30">近30天</option>
+                        </select>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="dashHeartRateChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>近7日血压趋势</h3>
+                        <select id="dashBpPeriod" class="mini-select">
+                            <option value="7">近7天</option>
+                            <option value="30">近30天</option>
+                        </select>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="dashBpChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 康复进度与提醒 -->
+            <div class="info-row">
+                <div class="info-card rehab-progress-card">
+                    <h3>康复训练进度</h3>
+                    <div class="rehab-items">
+                        <div class="rehab-item">
+                            <span class="rehab-name">记忆力训练</span>
+                            <div class="progress-bar"><div class="progress-fill" style="width:78%"></div></div>
+                            <span class="rehab-percent">78%</span>
+                        </div>
+                        <div class="rehab-item">
+                            <span class="rehab-name">注意力训练</span>
+                            <div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div>
+                            <span class="rehab-percent">85%</span>
+                        </div>
+                        <div class="rehab-item">
+                            <span class="rehab-name">反应速度训练</span>
+                            <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+                            <span class="rehab-percent">70%</span>
+                        </div>
+                        <div class="rehab-item">
+                            <span class="rehab-name">空间感知训练</span>
+                            <div class="progress-bar"><div class="progress-fill" style="width:88%"></div></div>
+                            <span class="rehab-percent">88%</span>
+                        </div>
+                        <div class="rehab-item">
+                            <span class="rehab-name">语言能力训练</span>
+                            <div class="progress-bar"><div class="progress-fill" style="width:72%"></div></div>
+                            <span class="rehab-percent">72%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card reminder-card">
+                    <h3>今日提醒</h3>
+                    <ul class="reminder-list">
+                        <li class="reminder-item">
+                            <span class="reminder-icon pill">💊</span>
+                            <div class="reminder-content">
+                                <strong>服药提醒</strong>
+                                <span>降压药 - 08:00 已服用</span>
+                            </div>
+                        </li>
+                        <li class="reminder-item">
+                            <span class="reminder-icon exercise">🏃</span>
+                            <div class="reminder-content">
+                                <strong>康复训练</strong>
+                                <span>记忆力训练 - 待完成</span>
+                            </div>
+                        </li>
+                        <li class="reminder-item warning">
+                            <span class="reminder-icon water">💧</span>
+                            <div class="reminder-content">
+                                <strong>饮水提醒</strong>
+                                <span>今日已饮水 1200ml / 目标 2000ml</span>
+                            </div>
+                        </li>
+                        <li class="reminder-item">
+                            <span class="reminder-icon checkup">📋</span>
+                            <div class="reminder-content">
+                                <strong>复查预约</strong>
+                                <span>下周三（6月25日）社区医院复查</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 健康档案模块 ==================== -->
+        <section class="page-section" id="page-health-archive">
+            <div class="page-header">
+                <h1>个人数字生命档案</h1>
+                <p class="page-subtitle">管理您的完整健康信息与数字生命记录</p>
+            </div>
+
+            <!-- 个人基本信息卡 -->
+            <div class="profile-card">
+                <div class="profile-avatar-large">
+                    <div class="avatar-circle large">张</div>
+                </div>
+                <div class="profile-info-grid">
+                    <div class="profile-field">
+                        <label>姓名</label>
+                        <span>张建国</span>
+                    </div>
+                    <div class="profile-field">
+                        <label>性别</label>
+                        <span>男</span>
+                    </div>
+                    <div class="profile-field">
+                        <label>年龄</label>
+                        <span>68岁</span>
+                    </div>
+                    <div class="profile-field">
+                        <label>出生日期</label>
+                        <span>1958年3月15日</span>
+                    </div>
+                    <div class="profile-field">
+                        <label>血型</label>
+                        <span>A型</span>
+                    </div>
+                    <div class="profile-field">
+                        <label>身高/体重</label>
+                        <span>172cm / 71kg</span>
+                    </div>
+                    <div class="profile-field wide">
+                        <label>既往病史</label>
+                        <span>高血压（2018年确诊）、轻度高血脂（2020年发现）</span>
+                    </div>
+                    <div class="profile-field wide">
+                        <label>过敏史</label>
+                        <span>青霉素过敏</span>
+                    </div>
+                    <div class="profile-field wide">
+                        <label>家族病史</label>
+                        <span>父亲：冠心病；母亲：糖尿病</span>
+                    </div>
+                    <div class="profile-field wide">
+                        <label>紧急联系人</label>
+                        <span>张小明（儿子）138****5678</span>
+                    </div>
+                </div>
+                <button class="btn btn-outline" onclick="alert('编辑功能演示')">编辑信息</button>
+            </div>
+
+            <!-- 健康档案分类标签 -->
+            <div class="archive-tabs">
+                <button class="archive-tab active" data-tab="basic">基础信息</button>
+                <button class="archive-tab" data-tab="disease">疾病记录</button>
+                <button class="archive-tab" data-tab="medication">用药记录</button>
+                <button class="archive-tab" data-tab="lifestyle">生活习惯</button>
+            </div>
+
+            <!-- 疾病记录面板 -->
+            <div class="archive-panel" id="panel-disease" style="display:none;">
+                <div class="section-title-bar"><h2>疾病诊疗记录</h2></div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>诊断日期</th>
+                                <th>疾病名称</th>
+                                <th>就诊医院</th>
+                                <th>医生建议</th>
+                                <th>状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-11-15</td>
+                                <td>原发性高血压（2级）</td>
+                                <td>北京协和医院</td>
+                                <td>规律服药，低盐饮食，定期监测血压</td>
+                                <td><span class="status-badge chronic">慢性管理中</span></td>
+                            </tr>
+                            <tr>
+                                <td>2024-06-20</td>
+                                <td>高脂血症</td>
+                                <td>社区医院</td>
+                                <td>控制饮食，适量运动，每半年复查</td>
+                                <td><span class="status-badge stable">稳定控制</span></td>
+                            </tr>
+                            <tr>
+                                <td>2023-03-10</td>
+                                <td>腰椎间盘突出</td>
+                                <td>积水潭医院</td>
+                                <td>理疗+康复锻炼，避免久坐弯腰</td>
+                                <td><span class="status-badge recovered">已康复</span></td>
+                            </tr>
+                            <tr>
+                                <td>2021-09-05</td>
+                                <td>急性支气管炎</td>
+                                <td>朝阳医院</td>
+                                <td>抗感染治疗，注意保暖</td>
+                                <td><span class="status-badge recovered">已康复</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 用药记录面板 -->
+            <div class="archive-panel" id="panel-medication" style="display:none;">
+                <div class="section-title-bar"><h2>当前用药方案</h2></div>
+                <div class="medication-cards">
+                    <div class="med-card">
+                        <div class="med-icon">💊</div>
+                        <div class="med-info">
+                            <h4>苯磺酸氨氯地平片</h4>
+                            <p>5mg × 1片/次 | 每日1次 | 餐后服用</p>
+                            <p class="med-purpose">用于治疗原发性高血压</p>
+                        </div>
+                        <div class="med-schedule">
+                            <span class="time-slot morning active">早 08:00 ✓</span>
+                            <span class="time-slot noon">午 12:00</span>
+                            <span class="time-slot evening">晚 19:00</span>
+                        </div>
+                    </div>
+                    <div class="med-card">
+                        <div class="med-icon">🩺</div>
+                        <div class="med-info">
+                            <h4>阿托伐他汀钙片</h4>
+                            <p>10mg × 1片/次 | 每晚1次 | 睡前服用</p>
+                            <p class="med-purpose">用于降血脂，预防心血管事件</p>
+                        </div>
+                        <div class="med-schedule">
+                            <span class="time-slot morning">早</span>
+                            <span class="time-slot noon">午</span>
+                            <span class="time-slot evening active">晚 21:00 ✓</span>
+                        </div>
+                    </div>
+                    <div class="med-card">
+                        <div class="med-icon">🧪</div>
+                        <div class="med-info">
+                            <h4>复合维生素B族</h4>
+                            <p>1片/次 | 每日1次 | 随餐服用</p>
+                            <p class="med-purpose">营养补充，辅助神经系统健康</p>
+                        </div>
+                        <div class="med-schedule">
+                            <span class="time-slot morning active">早 07:30 ✓</span>
+                            <span class="time-slot noon">午</span>
+                            <span class="time-slot evening">晚</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 生活习惯面板 -->
+            <div class="archive-panel" id="panel-lifestyle" style="display:none;">
+                <div class="section-title-bar"><h2>生活习惯评估</h2></div>
+                <div class="lifestyle-grid">
+                    <div class="lifestyle-card">
+                        <div class="ls-icon sleep">😴</div>
+                        <h4>睡眠质量</h4>
+                        <div class="ls-score">良好</div>
+                        <p>平均睡眠时长 7.2小时<br>入睡时间 22:30 左右<br>深睡占比 23%</p>
+                    </div>
+                    <div class="lifestyle-card">
+                        <div class="ls-icon diet">🥗</div>
+                        <h4>饮食习惯</h4>
+                        <div class="ls-score">一般</div>
+                        <p>三餐较规律，盐摄入偏多<br>蔬菜水果摄入不足<br>需增加膳食纤维</p>
+                    </div>
+                    <div class="lifestyle-card">
+                        <div class="ls-icon exercise">🏃</div>
+                        <h4>运动情况</h4>
+                        <div class="ls-score">良好</div>
+                        <p>每周运动 4 次<br>以散步和太极为主<br>每次约 45 分钟</p>
+                    </div>
+                    <div class="lifestyle-card">
+                        <div class="ls-icon mental">🧘</div>
+                        <h4>心理状态</h4>
+                        <div class="ls-score">良好</div>
+                        <p>情绪总体平稳<br>社交活动参与积极<br>有固定兴趣爱好</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 默认显示基础信息面板 -->
+            <div class="archive-panel" id="panel-basic">
+                <div class="section-title-bar"><h2>健康指标历史趋势</h2></div>
+                <div class="charts-row-single">
+                    <div class="chart-card full-width">
+                        <div class="chart-header"><h3>BMI指数变化趋势</h3></div>
+                        <div class="chart-body"><canvas id="bmiTrendChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 体征监测模块 ==================== -->
+        <section class="page-section" id="page-vital-signs">
+            <div class="page-header">
+                <h1>体征监测中心</h1>
+                <p class="page-subtitle">实时追踪您的各项生理指标变化</p>
+            </div>
+
+            <!-- 数据录入区 -->
+            <div class="input-section-card">
+                <h3>录入今日体征数据</h3>
+                <form class="vital-input-form" id="vitalInputForm">
+                    <div class="input-group">
+                        <label for="inputHeartRate">心率（次/分）</label>
+                        <input type="number" id="inputHeartRate" placeholder="60-100" min="40" max="180" required>
+                        <span class="input-hint">正常范围：60-100</span>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputSystolic">收缩压（高压）mmHg</label>
+                        <input type="number" id="inputSystolic" placeholder="90-140" min="60" max="250" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputDiastolic">舒张压（低压）mmHg</label>
+                        <input type="number" id="inputDiastolic" placeholder="60-90" min="40" max="150" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputBloodOxygen">血氧饱和度（%）</label>
+                        <input type="number" id="inputBloodOxygen" placeholder="95-100" min="70" max="100" step="0.1" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputBodyTemp">体温（°C）</label>
+                        <input type="number" id="inputBodyTemp" placeholder="36.0-37.3" min="35" max="42" step="0.1" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="inputBloodSugar">空腹血糖（mmol/L）</label>
+                        <input type="number" id="inputBloodSugar" placeholder="3.9-6.1" min="2" max="25" step="0.1">
+                    </div>
+                    <div class="input-actions">
+                        <button type="submit" class="btn btn-primary">保存数据</button>
+                        <button type="reset" class="btn btn-outline">清空表单</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 实时体征看板 -->
+            <div class="section-title-bar">
+                <h2>体征数据看板</h2>
+                <div class="period-selector">
+                    <button class="period-btn active" data-period="7">7天</button>
+                    <button class="period-btn" data-period="30">30天</button>
+                    <button class="period-btn" data-period="90">90天</button>
+                </div>
+            </div>
+
+            <div class="vitals-display-grid">
+                <div class="vital-detail-card">
+                    <div class="vdc-header">
+                        <span class="vdc-icon hr-icon">❤️</span>
+                        <span class="vdc-title">心率 Heart Rate</span>
+                        <span class="vdc-latest" id="vsLatestHR">72 次/分</span>
+                    </div>
+                    <div class="vdc-chart-wrap"><canvas id="vsHeartRateChart"></canvas></div>
+                    <div class="vdc-stats">
+                        <div class="stat-box"><span class="stat-label">平均值</span><span class="stat-val" id="vsAvgHR">73</span></div>
+                        <div class="stat-box"><span class="stat-label">最高值</span><span class="stat-val" id="vsMaxHR">89</span></div>
+                        <div class="stat-box"><span class="stat-label">最低值</span><span class="stat-val" id="vsMinHR">62</span></div>
+                    </div>
+                </div>
+
+                <div class="vital-detail-card">
+                    <div class="vdc-header">
+                        <span class="vdc-icon bp-icon">🩸</span>
+                        <span class="vdc-title">血压 Blood Pressure</span>
+                        <span class="vdc-latest" id="vsLatestBP">125/82 mmHg</span>
+                    </div>
+                    <div class="vdc-chart-wrap"><canvas id="vsBPChart"></canvas></div>
+                    <div class="vdc-stats">
+                        <div class="stat-box"><span class="stat-label">平均收缩压</span><span class="stat-val" id="vsAvgSys">128</span></div>
+                        <div class="stat-box"><span class="stat-label">平均舒张压</span><span class="stat-val" id="vsAvgDia">80</span></div>
+                        <div class="stat-box"><span class="stat-label">波动范围</span><span class="stat-val" id="vsBPRange">±8</span></div>
+                    </div>
+                </div>
+
+                <div class="vital-detail-card">
+                    <div class="vdc-header">
+                        <span class="vdc-icon bo-icon">🫁</span>
+                        <span class="vdc-title">血氧 SpO2</span>
+                        <span class="vdc-latest" id="vsLatestBO">98 %</span>
+                    </div>
+                    <div class="vdc-chart-wrap"><canvas id="vsBOChart"></canvas></div>
+                    <div class="vdc-stats">
+                        <div class="stat-box"><span class="stat-label">平均值</span><span class="stat-val" id="vsAvgBO">97.8</span></div>
+                        <div class="stat-box"><span class="stat-label">最低值</span><span class="stat-val" id="vsMinBO">96</span></div>
+                        <div class="stat-box"><span class="stat-label">达标率</span><span class="stat-val" id="vsBORate">98%</span></div>
+                    </div>
+                </div>
+
+                <div class="vital-detail-card">
+                    <div class="vdc-header">
+                        <span class="vdc-icon temp-icon">🌡️</span>
+                        <span class="vdc-title">体温 Temperature</span>
+                        <span class="vdc-latest" id="vsLatestTemp">36.5 °C</span>
+                    </div>
+                    <div class="vdc-chart-wrap"><canvas id="vsTempChart"></canvas></div>
+                    <div class="vdc-stats">
+                        <div class="stat-box"><span class="stat-label">平均值</span><span class="stat-val" id="vsAvgTemp">36.4</span></div>
+                        <div class="stat-box"><span class="stat-label">最高值</span><span class="stat-val" id="vsMaxTemp">37.0</span></div>
+                        <div class="stat-box"><span class="stat-label">最低值</span><span class="stat-val" id="vsMinTemp">36.1</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 异常预警记录 -->
+            <div class="alert-section">
+                <div class="section-title-bar">
+                    <h2>异常预警记录</h2>
+                </div>
+                <div class="alert-list" id="alertList">
+                    <div class="alert-item warning">
+                        <div class="alert-time">2026-06-12 14:30</div>
+                        <div class="alert-msg">血压偏高：收缩压148mmHg，超出正常范围。建议休息后复测。</div>
+                        <div class="alert-action">已处理 ✓</div>
+                    </div>
+                    <div class="alert-item info">
+                        <div class="alert-time">2026-06-08 08:15</div>
+                        <div class="alert-msg">心率偏低：清晨静息心率55次/分，属运动员型偏低，无需担心。</div>
+                        <div class="alert-action">已查看 ✓</div>
+                    </div>
+                    <div class="alert-item danger">
+                        <div class="alert-time">2026-06-03 22:00</div>
+                        <div class="alert-msg">体温异常：37.8°C，略高于正常范围。建议观察，多饮水。</div>
+                        <div class="alert-action">次日恢复正常 ✓</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 数字孪生模块 ==================== -->
+        <section class="page-section" id="page-digital-twin">
+            <div class="page-header">
+                <h1>数字孪生可视化</h1>
+                <p class="page-subtitle">您的数字化身，实时映射生理与健康状态</p>
+            </div>
+
+            <div class="twin-layout">
+                <!-- 数字人体模型区域 -->
+                <div class="twin-model-area">
+                    <div class="twin-model-container">
+                        <svg class="human-body-svg" viewBox="0 0 300 500" id="twinBodySvg">
+                            <!-- 身体轮廓 -->
+                            <ellipse cx="150" cy="50" rx="38" ry="45" fill="#e6f7ff" stroke="#1890ff" stroke-width="2" id="twinHead"/>
+                            <!-- 脖子 -->
+                            <rect x="138" y="92" width="24" height="18" fill="#e6f7ff" stroke="#1890ff" stroke-width="1.5" rx="3"/>
+                            <!-- 躯干 -->
+                            <path d="M110 110 Q105 160 108 220 L115 260 Q130 270 150 270 Q170 270 185 260 L192 220 Q195 160 190 110 Z" fill="#e6f7ff" stroke="#1890ff" stroke-width="2" id="twinTorso"/>
+                            <!-- 左臂 -->
+                            <path d="M110 115 Q85 140 70 185 Q65 210 75 230" fill="none" stroke="#1890ff" stroke-width="12" stroke-linecap="round" id="twinLeftArm"/>
+                            <!-- 右臂 -->
+                            <path d="M190 115 Q215 140 230 185 Q235 210 225 230" fill="none" stroke="#1890ff" stroke-width="12" stroke-linecap="round" id="twinRightArm"/>
+                            <!-- 左腿 -->
+                            <path d="M125 268 Q120 330 118 400 Q117 450 122 480" fill="none" stroke="#1890ff" stroke-width="14" stroke-linecap="round" id="twinLeftLeg"/>
+                            <!-- 右腿 -->
+                            <path d="M175 268 Q180 330 182 400 Q183 450 178 480" fill="none" stroke="#1890ff" stroke-width="14" stroke-linecap="round" id="twinRightLeg"/>
+
+                            <!-- 心脏位置标记 -->
+                            <circle cx="165" cy="155" r="12" fill="#ff4d4f" opacity="0.7" id="twinHeart">
+                                <animate attributeName="r" values="10;14;10" dur="1s" repeatCount="indefinite"/>
+                                <animate attributeName="opacity" values="0.5;0.9;0.5" dur="1s" repeatCount="indefinite"/>
+                            </circle>
+                            <!-- 大脑位置标记 -->
+                            <circle cx="150" cy="42" r="18" fill="#722ed1" opacity="0.4" id="twinBrain"/>
+
+                            <!-- 器官热点标注 -->
+                            <g class="organ-marker" data-organ="heart" style="cursor:pointer;">
+                                <circle cx="165" cy="155" r="20" fill="transparent" stroke="#ff4d4f" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.6"/>
+                            </g>
+                            <g class="organ-marker" data-organ="brain" style="cursor:pointer;">
+                                <circle cx="150" cy="42" r="26" fill="transparent" stroke="#722ed1" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.6"/>
+                            </g>
+                            <g class="organ-marker" data-organ="lung" style="cursor:pointer;">
+                                <ellipse cx="140" cy="145" rx="14" ry="20" fill="transparent" stroke="#13c2c2" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/>
+                                <ellipse cx="170" cy="145" rx="14" ry="20" fill="transparent" stroke="#13c2c2" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5"/>
+                            </g>
+                        </svg>
+                        <div class="twin-pulse-ring"></div>
+                    </div>
+                    <div class="model-legend">
+                        <span class="legend-item"><i style="background:#ff4d4f"></i>心血管系统</span>
+                        <span class="legend-item"><i style="background:#722ed1"></i>神经系统</span>
+                        <span class="legend-item"><i style="background:#13c2c2"></i>呼吸系统</span>
+                        <span class="legend-item"><i style="background:#52c41a"></i>代谢系统</span>
+                    </div>
+                </div>
+
+                <!-- 右侧数据面板 -->
+                <div class="twin-data-panel">
+                    <!-- 系统健康度雷达图 -->
+                    <div class="twin-radar-card">
+                        <h3>各系统健康度</h3>
+                        <div class="radar-chart-wrap">
+                            <canvas id="systemRadarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- 器官详情弹窗 -->
+                    <div class="organ-detail-card" id="organDetailCard">
+                        <h3 id="organDetailTitle">点击身体部位查看详情</h3>
+                        <div id="organDetailContent" class="organ-detail-body">
+                            <p class="placeholder-text">请点击左侧人体模型上的器官热点区域，查看该系统的详细健康数据。</p>
+                        </div>
+                    </div>
+
+                    <!-- 生命体征实时流 -->
+                    <div class="vital-stream-card">
+                        <h3>实时生命体征流</h3>
+                        <div class="stream-items">
+                            <div class="stream-item">
+                                <span class="stream-label">心跳</span>
+                                <div class="stream-bar"><div class="stream-fill pulse-anim" style="width:72%"></div></div>
+                                <span class="stream-val">72 bpm</span>
+                            </div>
+                            <div class="stream-item">
+                                <span class="stream-label">血氧</span>
+                                <div class="stream-bar"><div class="stream-fill" style="width:98%;background:#13c2c2"></div></div>
+                                <span class="stream-val">98%</span>
+                            </div>
+                            <div class="stream-item">
+                                <span class="stream-label">体温</span>
+                                <div class="stream-bar"><div class="stream-fill" style="width:91%;background:#fa8c16"></div></div>
+                                <span class="stream-val">36.5°C</span>
+                            </div>
+                            <div class="stream-item">
+                                <span class="stream-label">能量</span>
+                                <div class="stream-bar"><div class="stream-fill" style="width:80%;background:#52c41a"></div></div>
+                                <span class="stream-val">良好</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 数字生命指数 -->
+                    <div class="life-index-card">
+                        <h3>数字生命指数 DLI</h3>
+                        <div class="dli-value" id="dliValue">86.4</div>
+                        <div class="dli-bar"><div class="dli-fill" style="width:86.4%"></div></div>
+                        <div class="dli-desc">基于多维健康数据融合计算的综合生命活力指数</div>
+                        <div class="dli-breakdown">
+                            <div class="dli-item"><span>生理机能</span><div class="dli-mini-bar"><div style="width:88%"></div></div><span>88</span></div>
+                            <div class="dli-item"><span>认知水平</span><div class="dli-mini-bar"><div style="width:78%"></div></div><span>78</span></div>
+                            <div class="dli-item"><span>情绪状态</span><div class="dli-mini-bar"><div style="width:92%"></div></div><span>92</span></div>
+                            <div class="dli-item"><span>社会活跃</span><div class="dli-mini-bar"><div style="width:85%"></div></div><span>85</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 认知康复训练模块 ==================== -->
+        <section class="page-section" id="page-cognitive-training">
+            <div class="page-header">
+                <h1>脑机接口认知康复</h1>
+                <p class="page-subtitle">科学训练大脑，提升认知能力，延缓衰老进程</p>
+            </div>
+
+            <!-- 训练总览 -->
+            <div class="training-overview">
+                <div class="training-stat-card">
+                    <div class="ts-number" id="totalTrainingDays">47</div>
+                    <div class="ts-label">累计训练天数</div>
+                </div>
+                <div class="training-stat-card">
+                    <div class="ts-number" id="todayTrainingTime">25</div>
+                    <div class="ts-label">今日训练(分钟)</div>
+                </div>
+                <div class="training-stat-card">
+                    <div class="ts-number" id="avgScore">82</div>
+                    <div class="ts-label">平均得分</div>
+                </div>
+                <div class="training-stat-card highlight">
+                    <div class="ts-number" id="cognitiveIndex">78</div>
+                    <div class="ts-label">综合认知指数</div>
+                </div>
+            </div>
+
+            <!-- 五大训练模块入口 -->
+            <div class="training-modules-grid">
+                <!-- 记忆力训练 -->
+                <div class="training-module-card" data-module="memory">
+                    <div class="module-icon memory-icon">
+                        <svg viewBox="0 0 64 64"><path d="M32 8L8 20v16c0 14 10 24 24 28 14-4 24-14 24-28V20L32 8z" fill="none" stroke="#1890ff" stroke-width="2.5"/><path d="M24 30h16M24 38h10" stroke="#1890ff" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3>记忆力训练</h3>
+                    <p>通过图形配对、数字序列等任务锻炼短期记忆和工作记忆能力</p>
+                    <div class="module-progress">
+                        <div class="mp-bar"><div class="mp-fill" style="width:78%"></div></div>
+                        <span>完成度 78%</span>
+                    </div>
+                    <div class="module-meta">
+                        <span>最佳成绩：<strong>92分</strong></span>
+                        <span>等级：<strong class="level-good">良好</strong></span>
+                    </div>
+                    <button class="btn btn-primary btn-start-training" data-module="memory">开始训练</button>
+                </div>
+
+                <!-- 注意力训练 -->
+                <div class="training-module-card" data-module="attention">
+                    <div class="module-icon attention-icon">
+                        <svg viewBox="0 0 64 64"><circle cx="32" cy="28" r="18" fill="none" stroke="#722ed1" stroke-width="2.5"/><circle cx="32" cy="28" r="6" fill="#722ed1"/><line x1="32" y1="46" x2="32" y2="58" stroke="#722ed1" stroke-width="3" stroke-linecap="round"/><line x1="26" y1="54" x2="38" y2="54" stroke="#722ed1" stroke-width="3" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3>注意力训练</h3>
+                    <p>通过目标搜索、干扰过滤等任务提升专注力和选择性注意力</p>
+                    <div class="module-progress">
+                        <div class="mp-bar"><div class="mp-fill" style="width:85%"></div></div>
+                        <span>完成度 85%</span>
+                    </div>
+                    <div class="module-meta">
+                        <span>最佳成绩：<strong>95分</strong></span>
+                        <span>等级：<strong class="level-excellent">优秀</strong></span>
+                    </div>
+                    <button class="btn btn-primary btn-start-training" data-module="attention">开始训练</button>
+                </div>
+
+                <!-- 反应速度训练 -->
+                <div class="training-module-card" data-module="reaction">
+                    <div class="module-icon reaction-icon">
+                        <svg viewBox="0 0 64 64"><polygon points="32,8 54,28 44,28 44,56 20,56 20,28 10,28" fill="none" stroke="#fa8c16" stroke-width="2.5" stroke-linejoin="round"/><circle cx="32" cy="34" r="6" fill="#fa8c16"/></svg>
+                    </div>
+                    <h3>反应速度训练</h3>
+                    <p>通过快速识别、即时响应任务提升神经传导速度和手眼协调</p>
+                    <div class="module-progress">
+                        <div class="mp-bar"><div class="mp-fill" style="width:70%"></div></div>
+                        <span>完成度 70%</span>
+                    </div>
+                    <div class="module-meta">
+                        <span>最佳成绩：<strong>78分</strong></span>
+                        <span>等级：<strong class="level-normal">一般</strong></span>
+                    </div>
+                    <button class="btn btn-primary btn-start-training" data-module="reaction">开始训练</button>
+                </div>
+
+                <!-- 空间感知训练 -->
+                <div class="training-module-card" data-module="spatial">
+                    <div class="module-icon spatial-icon">
+                        <svg viewBox="0 0 64 64"><rect x="12" y="12" width="40" height="40" rx="4" fill="none" stroke="#13c2c2" stroke-width="2.5"/><line x1="12" y1="32" x2="52" y2="32" stroke="#13c2c2" stroke-width="1.5"/><line x1="32" y1="12" x2="32" y2="52" stroke="#13c2c2" stroke-width="1.5"/><circle cx="22" cy="22" r="4" fill="#13c2c2"/><circle cx="42" cy="42" r="4" fill="#13c2c2"/></svg>
+                    </div>
+                    <h3>空间感知训练</h3>
+                    <p>通过三维旋转、路径规划等任务增强空间想象力和方向感</p>
+                    <div class="module-progress">
+                        <div class="mp-bar"><div class="mp-fill" style="width:88%"></div></div>
+                        <span>完成度 88%</span>
+                    </div>
+                    <div class="module-meta">
+                        <span>最佳成绩：<strong>90分</strong></span>
+                        <span>等级：<strong class="level-excellent">优秀</strong></span>
+                    </div>
+                    <button class="btn btn-primary btn-start-training" data-module="spatial">开始训练</button>
+                </div>
+
+                <!-- 语言能力训练 -->
+                <div class="training-module-card" data-module="language">
+                    <div class="module-icon language-icon">
+                        <svg viewBox="0 0 64 64"><path d="M12 20h40v24H28l-12 8v-8H12V20z" fill="none" stroke="#eb2f96" stroke-width="2.5" stroke-linejoin="round"/><line x1="20" y1="29" x2="44" y2="29" stroke="#eb2f96" stroke-width="2"/><line x1="20" y1="36" x2="36" y2="36" stroke="#eb2f96" stroke-width="2"/></svg>
+                    </div>
+                    <h3>语言能力训练</h3>
+                    <p>通过词汇联想、成语填空、阅读理解等任务保持语言流畅性</p>
+                    <div class="module-progress">
+                        <div class="mp-bar"><div class="mp-fill" style="width:72%"></div></div>
+                        <span>完成度 72%</span>
+                    </div>
+                    <div class="module-meta">
+                        <span>最佳成绩：<strong>81分</strong></span>
+                        <span>等级：<strong class="level-good">良好</strong></span>
+                    </div>
+                    <button class="btn btn-primary btn-start-training" data-module="language">开始训练</button>
+                </div>
+            </div>
+
+            <!-- 训练游戏区域（默认隐藏） -->
+            <div class="training-game-area" id="trainingGameArea" style="display:none;">
+                <div class="game-header-bar">
+                    <button class="btn btn-outline btn-sm" id="exitGameBtn">退出训练</button>
+                    <h3 id="gameTitle">训练进行中</h3>
+                    <div class="game-timer" id="gameTimer">00:00</div>
+                </div>
+                <div class="game-content" id="gameContent">
+                    <!-- 动态渲染训练内容 -->
+                </div>
+                <div class="game-footer-bar">
+                    <div class="game-score-display">
+                        <span>得分：</span><strong id="gameScore">0</strong>
+                    </div>
+                    <div class="game-round-display">
+                        <span>第 <strong id="gameRound">1</strong>/<span id="gameTotalRounds">10</span> 关</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 训练结果展示（默认隐藏） -->
+            <div class="training-result-area" id="trainingResultArea" style="display:none;">
+                <div class="result-card">
+                    <div class="result-icon">🎉</div>
+                    <h2>训练完成！</h2>
+                    <div class="result-score-big" id="resultScoreBig">85</div>
+                    <div class="result-details">
+                        <div class="rd-item"><span>正确数</span><strong id="resultCorrect">8</strong></div>
+                        <div class="rd-item"><span>用时</span><strong id="resultTime">02:35</strong></div>
+                        <div class="rd-item"><span>准确率</span><strong id="resultAccuracy">80%</strong></div>
+                    </div>
+                    <div class="result-eval" id="resultEval">表现良好，继续保持！</div>
+                    <div class="result-actions">
+                        <button class="btn btn-primary" id="retryGameBtn">再来一次</button>
+                        <button class="btn btn-outline" id="backToModulesBtn">返回模块</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 训练历史记录 -->
+            <div class="training-history-section">
+                <div class="section-title-bar"><h2>近期训练记录</h2></div>
+                <div class="history-chart-wrap">
+                    <canvas id="trainingHistoryChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 体检报告管理模块 ==================== -->
+        <section class="page-section" id="page-report-management">
+            <div class="page-header">
+                <h1>体检报告管理</h1>
+                <p class="page-subtitle">统一管理历年体检报告，智能分析健康趋势</p>
+            </div>
+
+            <!-- 报告列表 -->
+            <div class="reports-list-section">
+                <div class="section-title-bar">
+                    <h2>体检报告列表</h2>
+                    <button class="btn btn-primary btn-sm" id="addReportBtn">+ 上传报告</button>
+                </div>
+                <div class="report-cards-grid">
+                    <div class="report-card latest">
+                        <div class="report-badge">最新</div>
+                        <div class="report-date">2026-03-15</div>
+                        <div class="report-title">年度全面体检报告</div>
+                        <div class="report-hospital">北京协和医院 · 健康管理中心</div>
+                        <div class="report-summary">
+                            <div class="summary-item ok">
+                                <span class="si-icon">✓</span>
+                                <span>检查项目 28 项</span>
+                            </div>
+                            <div class="summary-item warn">
+                                <span class="si-icon">!</span>
+                                <span>异常项 2 项</span>
+                            </div>
+                            <div class="summary-item info">
+                                <span class="si-icon">→</span>
+                                <span>较去年改善 3 项</span>
+                            </div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-outline btn-sm view-report-btn" data-report="2026">查看详情</button>
+                            <button class="btn btn-text btn-sm download-report-btn" data-report="2026">下载PDF</button>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-date">2025-03-20</div>
+                        <div class="report-title">年度全面体检报告</div>
+                        <div class="report-hospital">北京协和医院 · 健康管理中心</div>
+                        <div class="report-summary">
+                            <div class="summary-item ok"><span class="si-icon">✓</span><span>检查项目 26 项</span></div>
+                            <div class="summary-item warn"><span class="si-icon">!</span><span>异常项 3 项</span></div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-outline btn-sm view-report-btn" data-report="2025">查看详情</button>
+                            <button class="btn btn-text btn-sm download-report-btn" data-report="2025">下载PDF</button>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-date">2024-04-10</div>
+                        <div class="report-title">年度全面体检报告</div>
+                        <div class="report-hospital">朝阳区社区医院</div>
+                        <div class="report-summary">
+                            <div class="summary-item ok"><span class="si-icon">✓</span><span>检查项目 24 项</span></div>
+                            <div class="summary-item warn"><span class="si-icon">!</span><span>异常项 4 项</span></div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-outline btn-sm view-report-btn" data-report="2024">查看详情</button>
+                            <button class="btn btn-text btn-sm download-report-btn" data-report="2024">下载PDF</button>
+                        </div>
+                    </div>
+
+                    <div class="report-card">
+                        <div class="report-date">2023-05-08</div>
+                        <div class="report-title">入职退休体检</div>
+                        <div class="report-hospital">北京市第一中西医结合医院</div>
+                        <div class="report-summary">
+                            <div class="summary-item ok"><span class="si-icon">✓</span><span>检查项目 22 项</span></div>
+                            <div class="summary-item warn"><span class="si-icon">!</span><span>异常项 5 项</span></div>
+                        </div>
+                        <div class="report-actions">
+                            <button class="btn btn-outline btn-sm view-report-btn" data-report="2023">查看详情</button>
+                            <button class="btn btn-text btn-sm download-report-btn" data-report="2023">下载PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报告详情视图（默认隐藏） -->
+            <div class="report-detail-view" id="reportDetailView" style="display:none;">
+                <div class="detail-nav-bar">
+                    <button class="btn btn-outline btn-sm" id="backToReportsBtn">← 返回列表</button>
+                    <h3 id="detailReportTitle">2026年度体检报告详情</h3>
+                </div>
+
+                <!-- 报告概要 -->
+                <div class="detail-summary-card">
+                    <h3>报告概要</h3>
+                    <div class="ds-grid">
+                        <div class="ds-item"><label>体检日期</label><span id="drDate">2026-03-15</span></div>
+                        <div class="ds-item"><label>体检机构</label><span id="drHospital">北京协和医院</span></div>
+                        <div class="ds-item"><label>总检项目</label><span id="drTotalItems">28项</span></div>
+                        <div class="ds-item"><label>异常项目</label><span class="warn-text" id="drAbnormalItems">2项</span></div>
+                        <div class="ds-item"><label>医生结论</label><span id="drConclusion">整体健康状况良好，血压需持续关注</span></div>
+                    </div>
+                </div>
+
+                <!-- 各项检查结果 -->
+                <div class="detail-results-section">
+                    <h3>检查结果明细</h3>
+                    <div class="results-category">
+                        <h4 class="rc-title">一般检查</h4>
+                        <div class="table-wrapper">
+                            <table class="data-table compact">
+                                <thead><tr><th>项目</th><th>结果</th><th>参考范围</th><th>单位</th><th>状态</th></tr></thead>
+                                <tbody>
+                                    <tr><td>身高</td><td>172</td><td>-</td><td>cm</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>体重</td><td>71</td><td>-</td><td>kg</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>BMI</td><td>24.0</td><td>18.5~23.9</td><td>kg/m²</td><td><span class="status-badge warn">偏高</span></td></tr>
+                                    <tr><td>收缩压</td><td>132</td><td>90~139</td><td>mmHg</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>舒张压</td><td>84</td><td>60~89</td><td>mmHg</td><td><span class="status-badge ok">正常</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="results-category">
+                        <h4 class="rc-title">血液检验</h4>
+                        <div class="table-wrapper">
+                            <table class="data-table compact">
+                                <thead><tr><th>项目</th><th>结果</th><th>参考范围</th><th>单位</th><th>状态</th></tr></thead>
+                                <tbody>
+                                    <tr><td>血红蛋白</td><td>142</td><td>130~175</td><td>g/L</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>白细胞计数</td><td>6.2</td><td>3.5~9.5</td><td>×10⁹/L</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>空腹血糖</td><td>5.8</td><td>3.9~6.1</td><td>mmol/L</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>总胆固醇</td><td>5.6</td><td>&lt;5.2</td><td>mmol/L</td><td><span class="status-badge warn">偏高</span></td></tr>
+                                    <tr><td>甘油三酯</td><td>1.8</td><td>&lt;1.7</td><td>mmol/L</td><td><span class="status-badge warn">偏高</span></td></tr>
+                                    <tr><td>HDL-C</td><td>1.15</td><td>&gt;1.04</td><td>mmol/L</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>LDL-C</td><td>3.4</td><td>&lt;3.4</td><td>mmol/L</td><td><span class="status-badge ok">临界</span></td></tr>
+                                    <tr><td>肌酐</td><td>78</td><td>57~111</td><td>μmol/L</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>尿酸</td><td>380</td><td>208~428</td><td>μmol/L</td><td><span class="status-badge ok">正常</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="results-category">
+                        <h4 class="rc-title">尿液分析</h4>
+                        <div class="table-wrapper">
+                            <table class="data-table compact">
+                                <thead><tr><th>项目</th><th>结果</th><th>参考范围</th><th>状态</th></tr></thead>
+                                <tbody>
+                                    <tr><td>尿蛋白</td><td>阴性</td><td>阴性</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>尿糖</td><td>阴性</td><td>阴性</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>尿潜血</td><td>阴性</td><td>阴性</td><td><span class="status-badge ok">正常</span></td></tr>
+                                    <tr><td>尿比重</td><td>1.018</td><td>1.010~1.030</td><td><span class="status-badge ok">正常</span></td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="results-category">
+                        <h4 class="rc-title">影像学检查</h4>
+                        <div class="imaging-results">
+                            <div class="ir-item">
+                                <h5>胸部X线</h5>
+                                <p>双肺纹理清晰，心影大小形态正常，膈肌光滑。未见明显异常。</p>
+                                <span class="status-badge ok">未见异常</span>
+                            </div>
+                            <div class="ir-item">
+                                <h5>腹部B超</h5>
+                                <p>肝脏形态大小正常，回声均匀。胆囊壁光滑。胰腺、脾脏未见异常。</p>
+                                <span class="status-badge ok">未见异常</span>
+                            </div>
+                            <div class="ir-item">
+                                <h5>心电图</h5>
+                                <p>窦性心律，心率72次/分，ST段无偏移，各导联QRS波群形态正常。</p>
+                                <span class="status-badge ok">大致正常</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 医生建议 -->
+                <div class="doctor-advice-card">
+                    <h3>医生建议</h3>
+                    <div class="advice-content" id="doctorAdviceContent">
+                        <ol>
+                            <li><strong>饮食调整：</strong>建议低盐低脂饮食，每日食盐摄入量控制在5g以内，减少动物内脏和高胆固醇食物的摄入。</li>
+                            <li><strong>运动处方：</strong>每周保持中等强度有氧运动至少150分钟，如快走、太极拳等，避免剧烈运动。</li>
+                            <li><strong>用药依从：</strong>继续按医嘱服用降压药和降脂药，不可自行停药或减量。</li>
+                            <li><strong>定期复查：</strong>建议3个月后复查血脂四项，6个月后进行全面体检复查。</li>
+                            <li><strong>体重管理：</strong>BMI处于超重边缘，建议通过合理饮食和适量运动将体重控制在68kg左右。</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 历年指标对比图 -->
+            <div class="report-trend-section">
+                <div class="section-title-bar"><h2>历年关键指标趋势</h2></div>
+                <div class="charts-row">
+                    <div class="chart-card">
+                        <div class="chart-header"><h3>血压变化趋势</h3></div>
+                        <div class="chart-body"><canvas id="reportBpTrendChart"></canvas></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header"><h3>血脂变化趋势</h3></div>
+                        <div class="chart-body"><canvas id="reportLipidTrendChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 底部信息 -->
+    <footer class="app-footer">
+        <p>虚实融合全域康养数字生命系统 &copy; 2026 | 北京信息职业技术学院 嵌入式创新应用设计</p>
+        <p class="footer-note">本系统仅供教学演示使用，不作为实际医疗诊断依据</p>
+    </footer>
+
+    <!-- Toast 提示组件 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- JavaScript 文件加载 -->
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/health-archive.js"></script>
+    <script src="js/vital-signs.js"></script>
+    <script src="js/digital-twin.js"></script>
+    <script src="js/cognitive-training.js"></script>
+    <script src="js/report-management.js"></script>
+</body>
+</html>
