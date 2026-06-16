@@ -1,903 +1,2027 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>人形机器人·具身智能创新设计产业级系统平台</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#00d4ff',
-        secondary: '#7b2ff7',
-        accent: '#ff2d95',
-        dark: '#06060b',
-        dark800: '#101018',
-        dark700: '#171724',
-        dark600: '#1f1f2f',
-      },
-      fontFamily: { inter: ['Inter', 'system-ui', 'sans-serif'] },
-      animation: {
-        float: 'float 6s ease-in-out infinite',
-        pulseSlow: 'pulse 4s cubic-bezier(0.4,0,0.6,1) infinite',
-        glow: 'glow 2s ease-in-out infinite alternate',
-      },
-      keyframes: {
-        float: { '0%,100%': {transform:'translateY(0)'}, '50%':{transform:'translateY(-22px)'} },
-        glow: {
-          '0%':{boxShadow:'0 0 6px rgba(0,212,255,0.4),0 0 12px rgba(0,212,255,0.2)'},
-          '100%':{boxShadow:'0 0 24px rgba(0,212,255,0.8),0 0 48px rgba(0,212,255,0.4)'}
-        },
-        gradientRotate: {
-          '0%':{backgroundPosition:'0% 50%'},
-          '50%':{backgroundPosition:'100% 50%'},
-          '100%':{backgroundPosition:'0% 50%'}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>智械 · 粒子组装与交互测试</title>
+    <style>
+        /* ===== 全局 ===== */
+        :root {
+            --bg: #05080f;
+            --surface: #0a0f1a;
+            --border: #1a2540;
+            --accent: #4da8da;
+            --accent2: #7b5ea7;
+            --gold: #c8a87c;
+            --text: #c8d0dc;
+            --text-dim: #6b7280;
+            --glow: rgba(77, 168, 218, 0.25);
+            --success: #3ef5a0;
+            --warning: #f5c542;
+            --danger: #e0556a;
         }
-      }
-    }
-  }
-}
-</script>
-<style type="text/tailwindcss">
-@layer utilities {
-  .text-gradient {
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .glass {
-    background: rgba(14,14,22,0.65);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.08);
-  }
-  .neonBorder {
-    position: relative;
-  }
-  .neonBorder::before {
-    content:"";
-    position:absolute;
-    inset:-2px;
-    background:linear-gradient(45deg,#00d4ff,#7b2ff7,#ff2d95,#00d4ff);
-    background-size:400% 400%;
-    border-radius:inherit;
-    z-index:-1;
-    animation:gradientRotate 8s ease infinite;
-  }
-  .scrollHide::-webkit-scrollbar { display:none; }
-  .scrollHide { -ms-overflow-style:none; scrollbar-width:none; }
-}
-</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: var(--bg);
+            font-family: 'SF Mono', 'Cascadia Code', 'Consolas', 'Menlo', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', monospace, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            cursor: crosshair;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #canvas-container {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+        }
+        canvas {
+            display: block;
+        }
+
+        .scanlines-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.05;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 0, 0, 0.30) 3px, rgba(0, 0, 0, 0.30) 4px);
+        }
+        .vignette {
+            position: fixed;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 55%, rgba(5, 8, 15, 0.55) 78%, rgba(5, 8, 15, 0.85) 100%);
+        }
+
+        .hud-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: none;
+            background: linear-gradient(180deg, rgba(5, 8, 15, 0.92) 30%, rgba(5, 8, 15, 0) 100%);
+            padding-bottom: 40px;
+        }
+        .hud-top .title-group {
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+        .hud-top .title-main {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: #e8edf5;
+            text-shadow: 0 0 30px var(--glow);
+            position: relative;
+        }
+        .hud-top .title-main::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent 80%);
+        }
+        .hud-top .title-sub {
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+        .hud-top .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px #3ef5a0aa, 0 0 25px #3ef5a055;
+            animation: status-pulse 2.2s ease-in-out infinite;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        @keyframes status-pulse {
+            0%,
+            100% {
+                box-shadow: 0 0 8px #3ef5a0aa, 0 0 20px #3ef5a044;
+            }
+            50% {
+                box-shadow: 0 0 18px #3ef5a0dd, 0 0 40px #3ef5a077;
+            }
+        }
+        .hud-top .status-text {
+            font-size: 0.65rem;
+            letter-spacing: 0.06em;
+            color: var(--success);
+            pointer-events: auto;
+        }
+
+        .control-bar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            pointer-events: none;
+            max-width: 95vw;
+        }
+        .control-bar button {
+            pointer-events: auto;
+            background: rgba(10, 15, 26, 0.80);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-family: inherit;
+            font-size: 0.7rem;
+            letter-spacing: 0.06em;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 72px;
+            justify-content: center;
+        }
+        .control-bar button:hover {
+            border-color: var(--accent);
+            box-shadow: 0 0 30px rgba(77, 168, 218, 0.15), 0 4px 24px rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px);
+            background: rgba(20, 30, 50, 0.85);
+        }
+        .control-bar button:active {
+            transform: translateY(0px);
+        }
+        .control-bar button.primary {
+            border-color: var(--accent);
+            color: #fff;
+            background: rgba(77, 168, 218, 0.20);
+        }
+        .control-bar button.primary:hover {
+            background: rgba(77, 168, 218, 0.30);
+            box-shadow: 0 0 40px rgba(77, 168, 218, 0.20);
+        }
+        .control-bar button.success {
+            border-color: var(--success);
+            color: var(--success);
+            background: rgba(62, 245, 160, 0.12);
+        }
+        .control-bar button.success:hover {
+            background: rgba(62, 245, 160, 0.22);
+        }
+        .control-bar button:disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            transform: none !important;
+        }
+
+        /* ===== 测试面板 - 可交互 ===== */
+        .test-panel {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            z-index: 15;
+            background: rgba(10, 15, 26, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            min-width: 220px;
+            max-width: 270px;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        .test-panel.visible {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+        .test-panel .test-title {
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .test-panel .test-title .icon {
+            font-size: 0.9rem;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 5px 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 0.7rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+        .test-item:hover {
+            background: rgba(77, 168, 218, 0.08);
+        }
+        .test-item:last-child {
+            border-bottom: none;
+        }
+        .test-item .label {
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .test-item .label .icon-small {
+            font-size: 0.7rem;
+        }
+        .test-item .result {
+            font-weight: 500;
+            padding: 1px 8px;
+            border-radius: 10px;
+            font-size: 0.55rem;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+        .test-item .result.pass {
+            color: var(--success);
+            background: rgba(62, 245, 160, 0.12);
+            border: 1px solid rgba(62, 245, 160, 0.20);
+        }
+        .test-item .result.fail {
+            color: var(--danger);
+            background: rgba(224, 85, 106, 0.12);
+            border: 1px solid rgba(224, 85, 106, 0.20);
+        }
+        .test-item .result.pending {
+            color: var(--gold);
+            background: rgba(200, 168, 124, 0.10);
+            border: 1px solid rgba(200, 168, 124, 0.15);
+            animation: pulse-gold 1.6s ease-in-out infinite;
+        }
+        .test-item .result.running {
+            color: var(--accent);
+            background: rgba(77, 168, 218, 0.12);
+            border: 1px solid rgba(77, 168, 218, 0.20);
+            animation: pulse-blue 0.8s ease-in-out infinite alternate;
+        }
+        @keyframes pulse-blue {
+            0% {
+                opacity: 0.6;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        @keyframes pulse-gold {
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        .test-item .progress-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--text-dim);
+            margin-left: 4px;
+            transition: background 0.3s;
+        }
+        .test-item .progress-dot.active {
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        /* 状态图 */
+        #statusDiagram {
+            width: 100%;
+            height: 80px;
+            margin-top: 6px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.30);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: block;
+        }
+        .diagram-label {
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        .assemble-progress {
+            position: fixed;
+            bottom: 82px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 12;
+            background: rgba(10, 15, 26, 0.70);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 18px;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .assemble-progress.visible {
+            opacity: 1;
+        }
+        .assemble-progress .step-dots {
+            display: flex;
+            gap: 6px;
+        }
+        .assemble-progress .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.4s ease;
+        }
+        .assemble-progress .dot.done {
+            background: var(--success);
+            border-color: var(--success);
+            box-shadow: 0 0 12px rgba(62, 245, 160, 0.30);
+        }
+        .assemble-progress .dot.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 16px rgba(77, 168, 218, 0.40);
+            animation: dot-pulse 0.8s ease-in-out infinite alternate;
+        }
+        @keyframes dot-pulse {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+        .assemble-progress .label {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .hint-bar {
+            position: fixed;
+            left: 24px;
+            bottom: 82px;
+            z-index: 10;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .hint-item {
+            font-size: 0.55rem;
+            letter-spacing: 0.04em;
+            color: var(--text-dim);
+            opacity: 0.6;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .hint-key {
+            display: inline-block;
+            padding: 2px 7px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            font-size: 0.5rem;
+            color: #aaa;
+            background: rgba(255, 255, 255, 0.03);
+            min-width: 14px;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hud-top {
+                padding: 10px 14px;
+                padding-bottom: 24px;
+            }
+            .hud-top .title-main {
+                font-size: 0.95rem;
+            }
+            .hud-top .title-sub {
+                font-size: 0.5rem;
+            }
+            .control-bar {
+                bottom: 14px;
+                gap: 6px;
+            }
+            .control-bar button {
+                padding: 6px 12px;
+                font-size: 0.6rem;
+                min-width: 56px;
+            }
+            .test-panel {
+                right: 8px;
+                top: 70px;
+                padding: 12px 14px;
+                min-width: 180px;
+                max-width: 210px;
+            }
+            .hint-bar {
+                display: none;
+            }
+            .assemble-progress {
+                bottom: 70px;
+                padding: 4px 12px;
+                font-size: 0.5rem;
+                gap: 8px;
+            }
+            .assemble-progress .dot {
+                width: 6px;
+                height: 6px;
+            }
+            #statusDiagram {
+                height: 60px;
+            }
+        }
+        @media (max-width: 480px) {
+            .control-bar button {
+                padding: 4px 8px;
+                font-size: 0.5rem;
+                min-width: 44px;
+                border-radius: 6px;
+            }
+            .test-panel {
+                min-width: 150px;
+                padding: 10px 10px;
+            }
+            .test-item {
+                font-size: 0.6rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-dark text-white font-inter overflow-x-hidden scrollHide">
-<!-- 立体粒子烟花背景画布 -->
-<canvas id="particleCanvas" class="fixed inset-0 w-full h-full z-0 pointer-events-none"></canvas>
+<body>
 
-<!-- 顶部导航栏 -->
-<nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-500 py-4">
-  <div class="container mx-auto px-6 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-        <i class="fa fa-robot text-xl text-white"></i>
-      </div>
-      <span class="text-2xl font-bold text-gradient bg-gradient-to-r from-primary to-secondary">NexusBot 创新产业系统</span>
-    </div>
-    <!-- 桌面导航 -->
-    <div class="hidden md:flex items-center gap-8">
-      <a href="#home" class="navLink hover:text-primary transition-colors duration-300">系统首页</a>
-      <a href="#innovation" class="navLink hover:text-primary transition-colors duration-300">创新设计亮点</a>
-      <a href="#tech" class="navLink hover:text-primary transition-colors duration-300">核心技术架构</a>
-      <a href="#value" class="navLink hover:text-primary transition-colors duration-300">产业级应用价值</a>
-      <a href="#lab" class="navLink hover:text-primary transition-colors duration-300">实验仿真平台</a>
-      <a href="#contact" class="navLink hover:text-primary transition-colors duration-300">项目对接</a>
-    </div>
-    <!-- 移动端菜单按钮 -->
-    <button id="menuBtn" class="md:hidden text-2xl focus:outline-none">
-      <i class="fa fa-bars"></i>
-    </button>
-  </div>
-  <!-- 移动端下拉菜单 -->
-  <div id="mobileMenu" class="hidden md:hidden glass absolute top-full left-0 w-full">
-    <div class="container mx-auto px-6 py-5 flex flex-col gap-4">
-      <a href="#home" class="navLink py-2 hover:text-primary">系统首页</a>
-      <a href="#innovation" class="navLink py-2 hover:text-primary">创新设计亮点</a>
-      <a href="#tech" class="navLink py-2 hover:text-primary">核心技术架构</a>
-      <a href="#value" class="navLink py-2 hover:text-primary">产业级应用价值</a>
-      <a href="#lab" class="navLink py-2 hover:text-primary">实验仿真平台</a>
-      <a href="#contact" class="navLink py-2 hover:text-primary">项目对接</a>
-    </div>
-  </div>
-</nav>
+    <div class="scanlines-overlay"></div>
+    <div class="vignette"></div>
 
-<!-- 首屏英雄区 -->
-<section id="home" class="relative min-h-screen flex items-center justify-center pt-24">
-  <div class="container mx-auto px-6 text-center z-10">
-    <div class="animate-float mb-10">
-      <div class="w-36 h-36 mx-auto rounded-full neonBorder overflow-hidden">
-        <div class="w-full h-full bg-dark800 flex items-center justify-center">
-          <i class="fa fa-android text-7xl text-primary"></i>
-        </div>
-      </div>
-    </div>
-    <h1 class="text-[clamp(2.4rem,8vw,5rem)] font-bold mb-7 leading-tight">
-      <span class="text-gradient bg-gradient-to-r from-primary via-secondary to-accent">人形机器人</span>
-      <br>具身智能创新设计产业级系统
-    </h1>
-    <p class="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto mb-14">
-      面向未来产业前沿赛道，突破传统机器人技术瓶颈，采用创新软硬件一体化设计，打造具备完整商业化落地能力的产业级具身智能系统，可直接应用于工业、医疗、服务等多个领域
-    </p>
-    <div class="flex flex-col sm:flex-row justify-center gap-7 mb-20">
-      <button class="px-9 py-4 bg-gradient-to-r from-primary to-secondary rounded-lg font-semibold text-lg hover:opacity-90 hover:scale-105 transition-all shadow-lg shadow-primary/20">
-        <i class="fa fa-play-circle mr-2"></i> 系统演示视频
-      </button>
-      <button class="px-9 py-4 glass rounded-lg font-semibold text-lg hover:bg-dark700 hover:scale-105 transition-all">
-        <i class="fa fa-file-text-o mr-2"></i> 下载产业价值白皮书
-      </button>
-    </div>
-    <div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
-      <i class="fa fa-chevron-down text-2xl text-primary"></i>
-    </div>
-  </div>
-</section>
-
-<!-- 创新设计亮点板块 -->
-<section id="innovation" class="py-28 relative">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-24">
-      <h2 class="text-[clamp(2rem,5vw,3.4rem)] font-bold mb-6">六大核心创新设计亮点</h2>
-      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-        从硬件架构、算法体系到商业模式全方位创新，解决行业痛点，实现从实验室技术到产业级产品的跨越
-      </p>
-    </div>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-9">
-      <!-- 创新点1 -->
-      <div class="innovationCard glass rounded-xl p-9 hover:-translate-y-4 transition-all duration-500 hover:shadow-xl shadow-primary/10">
-        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-primary to-blue-600 flex items-center justify-center mb-7">
-          <i class="fa fa-cubes text-3xl text-white"></i>
-        </div>
-        <h3 class="text-2xl font-bold mb-4">模块化可重构设计</h3>
-        <p class="text-gray-400 mb-7">全机身模块化设计，头部、躯干、四肢可快速拆卸重组，一机多用，大幅降低不同场景部署成本</p>
-        <div class="w-full bg-dark600 rounded-full h-2 mb-2">
-          <div class="bg-gradient-to-r from-primary to-blue-600 h-2 rounded-full" style="width:96%"></div>
-        </div>
-        <span class="text-sm text-gray-500">场景切换时间 <15分钟</span>
-      </div>
-      <!-- 创新点2 -->
-      <div class="innovationCard glass rounded-xl p-9 hover:-translate-y-4 transition-all duration-500 hover:shadow-xl shadow-secondary/10">
-        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-secondary to-purple-600 flex items-center justify-center mb-7">
-          <i class="fa fa-microchip text-3xl text-white"></i>
-        </div>
-        <h3 class="text-2xl font-bold mb-4">端云协同混合架构</h3>
-        <p class="text-gray-400 mb-7">本地边缘计算+云端大模型混合决策，既保证实时性又具备强大推理能力，断网也能独立运行</p>
-        <div class="w-full bg-dark600 rounded-full h-2 mb-2">
-          <div class="bg-gradient-to-r from-secondary to-purple-600 h-2 rounded-full" style="width:94%"></div>
-        </div>
-        <span class="text-sm text-gray-500">响应延迟 <200ms</span>
-      </div>
-      <!-- 创新点3 -->
-      <div class="innovationCard glass rounded-xl p-9 hover:-translate-y-4 transition-all duration-500 hover:shadow-xl shadow-accent/10">
-        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-accent to-pink-600 flex items-center justify-center mb-7">
-          <i class="fa fa-hand-paper-o text-3xl text-white"></i>
-        </div>
-        <h3 class="text-2xl font-bold mb-4">柔性力控交互技术</h3>
-        <p class="text-gray-400 mb-7">全身关节力反馈控制，接触力感知精度达0.1N，实现人机安全无冲击协作，无需安全围栏</p>
-        <div class="w-full bg-dark600 rounded-full h-2 mb-2">
-          <div class="bg-gradient-to-r from-accent to-pink-600 h-2 rounded-full" style="width:91%"></div>
-        </div>
-        <span class="text-sm text-gray-500">力控精度 ±0.1N</span>
-      </div>
-      <!-- 创新点4 -->
-      <div class="innovationCard glass rounded-xl p-9 hover:-translate-y-4 transition-all duration-500 hover:shadow-xl shadow-emerald-500/10">
-        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-600 flex items-center justify-center mb-7">
-          <i class="fa fa-magic text-3xl text-white"></i>
-        </div>
-        <h3 class="text-2xl font-bold mb-4">零代码快速部署</h3>
-        <p class="text-gray-400 mb-7">可视化拖拽式任务编程界面，无需专业编程知识，一线工人即可快速配置复杂作业流程</p>
-        <div class="w-full bg-dark600 rounded-full h-2 mb-2">
-          <div class="bg-gradient-to-r from-emerald-500 to-teal-600 h-2 rounded-full" style="width:89%"></div>
-        </div>
-        <span class="text-sm text-gray-500">新任务配置时间 <1小时</span>
-      </div>
-      <!-- 创新点5 -->
-      <div class="innovationCard glass rounded-xl p-9 hover:-translate-y-4 transition-all duration-500 hover:shadow-xl shadow-amber-500/10">
-        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-amber-500 to-orange-600 flex items-center justify-center mb-7">
-          <i class="fa fa-share-alt text-3xl text-white"></i>
-        </div>
-        <h3 class="text-2xl font-bold mb-4">集群协同进化</h3>
-        <p class="text-gray-400 mb-7">多机器人云端知识共享，单台机器人学习的技能自动同步到整个集群，实现指数级能力提升</p>
-        <div class="w-full bg-dark600 rounded-full h-2 mb-2">
-          <div class="bg-gradient-to-r from-amber-500 to-orange-600 h-2 rounded-full" style="width:87%"></div>
-        </div>
-        <span class="text-sm text-gray-500">知识同步延迟 <100ms</span>
-      </div>
-      <!-- 创新点6 -->
-      <div class="innovationCard glass rounded-xl p-9 hover:-translate-y-4 transition-all duration-500 hover:shadow-xl shadow-indigo-500/10">
-        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-600 flex items-center justify-center mb-7">
-          <i class="fa fa-dollar text-3xl text-white"></i>
-        </div>
-        <h3 class="text-2xl font-bold mb-4">全生命周期成本优化</h3>
-        <p class="text-gray-400 mb-7">采用标准化通用零部件，维护成本降低60%，整机使用寿命达10年，投资回报周期缩短至2年</p>
-        <div class="w-full bg-dark600 rounded-full h-2 mb-2">
-          <div class="bg-gradient-to-r from-indigo-500 to-violet-600 h-2 rounded-full" style="width:93%"></div>
-        </div>
-        <span class="text-sm text-gray-500">投资回报周期 1.8年</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- 核心技术架构板块 -->
-<section id="tech" class="py-28 bg-dark800 relative">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-24">
-      <h2 class="text-[clamp(2rem,5vw,3.4rem)] font-bold mb-6">产业级系统核心技术架构</h2>
-      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-        构建感知-决策-执行全链路自主技术体系，拥有完全自主知识产权，突破国外技术垄断
-      </p>
-    </div>
-    <div class="grid md:grid-cols-2 gap-14 mb-20">
-      <!-- 技术1 多模态感知层 -->
-      <div class="techCard group relative overflow-hidden rounded-2xl h-[420px]">
-        <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/75 to-transparent z-10"></div>
-        <img src="https://picsum.photos/id/1/820/640" alt="多模态感知" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-        <div class="absolute bottom-0 left-0 right-0 p-10 z-20">
-          <div class="w-14 h-14 rounded-lg bg-primary/20 flex items-center justify-center mb-5">
-            <i class="fa fa-eye text-2xl text-primary"></i>
-          </div>
-          <h3 class="text-2xl font-bold mb-4">多模态融合感知层</h3>
-          <p class="text-gray-300 mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            集成视觉、激光雷达、毫米波雷达、触觉、力觉等12种传感器，实现360°无死角环境感知与动态目标追踪
-          </p>
-          <a href="#" class="inline-flex items-center text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            技术详情 <i class="fa fa-arrow-right ml-2"></i>
-          </a>
-        </div>
-      </div>
-      <!-- 技术2 大模型决策层 -->
-      <div class="techCard group relative overflow-hidden rounded-2xl h-[420px]">
-        <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/75 to-transparent z-10"></div>
-        <img src="https://picsum.photos/id/26/820/640" alt="大模型决策" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-        <div class="absolute bottom-0 left-0 right-0 p-10 z-20">
-          <div class="w-14 h-14 rounded-lg bg-secondary/20 flex items-center justify-center mb-5">
-            <i class="fa fa-brain text-2xl text-secondary"></i>
-          </div>
-          <h3 class="text-2xl font-bold mb-4">具身大模型决策层</h3>
-          <p class="text-gray-300 mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            自研千亿参数具身智能大模型，融合语言、视觉、运动多模态能力，实现复杂任务的自主规划与推理
-          </p>
-          <a href="#" class="inline-flex items-center text-secondary font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            技术详情 <i class="fa fa-arrow-right ml-2"></i>
-          </a>
-        </div>
-      </div>
-      <!-- 技术3 运动控制层 -->
-      <div class="techCard group relative overflow-hidden rounded-2xl h-[420px]">
-        <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/75 to-transparent z-10"></div>
-        <img src="https://picsum.photos/id/42/820/640" alt="运动控制" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-        <div class="absolute bottom-0 left-0 right-0 p-10 z-20">
-          <div class="w-14 h-14 rounded-lg bg-accent/20 flex items-center justify-center mb-5">
-            <i class="fa fa-cogs text-2xl text-accent"></i>
-          </div>
-          <h3 class="text-2xl font-bold mb-4">高精度运动控制层</h3>
-          <p class="text-gray-300 mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            自研高性能伺服电机与减速器，52个自由度全身柔顺控制，支持精细抓取、避障行走、复杂地形适应
-          </p>
-          <a href="#" class="inline-flex items-center text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            技术详情 <i class="fa fa-arrow-right ml-2"></i>
-          </a>
-        </div>
-      </div>
-      <!-- 技术4 云端平台层 -->
-      <div class="techCard group relative overflow-hidden rounded-2xl h-[420px]">
-        <div class="absolute inset-0 bg-gradient-to-t from-dark via-dark/75 to-transparent z-10"></div>
-        <img src="https://picsum.photos/id/87/820/640" alt="云端平台" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-        <div class="absolute bottom-0 left-0 right-0 p-10 z-20">
-          <div class="w-14 h-14 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-5">
-            <i class="fa fa-cloud text-2xl text-emerald-500"></i>
-          </div>
-          <h3 class="text-2xl font-bold mb-4">云端协同平台层</h3>
-          <p class="text-gray-300 mb-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            百万级机器人接入能力，提供设备管理、数据采集、模型训练、远程运维一站式云端服务
-          </p>
-          <a href="#" class="inline-flex items-center text-emerald-500 font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            技术详情 <i class="fa fa-arrow-right ml-2"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-    <!-- 技术指标数据 -->
-    <div class="glass rounded-2xl p-10 md:p-14">
-      <div class="grid md:grid-cols-4 gap-10 text-center">
-        <div>
-          <div class="text-5xl md:text-6xl font-bold text-primary mb-3 counter" data-target="96">0</div>
-          <p class="text-gray-400 text-lg">核心技术自主化率(%)</p>
+    <div class="hud-top">
+        <div class="title-group">
+            <span class="title-main">粒子智械 · 交互测试</span>
+            <span class="title-sub">Interactive Test Lab</span>
         </div>
         <div>
-          <div class="text-5xl md:text-6xl font-bold text-secondary mb-3 counter" data-target="127">0</div>
-          <p class="text-gray-400 text-lg">授权发明专利数量</p>
+            <span class="status-dot"></span>
+            <span class="status-text" id="status-label">系统就绪</span>
         </div>
-        <div>
-          <div class="text-5xl md:text-6xl font-bold text-accent mb-3 counter" data-target="52">0</div>
-          <p class="text-gray-400 text-lg">机器人全身自由度</p>
-        </div>
-        <div>
-          <div class="text-5xl md:text-6xl font-bold text-emerald-500 mb-3 counter" data-target="15000">0</div>
-          <p class="text-gray-400 text-lg">累计稳定运行小时</p>
-        </div>
-      </div>
     </div>
-  </div>
-</section>
 
-<!-- 产业级应用价值板块 -->
-<section id="value" class="py-28 relative">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-24">
-      <h2 class="text-[clamp(2rem,5vw,3.4rem)] font-bold mb-6">四大核心产业级应用价值</h2>
-      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-        解决各行业实际痛点，创造显著经济价值与社会价值，推动传统产业数字化智能化转型升级
-      </p>
+    <div id="canvas-container"></div>
+
+    <div class="assemble-progress" id="assembleProgress">
+        <span class="label" id="progressLabel">组装进度</span>
+        <div class="step-dots" id="stepDots"></div>
+        <span id="progressCount">0/6</span>
     </div>
-    <div class="flex flex-col lg:flex-row items-center gap-20">
-      <div class="lg:w-1/2">
-        <div class="relative">
-          <div class="absolute -inset-5 bg-gradient-to-r from-primary via-secondary to-accent rounded-2xl blur-3xl opacity-20 animate-pulseSlow"></div>
-          <div class="relative glass rounded-2xl overflow-hidden">
-            <img src="https://picsum.photos/id/96/840/1040" alt="产业应用" class="w-full h-auto">
-            <div class="absolute top-5 left-5 glass px-5 py-2 rounded-lg">
-              <span class="text-primary font-semibold">产业级落地应用场景</span>
-            </div>
-          </div>
+
+    <!-- 测试面板 - 可交互测试项 -->
+    <div class="test-panel" id="testPanel">
+        <div class="test-title">
+            <span><span class="icon">🧪</span> 系统测试</span>
+            <span style="font-size:0.5rem;color:var(--text-dim);">点击项目运行</span>
         </div>
-      </div>
-      <div class="lg:w-1/2 space-y-10">
-        <!-- 价值1 经济价值 -->
-        <div class="valueItem flex gap-7">
-          <div class="flex-shrink-0 w-13 h-13 rounded-lg bg-primary/20 flex items-center justify-center">
-            <i class="fa fa-line-chart text-xl text-primary"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-bold mb-3">显著提升生产效率</h3>
-            <p class="text-gray-400">24小时不间断作业，替代3-5名工人，生产效率提升300%，产品不良率降低85%，大幅降低企业生产成本</p>
-          </div>
+        <div class="test-item" data-test-id="joint">
+            <span class="label"><span class="icon-small">🔄</span> 关节灵活性</span>
+            <span class="result pending" id="test-joint">等待</span>
         </div>
-        <!-- 价值2 安全价值 -->
-        <div class="valueItem flex gap-7">
-          <div class="flex-shrink-0 w-13 h-13 rounded-lg bg-secondary/20 flex items-center justify-center">
-            <i class="fa fa-shield text-xl text-secondary"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-bold mb-3">消除高危作业风险</h3>
-            <p class="text-gray-400">替代人类进入高温、高压、有毒、易燃易爆、高空等危险环境作业，从根本上消除安全生产事故隐患</p>
-          </div>
+        <div class="test-item" data-test-id="balance">
+            <span class="label"><span class="icon-small">⚖️</span> 动态平衡</span>
+            <span class="result pending" id="test-balance">等待</span>
         </div>
-        <!-- 价值3 社会价值 -->
-        <div class="valueItem flex gap-7">
-          <div class="flex-shrink-0 w-13 h-13 rounded-lg bg-accent/20 flex items-center justify-center">
-            <i class="fa fa-users text-xl text-accent"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-bold mb-3">缓解劳动力短缺</h3>
-            <p class="text-gray-400">有效应对人口老龄化带来的劳动力短缺问题，填补制造业、服务业、养老医疗等领域的用工缺口</p>
-          </div>
+        <div class="test-item" data-test-id="perception">
+            <span class="label"><span class="icon-small">👁️</span> 感知响应</span>
+            <span class="result pending" id="test-perception">等待</span>
         </div>
-        <!-- 价值4 战略价值 -->
-        <div class="valueItem flex gap-7">
-          <div class="flex-shrink-0 w-13 h-13 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-            <i class="fa fa-flag text-xl text-emerald-500"></i>
-          </div>
-          <div>
-            <h3 class="text-xl font-bold mb-3">掌握产业战略主动权</h3>
-            <p class="text-gray-400">完全自主可控的核心技术体系，打破国外技术垄断，保障国家产业链供应链安全，抢占未来产业制高点</p>
-          </div>
+        <div class="test-item" data-test-id="communication">
+            <span class="label"><span class="icon-small">📡</span> 通信延迟</span>
+            <span class="result pending" id="test-communication">等待</span>
         </div>
-      </div>
+        <div class="test-item" data-test-id="energy">
+            <span class="label"><span class="icon-small">🔋</span> 能耗效率</span>
+            <span class="result pending" id="test-energy">等待</span>
+        </div>
+        <div class="test-item" data-test-id="environment">
+            <span class="label"><span class="icon-small">🌐</span> 环境感知</span>
+            <span class="result pending" id="test-environment">等待</span>
+        </div>
+        <div style="margin-top:6px;border-top:1px solid rgba(255,255,255,0.06);padding-top:6px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:0.6rem;color:var(--text-dim);">总体状态</span>
+            <span class="result pending" id="testOverall" style="font-size:0.6rem;">未测试</span>
+        </div>
+        <canvas id="statusDiagram" width="220" height="80"></canvas>
+        <div class="diagram-label" id="diagramLabel">点击测试项目查看状态</div>
     </div>
-  </div>
-</section>
 
-<!-- 实验仿真平台 -->
-<section id="lab" class="py-28 bg-dark800 relative">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-24">
-      <h2 class="text-[clamp(2rem,5vw,3.4rem)] font-bold mb-6">科研与产业一体化实验仿真平台</h2>
-      <p class="text-xl text-gray-400 max-w-3xl mx-auto">
-        从算法研发到产业落地一站式解决方案，大幅缩短技术转化周期，加速创新成果产业化
-      </p>
+    <div class="control-bar" id="controlBar">
+        <button class="primary" id="btnAssemble">🔧 一键组装</button>
+        <button class="success" id="btnRunAll" disabled>▶ 全部测试</button>
+        <button id="btnReset">⟲ 重置</button>
     </div>
-    <div class="grid md:grid-cols-3 gap-9 mb-20">
-      <!-- 仿真引擎 -->
-      <div class="labCard glass rounded-xl p-9 hover:shadow-xl shadow-primary/10 transition-all duration-500">
-        <div class="text-4xl text-primary mb-7"><i class="fa fa-desktop"></i></div>
-        <h3 class="text-2xl font-bold mb-5">高保真物理仿真引擎</h3>
-        <p class="text-gray-400 mb-7">1:1还原真实物理世界，支持复杂场景快速构建，算法验证效率提升10倍，大幅降低真机调试成本</p>
-        <ul class="space-y-3 text-gray-300">
-          <li class="flex items-center"><i class="fa fa-check text-primary mr-3"></i>支持PyBullet / MuJoCo / Isaac Sim</li>
-          <li class="flex items-center"><i class="fa fa-check text-primary mr-3"></i>1000+标准化工业场景库</li>
-          <li class="flex items-center"><i class="fa fa-check text-primary mr-3"></i>万级并发仿真能力</li>
-        </ul>
-      </div>
-      <!-- 算法框架 -->
-      <div class="labCard glass rounded-xl p-9 hover:shadow-xl shadow-secondary/10 transition-all duration-500">
-        <div class="text-4xl text-secondary mb-7"><i class="fa fa-code-fork"></i></div>
-        <h3 class="text-2xl font-bold mb-5">产业级算法开发框架</h3>
-        <p class="text-gray-400 mb-7">模块化算法组件库，预训练模型一键调用，支持快速二次开发，满足不同行业个性化需求</p>
-        <ul class="space-y-3 text-gray-300">
-          <li class="flex items-center"><i class="fa fa-check text-secondary mr-3"></i>PyTorch / TensorFlow全兼容</li>
-          <li class="flex items-center"><i class="fa fa-check text-secondary mr-3"></i>500+预训练算法模型</li>
-          <li class="flex items-center"><i class="fa fa-check text-secondary mr-3"></i>一键部署到真机</li>
-        </ul>
-      </div>
-      <!-- 测试验证 -->
-      <div class="labCard glass rounded-xl p-9 hover:shadow-xl shadow-accent/10 transition-all duration-500">
-        <div class="text-4xl text-accent mb-7"><i class="fa fa-check-circle"></i></div>
-        <h3 class="text-2xl font-bold mb-5">自动化测试验证平台</h3>
-        <p class="text-gray-400 mb-7">全自动化测试流程，覆盖功能、性能、安全、可靠性等多个维度，保障产品质量稳定可靠</p>
-        <ul class="space-y-3 text-gray-300">
-          <li class="flex items-center"><i class="fa fa-check text-accent mr-3"></i>1000+标准化测试用例</li>
-          <li class="flex items-center"><i class="fa fa-check text-accent mr-3"></i>7×24小时无人值守测试</li>
-          <li class="flex items-center"><i class="fa fa-check text-accent mr-3"></i>智能缺陷定位与分析</li>
-        </ul>
-      </div>
+
+    <div class="hint-bar">
+        <div class="hint-item"><span class="hint-key">🖱 拖拽</span> 旋转场景</div>
+        <div class="hint-item"><span class="hint-key">🖱 滚轮</span> 缩放视野</div>
+        <div class="hint-item"><span class="hint-key">R</span> 重置视角</div>
+        <div class="hint-item"><span class="hint-key">空格</span> 脉冲（组装后）</div>
     </div>
-    <!-- 实验演示 -->
-    <div class="glass rounded-2xl overflow-hidden">
-      <div class="flex justify-between items-center p-7 border-b border-white/10">
-        <h3 class="text-xl font-bold">产业级系统性能测试演示</h3>
-        <div class="flex gap-3">
-          <div class="w-3 h-3 rounded-full bg-red-500"></div>
-          <div class="w-3 h-3 rounded-full bg-amber-500"></div>
-          <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-        </div>
-      </div>
-      <div class="p-8 grid md:grid-cols-2 gap-10">
-        <div>
-          <div class="relative rounded-lg overflow-hidden mb-5">
-            <img src="https://picsum.photos/id/60/640/420" alt="系统演示" class="w-full h-auto">
-            <div class="absolute inset-0 flex items-center justify-center bg-dark/50">
-              <button class="w-16 h-16 rounded-full bg-primary/80 flex items-center justify-center hover:bg-primary transition-colors">
-                <i class="fa fa-play text-2xl text-white"></i>
-              </button>
-            </div>
-          </div>
-          <h4 class="text-lg font-semibold mb-3">工业装配线全流程自动化演示</h4>
-          <p class="text-gray-400 text-sm">展示机器人在真实工业环境中完成零部件抓取、装配、质检、搬运全流程作业</p>
-        </div>
-        <div>
-          <h4 class="text-lg font-semibold mb-5">系统综合性能对比</h4>
-          <canvas id="perfChart" width="420" height="320"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- 项目对接板块 -->
-<section id="contact" class="py-28 relative">
-  <div class="container mx-auto px-6 max-w-5xl">
-    <div class="text-center mb-20">
-      <h2 class="text-[clamp(2rem,5vw,3.4rem)] font-bold mb-6">产业合作与项目对接</h2>
-      <p class="text-xl text-gray-400">填写信息即可获取完整系统介绍文档、产业价值白皮书、路演PPT及演示视频</p>
-    </div>
-    <div class="glass rounded-2xl p-10 md:p-14">
-      <form id="projectForm" class="space-y-7">
-        <div class="grid md:grid-cols-2 gap-7">
-          <div>
-            <label class="block text-sm font-medium text-gray-400 mb-3">联系人姓名</label>
-            <input type="text" class="w-full bg-dark700 border border-white/10 rounded-lg px-5 py-4 focus:outline-none focus:border-primary transition-colors" placeholder="填写您的姓名">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-400 mb-3">单位名称</label>
-            <input type="text" class="w-full bg-dark700 border border-white/10 rounded-lg px-5 py-4 focus:outline-none focus:border-primary transition-colors" placeholder="企业、高校或科研机构名称">
-          </div>
-        </div>
-        <div class="grid md:grid-cols-2 gap-7">
-          <div>
-            <label class="block text-sm font-medium text-gray-400 mb-3">联系邮箱</label>
-            <input type="email" class="w-full bg-dark700 border border-white/10 rounded-lg px-5 py-4 focus:outline-none focus:border-primary transition-colors" placeholder="接收资料的邮箱地址">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-400 mb-3">联系电话</label>
-            <input type="tel" class="w-full bg-dark700 border border-white/10 rounded-lg px-5 py-4 focus:outline-none focus:border-primary transition-colors" placeholder="方便沟通的联系电话">
-          </div>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-400 mb-3">合作意向</label>
-          <select class="w-full bg-dark700 border border-white/10 rounded-lg px-5 py-4 focus:outline-none focus:border-primary transition-colors">
-            <option value="">请选择您的合作意向</option>
-            <option value="purchase">产品采购与部署</option>
-            <option value="cooperation">技术合作开发</option>
-            <option value="investment">投资与融资</option>
-            <option value="research">科研项目合作</option>
-            <option value="other">其他合作方式</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-400 mb-3">需求说明</label>
-          <textarea rows="5" class="w-full bg-dark700 border border-white/10 rounded-lg px-5 py-4 focus:outline-none focus:border-primary transition-colors" placeholder="请简要描述您的需求，如需要系统演示、技术交流、定制开发等"></textarea>
-        </div>
-        <button type="submit" class="w-full py-5 bg-gradient-to-r from-primary to-secondary rounded-lg font-semibold text-xl hover:opacity-90 hover:scale-[1.02] transition-all shadow-lg shadow-primary/20">
-          提交申请，获取全套项目资料
-        </button>
-      </form>
-    </div>
-  </div>
-</section>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 
-<!-- 页脚 -->
-<footer class="py-14 bg-dark800 border-t border-white/10">
-  <div class="container mx-auto px-6">
-    <div class="grid md:grid-cols-4 gap-10 mb-16">
-      <div>
-        <div class="flex items-center gap-3 mb-7">
-          <div class="w-11 h-11 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-            <i class="fa fa-robot text-xl text-white"></i>
-          </div>
-          <span class="text-2xl font-bold text-gradient bg-gradient-to-r from-primary to-secondary">NexusBot 创新产业系统</span>
-        </div>
-        <p class="text-gray-400 mb-7">专注于人形机器人与具身智能技术创新，打造具备产业级应用价值的新一代智能机器人系统，推动未来产业发展</p>
-        <div class="flex gap-4">
-          <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center hover:bg-primary/20 transition-colors"><i class="fa fa-weibo"></i></a>
-          <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center hover:bg-primary/20 transition-colors"><i class="fa fa-wechat"></i></a>
-          <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center hover:bg-primary/20 transition-colors"><i class="fa fa-github"></i></a>
-          <a href="#" class="w-11 h-11 rounded-full glass flex items-center justify-center hover:bg-primary/20 transition-colors"><i class="fa fa-linkedin"></i></a>
-        </div>
-      </div>
-      <div>
-        <h4 class="text-lg font-bold mb-7">产品与服务</h4>
-        <ul class="space-y-4 text-gray-400">
-          <li><a href="#value" class="hover:text-primary transition-colors">人形机器人整机</a></li>
-          <li><a href="#lab" class="hover:text-primary transition-colors">仿真实验平台</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">行业解决方案</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">技术咨询服务</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">定制化开发</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-lg font-bold mb-7">关于我们</h4>
-        <ul class="space-y-4 text-gray-400">
-          <li><a href="#home" class="hover:text-primary transition-colors">系统概述</a></li>
-          <li><a href="#innovation" class="hover:text-primary transition-colors">创新设计</a></li>
-          <li><a href="#tech" class="hover:text-primary transition-colors">核心技术</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">发展历程</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">新闻动态</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-lg font-bold mb-7">联系我们</h4>
-        <ul class="space-y-4 text-gray-400">
-          <li class="flex items-center gap-3"><i class="fa fa-map-marker text-primary"></i>北京市海淀区未来产业科创园</li>
-          <li class="flex items-center gap-3"><i class="fa fa-phone text-primary"></i>400-888-9999</li>
-          <li class="flex items-center gap-3"><i class="fa fa-envelope text-primary"></i>business@nexusbot.ai</li>
-          <li class="flex items-center gap-3"><i class="fa fa-clock-o text-primary"></i>工作日 9:00-18:00</li>
-        </ul>
-      </div>
-    </div>
-    <div class="pt-10 border-t border-white/10 text-center text-gray-500">
-      <p>© 2026 NexusBot 人形机器人具身智能创新产业系统 | 具备完整产业级应用价值 | 配套系统介绍文档·产业价值白皮书·路演PPT全套资料</p>
-    </div>
-  </div>
-</footer>
+    <script type="module">
+        import * as THREE from 'three';
 
-<script>
-// 页面完全加载后初始化所有功能，彻底解决白屏
-document.addEventListener('DOMContentLoaded',function(){
-  initParticleCanvas();
-  initNavScrollEffect();
-  initMobileMenuToggle();
-  initAnchorSmoothScroll();
-  initNumberCountAnimation();
-  initPerformanceChartRender();
-  initFormSubmitLogic();
-  // 自动定时发射烟花特效
-  setInterval(()=>{
-    const randX = Math.random() * window.innerWidth;
-    const randY = Math.random() * window.innerHeight * 0.55;
-    createSingleFirework(randX, randY);
-  },3200);
-});
+        // ============================================================
+        //  DOM 引用
+        // ============================================================
+        const container = document.getElementById('canvas-container');
+        const statusLabel = document.getElementById('status-label');
+        const btnAssemble = document.getElementById('btnAssemble');
+        const btnRunAll = document.getElementById('btnRunAll');
+        const btnReset = document.getElementById('btnReset');
+        const testPanel = document.getElementById('testPanel');
+        const assembleProgress = document.getElementById('assembleProgress');
+        const stepDots = document.getElementById('stepDots');
+        const progressCount = document.getElementById('progressCount');
+        const progressLabel = document.getElementById('progressLabel');
+        const testOverall = document.getElementById('testOverall');
+        const diagramCanvas = document.getElementById('statusDiagram');
+        const diagramLabel = document.getElementById('diagramLabel');
+        const ctx = diagramCanvas.getContext('2d');
 
-// ========== 立体粒子+烟花特效核心代码 ==========
-let canvasDom, ctxDom;
-let bgParticleList = [];
-let fireworkList = [];
+        // ============================================================
+        //  性能
+        // ============================================================
+        const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent) || window.innerWidth < 768;
+        const pixelRatio = Math.min(window.devicePixelRatio, isMobile ? 1.0 : 1.4);
+        const PARTICLE_MULT = isMobile ? 0.45 : 0.70;
 
-function initParticleCanvas(){
-  canvasDom = document.getElementById('particleCanvas');
-  ctxDom = canvasDom.getContext('2d');
-  resizeCanvasSize();
-  window.addEventListener('resize',resizeCanvasSize);
-  // 画布点击触发烟花
-  canvasDom.addEventListener('click',(e)=>{
-    createSingleFirework(e.clientX,e.clientY);
-  });
-  createBackgroundBaseParticles();
-  runParticleAnimationLoop();
-}
+        // ============================================================
+        //  场景 / 相机 / 渲染器
+        // ============================================================
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2('#05080f', 0.00030);
 
-function resizeCanvasSize(){
-  canvasDom.width = window.innerWidth;
-  canvasDom.height = window.innerHeight;
-}
+        const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.3, 28);
+        camera.position.set(0, 1.4, 6.0);
+        camera.lookAt(0, 0.7, 0);
 
-// 背景静态流动粒子类
-class BaseParticle{
-  constructor(x,y,color,vel,size){
-    this.x = x;
-    this.y = y;
-    this.color = color;
-    this.vx = vel.x;
-    this.vy = vel.y;
-    this.size = size;
-  }
-  update(){
-    this.x += this.vx;
-    this.y += this.vy;
-    // 边界循环
-    if(this.x < 0) this.x = canvasDom.width;
-    if(this.x > canvasDom.width) this.x = 0;
-    if(this.y < 0) this.y = canvasDom.height;
-    if(this.y > canvasDom.height) this.y = 0;
-  }
-  draw(){
-    ctxDom.fillStyle = this.color;
-    ctxDom.beginPath();
-    ctxDom.arc(this.x,this.y,this.size,0,Math.PI*2);
-    ctxDom.fill();
-  }
-}
+        const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true, powerPreference: 'high-performance' });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        renderer.setPixelRatio(pixelRatio);
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        renderer.toneMappingExposure = 1.0;
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        container.appendChild(renderer.domElement);
 
-// 烟花爆炸粒子类
-class BoomParticle{
-  constructor(x,y,color,vel,size,life){
-    this.x = x;
-    this.y = y;
-    this.color = color;
-    this.vx = vel.x;
-    this.vy = vel.y;
-    this.size = size;
-    this.life = life;
-    this.maxLife = life;
-  }
-  update(){
-    this.x += this.vx;
-    this.vy += 0.06; // 重力下坠
-    this.life -= 1;
-    this.size *= 0.975;
-  }
-  draw(){
-    ctxDom.save();
-    ctxDom.globalAlpha = this.life / this.maxLife;
-    ctxDom.fillStyle = this.color;
-    ctxDom.beginPath();
-    ctxDom.arc(this.x,this.y,this.size,0,Math.PI*2);
-    ctxDom.fill();
-    ctxDom.restore();
-  }
-  isDead(){
-    return this.life <= 0;
-  }
-}
+        // ============================================================
+        //  光照
+        // ============================================================
+        const ambientLight = new THREE.AmbientLight('#1a2a40', 1.8);
+        scene.add(ambientLight);
+        const pointLight1 = new THREE.PointLight('#4da8da', 28, 9, 1.8);
+        pointLight1.position.set(2, 3, 3);
+        scene.add(pointLight1);
+        const pointLight2 = new THREE.PointLight('#7b5ea7', 16, 7, 1.8);
+        pointLight2.position.set(-2, 1.5, -2);
+        scene.add(pointLight2);
 
-// 烟花发射弹体类
-class FireworkShell{
-  constructor(startX,targetY){
-    this.x = startX;
-    this.y = canvasDom.height;
-    this.targetY = targetY;
-    this.vy = -8.2;
-    this.exploded = false;
-    this.boomParticles = [];
-    this.colorPool = ['#00d4ff','#7b2ff7','#ff2d95','#00ff99','#fff333','#ff6b2f'];
-  }
-  update(){
-    if(!this.exploded){
-      this.y += this.vy;
-      if(this.y <= this.targetY) this.explode();
-    }else{
-      for(let i=this.boomParticles.length-1;i>=0;i--){
-        this.boomParticles[i].update();
-        if(this.boomParticles[i].isDead()) this.boomParticles.splice(i,1);
-      }
-    }
-  }
-  explode(){
-    this.exploded = true;
-    const totalBoom = 130;
-    const randColor = this.colorPool[Math.floor(Math.random()*this.colorPool.length)];
-    for(let i=0;i<totalBoom;i++){
-      const angle = (Math.PI * 2 / totalBoom) * i;
-      const speed = Math.random()*6.2 + 2.1;
-      const vel = {x:Math.cos(angle)*speed, y:Math.sin(angle)*speed};
-      const pSize = Math.random()*3.2 + 0.8;
-      const pLife = Math.random()*85 + 65;
-      this.boomParticles.push(new BoomParticle(this.x,this.y,randColor,vel,pSize,pLife));
-    }
-  }
-  draw(){
-    if(!this.exploded){
-      // 绘制发射弹丸
-      ctxDom.fillStyle = '#ffffff';
-      ctxDom.beginPath();
-      ctxDom.arc(this.x,this.y,3.2,0,Math.PI*2);
-      ctxDom.fill();
-      // 尾迹拖线
-      ctxDom.strokeStyle = 'rgba(255,255,255,0.45)';
-      ctxDom.lineWidth = 2;
-      ctxDom.beginPath();
-      ctxDom.moveTo(this.x,this.y);
-      ctxDom.lineTo(this.x,this.y+22);
-      ctxDom.stroke();
-    }else{
-      for(let p of this.boomParticles) p.draw();
-    }
-  }
-  isAllDead(){
-    return this.exploded && this.boomParticles.length === 0;
-  }
-}
+        // ============================================================
+        //  场景分组
+        // ============================================================
+        const mainGroup = new THREE.Group();
+        const starGroup = new THREE.Group();
+        scene.add(mainGroup);
+        scene.add(starGroup);
 
-// 初始化背景流动粒子
-function createBackgroundBaseParticles(){
-  for(let i=0;i<160;i++){
-    const x = Math.random()*canvasDom.width;
-    const y = Math.random()*canvasDom.height;
-    const opacity = Math.random()*0.38 + 0.08;
-    const color = `rgba(0, 212, 255, ${opacity})`;
-    const vel = {x:(Math.random()-0.5)*0.32, y:(Math.random()-0.5)*0.32};
-    const size = Math.random()*2.1 + 0.4;
-    bgParticleList.push(new BaseParticle(x,y,color,vel,size));
-  }
-}
-
-// 创建单个烟花
-function createSingleFirework(x,y){
-  fireworkList.push(new FireworkShell(x,y));
-}
-
-// 全局动画循环
-function runParticleAnimationLoop(){
-  // 半透明底色制造拖影流光效果
-  ctxDom.fillStyle = 'rgba(6,6,11,0.16)';
-  ctxDom.fillRect(0,0,canvasDom.width,canvasDom.height);
-  // 更新绘制背景粒子
-  for(let p of bgParticleList){
-    p.update();
-    p.draw();
-  }
-  // 更新绘制所有烟花
-  for(let i=fireworkList.length-1;i>=0;i--){
-    fireworkList[i].update();
-    fireworkList[i].draw();
-    if(fireworkList[i].isAllDead()) fireworkList.splice(i,1);
-  }
-  requestAnimationFrame(runParticleAnimationLoop);
-}
-
-// ========== 导航栏滚动透明度变化 ==========
-function initNavScrollEffect(){
-  const nav = document.getElementById('navbar');
-  window.addEventListener('scroll',()=>{
-    if(window.scrollY > 60){
-      nav.classList.add('glass','py-2');
-      nav.classList.remove('py-4');
-    }else{
-      nav.classList.remove('glass','py-2');
-      nav.classList.add('py-4');
-    }
-  });
-}
-
-// ========== 移动端菜单开关 ==========
-function initMobileMenuToggle(){
-  const btn = document.getElementById('menuBtn');
-  const menu = document.getElementById('mobileMenu');
-  btn.addEventListener('click',()=>{
-    menu.classList.toggle('hidden');
-  });
-}
-
-// ========== 锚点平滑滚动 ==========
-function initAnchorSmoothScroll(){
-  document.querySelectorAll('a[href^="#"]').forEach(link=>{
-    link.addEventListener('click',function(e){
-      e.preventDefault();
-      const targetId = this.getAttribute('href');
-      const targetDom = document.querySelector(targetId);
-      if(targetDom){
-        window.scrollTo({
-          top: targetDom.offsetTop - 90,
-          behavior: 'smooth'
+        // ============================================================
+        //  星空
+        // ============================================================
+        const starCount = Math.floor(350 * PARTICLE_MULT);
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        const starCol = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos(2 * Math.random() - 1);
+            const r = 7 + Math.random() * 9;
+            starPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+            starPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+            starPos[i * 3 + 2] = r * Math.cos(phi);
+            const t = Math.random();
+            starCol[i * 3] = 0.55 + t * 0.35;
+            starCol[i * 3 + 1] = 0.6 + t * 0.3;
+            starCol[i * 3 + 2] = 0.75 + t * 0.25;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        starGeo.setAttribute('color', new THREE.BufferAttribute(starCol, 3));
+        const starMat = new THREE.PointsMaterial({
+            size: 0.035,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+            opacity: 0.7,
+            sizeAttenuation: true,
         });
-        document.getElementById('mobileMenu').classList.add('hidden');
-      }
-    });
-  });
-}
+        const starPoints = new THREE.Points(starGeo, starMat);
+        starGroup.add(starPoints);
 
-// ========== 数字滚动计数动画 ==========
-function initNumberCountAnimation(){
-  const counterItems = document.querySelectorAll('.counter');
-  counterItems.forEach(item=>{
-    const targetNum = parseInt(item.dataset.target);
-    const duration = 2200;
-    const stepVal = targetNum / (duration / 16);
-    let cur = 0;
-    function updateCount(){
-      cur += stepVal;
-      if(cur < targetNum){
-        item.textContent = Math.floor(cur);
-        requestAnimationFrame(updateCount);
-      }else{
-        item.textContent = targetNum;
-      }
-    }
-    // 滚动到可视区域触发
-    const observer = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          updateCount();
-          observer.unobserve(entry.target);
+        // ============================================================
+        //  机器人粒子系统（主体）
+        // ============================================================
+        const robotParticleCount = Math.floor(580 * PARTICLE_MULT);
+        const robotGeo = new THREE.BufferGeometry();
+        const robotPosBase = new Float32Array(robotParticleCount * 3);
+        const robotPos = new Float32Array(robotParticleCount * 3);
+        const robotCol = new Float32Array(robotParticleCount * 3);
+        const robotSizes = new Float32Array(robotParticleCount);
+
+        function sampleSphere(cx, cy, cz, radius, count, out, idx) {
+            for (let i = 0; i < count; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                const r = radius * (0.85 + Math.random() * 0.15);
+                out[idx + i * 3] = cx + r * Math.sin(phi) * Math.cos(theta);
+                out[idx + i * 3 + 1] = cy + r * Math.sin(phi) * Math.sin(theta);
+                out[idx + i * 3 + 2] = cz + r * Math.cos(phi);
+            }
         }
-      })
-    },{threshold:0.4});
-    observer.observe(item);
-  });
-}
 
-// ========== 性能图表渲染 ==========
-function initPerformanceChartRender(){
-  const chartCanvas = document.getElementById('perfChart');
-  if(!chartCanvas) return;
-  new Chart(chartCanvas,{
-    type:'radar',
-    data:{
-      labels:['生产效率','安全可靠性','部署便捷性','维护成本','系统扩展性','投资回报'],
-      datasets:[{
-        label:'NexusBot创新系统',
-        data:[96,94,89,93,91,88],
-        borderColor:'#00d4ff',
-        backgroundColor:'rgba(0,212,255,0.15)',
-        borderWidth:2,
-        pointBackgroundColor:'#00d4ff'
-      },{
-        label:'传统工业机器人',
-        data:[65,72,45,38,52,41],
-        borderColor:'#ff6b2f',
-        backgroundColor:'rgba(255,107,47,0.1)',
-        borderWidth:2,
-        pointBackgroundColor:'#ff6b2f'
-      }]
-    },
-    options:{
-      plugins:{
-        legend:{labels:{color:'#cccccc'}}
-      },
-      scales:{
-        r:{
-          ticks:{display:false},
-          grid:{color:'rgba(255,255,255,0.1)'},
-          pointLabels:{color:'#e0e0e0'},
-          angleLines:{color:'rgba(255,255,255,0.1)'}
+        function sampleCapsule(cx1, cy1, cz1, cx2, cy2, cz2, radius, count, out, idx) {
+            for (let i = 0; i < count; i++) {
+                const t = Math.random();
+                const cx = cx1 + (cx2 - cx1) * t;
+                const cy = cy1 + (cy2 - cy1) * t;
+                const cz = cz1 + (cz2 - cz1) * t;
+                const angle = Math.random() * Math.PI * 2;
+                const r = radius * (0.80 + Math.random() * 0.20);
+                out[idx + i * 3] = cx + r * Math.cos(angle);
+                out[idx + i * 3 + 1] = cy + r * Math.sin(angle);
+                out[idx + i * 3 + 2] = cz + (Math.random() - 0.5) * r * 1.2;
+            }
         }
-      }
-    }
-  });
-}
 
-// ========== 表单提交交互 ==========
-function initFormSubmitLogic(){
-  const form = document.getElementById('projectForm');
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    alert('提交成功！系统介绍文档、产业价值白皮书、路演PPT及演示视频将发送至您填写的邮箱，请留意查收');
-    form.reset();
-  });
-}
-</script>
+        function sampleBox(cx, cy, cz, hw, hh, hd, count, out, idx) {
+            const faces = [
+                { axis: 'x', val: hw, r: [cy - hh, cy + hh, cz - hd, cz + hd] },
+                { axis: 'x', val: -hw, r: [cy - hh, cy + hh, cz - hd, cz + hd] },
+                { axis: 'y', val: hh, r: [cx - hw, cx + hw, cz - hd, cz + hd] },
+                { axis: 'y', val: -hh, r: [cx - hw, cx + hw, cz - hd, cz + hd] },
+                { axis: 'z', val: hd, r: [cx - hw, cx + hw, cy - hh, cy + hh] },
+                { axis: 'z', val: -hd, r: [cx - hw, cx + hw, cy - hh, cy + hh] },
+            ];
+            for (let i = 0; i < count; i++) {
+                const f = faces[Math.floor(Math.random() * 6)];
+                const u = f.r[0] + Math.random() * (f.r[1] - f.r[0]);
+                const v = f.r[2] + Math.random() * (f.r[3] - f.r[2]);
+                if (f.axis === 'x') { out[idx + i * 3] = cx + f.val;
+                    out[idx + i * 3 + 1] = u;
+                    out[idx + i * 3 + 2] = v; } else if (f.axis === 'y') { out[idx + i * 3] = u;
+                    out[idx + i * 3 + 1] = cy + f.val;
+                    out[idx + i * 3 + 2] = v; } else { out[idx + i * 3] = u;
+                    out[idx + i * 3 + 1] = v;
+                    out[idx + i * 3 + 2] = cz + f.val; }
+            }
+        }
+
+        let idx2 = 0;
+        const hc = Math.floor(160 * PARTICLE_MULT);
+        sampleSphere(0, 1.48, 0, 0.27, hc, robotPosBase, idx2);
+        idx2 += hc * 3;
+        const nc = Math.floor(30 * PARTICLE_MULT);
+        sampleCapsule(0, 1.18, 0, 0, 1.08, 0, 0.07, nc, robotPosBase, idx2);
+        idx2 += nc * 3;
+        const tc = Math.floor(150 * PARTICLE_MULT);
+        sampleBox(0, 0.82, 0, 0.27, 0.36, 0.13, tc, robotPosBase, idx2);
+        idx2 += tc * 3;
+        const lu = Math.floor(40 * PARTICLE_MULT);
+        sampleCapsule(-0.37, 1.08, 0, -0.48, 0.62, 0.04, 0.08, lu, robotPosBase, idx2);
+        idx2 += lu * 3;
+        const ll = Math.floor(35 * PARTICLE_MULT);
+        sampleCapsule(-0.48, 0.62, 0.04, -0.40, 0.22, 0.06, 0.06, ll, robotPosBase, idx2);
+        idx2 += ll * 3;
+        const ru = Math.floor(40 * PARTICLE_MULT);
+        sampleCapsule(0.37, 1.08, 0, 0.48, 0.62, 0.04, 0.08, ru, robotPosBase, idx2);
+        idx2 += ru * 3;
+        const rl = Math.floor(35 * PARTICLE_MULT);
+        sampleCapsule(0.48, 0.62, 0.04, 0.40, 0.22, 0.06, 0.06, rl, robotPosBase, idx2);
+        idx2 += rl * 3;
+        const legl = Math.floor(40 * PARTICLE_MULT);
+        sampleCapsule(-0.14, 0.44, 0, -0.16, -0.10, 0.02, 0.09, legl, robotPosBase, idx2);
+        idx2 += legl * 3;
+        const legr = Math.floor(40 * PARTICLE_MULT);
+        sampleCapsule(0.14, 0.44, 0, 0.16, -0.10, 0.02, 0.09, legr, robotPosBase, idx2);
+
+        robotPos.set(robotPosBase);
+        for (let i = 0; i < robotParticleCount; i++) {
+            const y = robotPosBase[i * 3 + 1];
+            const dist = Math.abs(y - 0.7) / 1.9;
+            const glow = 1 - Math.min(dist * 1.3, 1);
+            robotCol[i * 3] = 0.35 + glow * 0.55;
+            robotCol[i * 3 + 1] = 0.50 + glow * 0.40;
+            robotCol[i * 3 + 2] = 0.65 + glow * 0.35;
+            robotSizes[i] = 0.015 + glow * 0.035 + Math.random() * 0.010;
+        }
+        robotGeo.setAttribute('position', new THREE.BufferAttribute(robotPos, 3));
+        robotGeo.setAttribute('color', new THREE.BufferAttribute(robotCol, 3));
+        robotGeo.setAttribute('size', new THREE.BufferAttribute(robotSizes, 1));
+        const robotMat = new THREE.PointsMaterial({
+            size: 0.032,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+            opacity: 0.92,
+            sizeAttenuation: true,
+        });
+        const robotPoints = new THREE.Points(robotGeo, robotMat);
+        mainGroup.add(robotPoints);
+
+        // ============================================================
+        //  骨架连线
+        // ============================================================
+        const skelPoints = [
+            [0, 1.48, 0],
+            [0, 1.08, 0],
+            [0, 0.82, 0],
+            [-0.37, 1.08, 0],
+            [-0.48, 0.62, 0.04],
+            [-0.40, 0.22, 0.06],
+            [0.37, 1.08, 0],
+            [0.48, 0.62, 0.04],
+            [0.40, 0.22, 0.06],
+            [-0.14, 0.44, 0],
+            [-0.16, -0.10, 0.02],
+            [0.14, 0.44, 0],
+            [0.16, -0.10, 0.02],
+        ];
+        const skelEdges = [
+            [0, 1],
+            [1, 2],
+            [1, 3],
+            [3, 4],
+            [4, 5],
+            [1, 6],
+            [6, 7],
+            [7, 8],
+            [2, 9],
+            [9, 10],
+            [2, 11],
+            [11, 12]
+        ];
+        const skelVerts = [];
+        skelEdges.forEach(([a, b]) => { skelVerts.push(...skelPoints[a], ...skelPoints[b]); });
+        const skelLineGeo = new THREE.BufferGeometry();
+        skelLineGeo.setAttribute('position', new THREE.Float32BufferAttribute(skelVerts, 3));
+        const skelLineMat = new THREE.LineBasicMaterial({
+            color: '#3a6090',
+            transparent: true,
+            opacity: 0.40,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+        });
+        const skeletonLines = new THREE.LineSegments(skelLineGeo, skelLineMat);
+        mainGroup.add(skeletonLines);
+
+        // ============================================================
+        //  轨道环
+        // ============================================================
+        function createOrbitalRing(radius, tiltX, tiltZ, count, colorHex, speed) {
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            for (let i = 0; i < count; i++) {
+                const a = (i / count) * Math.PI * 2;
+                pos[i * 3] = Math.cos(a) * radius;
+                pos[i * 3 + 1] = 0;
+                pos[i * 3 + 2] = Math.sin(a) * radius;
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            const mat = new THREE.PointsMaterial({
+                size: 0.020,
+                color: new THREE.Color(colorHex),
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                transparent: true,
+                opacity: 0.55,
+                sizeAttenuation: true,
+            });
+            const ring = new THREE.Points(geo, mat);
+            ring.rotation.x = tiltX;
+            ring.rotation.z = tiltZ;
+            ring.position.y = 0.75;
+            ring.userData = { speed, count, basePos: new Float32Array(pos) };
+            return ring;
+        }
+        const ringCount = Math.floor(60 * PARTICLE_MULT);
+        const ring1 = createOrbitalRing(0.72, Math.PI * 0.28, Math.PI * 0.12, ringCount, '#4da8da', 0.30);
+        const ring2 = createOrbitalRing(0.86, -Math.PI * 0.22, -Math.PI * 0.15, Math.floor(50 * PARTICLE_MULT), '#7b5ea7',
+            -0.24);
+        const ring3 = createOrbitalRing(0.65, Math.PI * 0.40, Math.PI * 0.30, Math.floor(42 * PARTICLE_MULT), '#5ec4c9',
+            0.36);
+        mainGroup.add(ring1);
+        mainGroup.add(ring2);
+        mainGroup.add(ring3);
+        const orbitalRings = [ring1, ring2, ring3];
+
+        // ============================================================
+        //  环境物体（机器人相关）
+        // ============================================================
+        const envObjects = [];
+
+        function createMiniRobotArm(color) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshStandardMaterial({
+                color: color,
+                roughness: 0.3,
+                metalness: 0.7,
+                emissive: color,
+                emissiveIntensity: 0.15,
+            });
+            const matJoint = new THREE.MeshStandardMaterial({
+                color: 0x8899aa,
+                roughness: 0.2,
+                metalness: 0.8,
+            });
+            const base = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.04, 6), mat);
+            base.position.y = -0.04;
+            group.add(base);
+            const seg1 = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.10, 6), mat);
+            seg1.position.y = 0.05;
+            group.add(seg1);
+            const joint1 = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6), matJoint);
+            joint1.position.y = 0.10;
+            group.add(joint1);
+            const seg2 = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.08, 6), mat);
+            seg2.position.y = 0.16;
+            group.add(seg2);
+            const end = new THREE.Mesh(new THREE.SphereGeometry(0.03, 6), matJoint);
+            end.position.y = 0.22;
+            group.add(end);
+            return group;
+        }
+
+        function createGear(color) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshStandardMaterial({
+                color: color,
+                roughness: 0.4,
+                metalness: 0.8,
+                emissive: color,
+                emissiveIntensity: 0.1,
+            });
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(0.10, 0.02, 8, 12), mat);
+            group.add(ring);
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.03, 0.03), mat);
+                tooth.position.set(0.12 * Math.cos(angle), 0.12 * Math.sin(angle), 0);
+                group.add(tooth);
+            }
+            return group;
+        }
+
+        function createScrew(color) {
+            const group = new THREE.Group();
+            const mat = new THREE.MeshStandardMaterial({
+                color: color,
+                roughness: 0.3,
+                metalness: 0.9,
+            });
+            const head = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.03, 6), mat);
+            head.position.y = 0.015;
+            group.add(head);
+            const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.08, 6), mat);
+            shaft.position.y = -0.04;
+            group.add(shaft);
+            return group;
+        }
+
+        const envColors = ['#4da8da', '#7b5ea7', '#f5c542', '#3ef5a0'];
+        const envCreators = [createMiniRobotArm, createGear, createScrew, createMiniRobotArm];
+        const envPositions = [
+            [1.0, 0.0, 0.7],
+            [-0.9, 0.1, -0.6],
+            [0.6, -0.1, -0.9],
+            [-0.7, 0.0, 0.8]
+        ];
+        envCreators.forEach((fn, i) => {
+            const obj = fn(envColors[i % envColors.length]);
+            obj.position.set(...envPositions[i]);
+            obj.userData = {
+                basePos: [...envPositions[i]],
+                floatOffset: Math.random() * Math.PI * 2,
+                floatSpeed: 0.4 + Math.random() * 0.5,
+                floatAmp: 0.08 + Math.random() * 0.12,
+                rotSpeed: 0.5 + Math.random() * 0.5,
+            };
+            mainGroup.add(obj);
+            envObjects.push(obj);
+        });
+
+        // ============================================================
+        //  数据流粒子
+        // ============================================================
+        const dataFlowCount = Math.floor(30 * PARTICLE_MULT);
+        const dfGeo = new THREE.BufferGeometry();
+        const dfPos = new Float32Array(dataFlowCount * 3);
+        const dfMeta = [];
+        for (let i = 0; i < dataFlowCount; i++) {
+            const srcObj = envObjects[Math.floor(Math.random() * envObjects.length)];
+            const src = srcObj.position.clone();
+            const dst = new THREE.Vector3(
+                (Math.random() - 0.5) * 0.4,
+                0.5 + Math.random() * 0.8,
+                (Math.random() - 0.5) * 0.4
+            );
+            const t = Math.random();
+            const pos = new THREE.Vector3().lerpVectors(src, dst, t);
+            dfPos[i * 3] = pos.x;
+            dfPos[i * 3 + 1] = pos.y;
+            dfPos[i * 3 + 2] = pos.z;
+            dfMeta.push({ src: src.clone(), dst: dst.clone(), t, speed: 0.12 + Math.random() * 0.4, forward: Math.random() >
+                    0.5 });
+        }
+        dfGeo.setAttribute('position', new THREE.BufferAttribute(dfPos, 3));
+        const dfMat = new THREE.PointsMaterial({
+            size: 0.025,
+            color: '#c8a87c',
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            transparent: true,
+            opacity: 0.5,
+            sizeAttenuation: true,
+        });
+        const dfPoints = new THREE.Points(dfGeo, dfMat);
+        mainGroup.add(dfPoints);
+
+        // ============================================================
+        //  组装部件系统（粒子云）
+        // ============================================================
+        function createParticlePart(colorHex, count) {
+            const color = new THREE.Color(colorHex);
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            const col = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+            for (let i = 0; i < count; i++) {
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                const r = 0.16 * Math.pow(Math.random(), 0.5);
+                pos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+                pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                pos[i * 3 + 2] = r * Math.cos(phi);
+                const bright = 0.6 + Math.random() * 0.4;
+                col[i * 3] = color.r * bright;
+                col[i * 3 + 1] = color.g * bright;
+                col[i * 3 + 2] = color.b * bright;
+                sizes[i] = 0.025 + Math.random() * 0.025;
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+            geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            const mat = new THREE.PointsMaterial({
+                size: 0.04,
+                vertexColors: true,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                transparent: true,
+                opacity: 0.9,
+                sizeAttenuation: true,
+            });
+            const points = new THREE.Points(geo, mat);
+            // 添加不可见碰撞体
+            const hitSphere = new THREE.Mesh(
+                new THREE.SphereGeometry(0.2, 6, 6),
+                new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false })
+            );
+            hitSphere.position.set(0, 0, 0);
+            points.add(hitSphere);
+            // 标签
+            const labelCanvas = document.createElement('canvas');
+            labelCanvas.width = 128;
+            labelCanvas.height = 48;
+            const ctx2 = labelCanvas.getContext('2d');
+            ctx2.fillStyle = 'rgba(0,0,0,0)';
+            ctx2.fillRect(0, 0, 128, 48);
+            ctx2.textAlign = 'center';
+            ctx2.textBaseline = 'middle';
+            ctx2.font = 'bold 16px "SF Mono", "Noto Sans SC", sans-serif';
+            ctx2.shadowColor = 'rgba(0,0,0,0.8)';
+            ctx2.shadowBlur = 8;
+            ctx2.fillStyle = '#e8edf5';
+            ctx2.fillText('点击组装', 64, 26);
+            ctx2.shadowBlur = 0;
+            ctx2.font = '10px "SF Mono", "Noto Sans SC", sans-serif';
+            ctx2.fillStyle = 'rgba(150,170,200,0.5)';
+            ctx2.fillText('粒子模块', 64, 46);
+            const texture = new THREE.CanvasTexture(labelCanvas);
+            texture.needsUpdate = true;
+            const spriteMat = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                depthWrite: false,
+                sizeAttenuation: true,
+            });
+            const sprite = new THREE.Sprite(spriteMat);
+            sprite.scale.set(0.5, 0.18, 1);
+            sprite.position.set(0, 0.30, 0);
+            points.add(sprite);
+            return points;
+        }
+
+        const partConfigs = [{
+            id: 'head',
+            label: '头部',
+            color: '#4da8da',
+            target: [0, 1.48, 0],
+            startOffset: [1.6, 2.2, 1.2],
+            particleCount: Math.floor(80 * PARTICLE_MULT),
+        }, {
+            id: 'torso',
+            label: '躯干',
+            color: '#7b5ea7',
+            target: [0, 0.82, 0],
+            startOffset: [-1.8, 0.2, 1.6],
+            particleCount: Math.floor(100 * PARTICLE_MULT),
+        }, {
+            id: 'larm',
+            label: '左臂',
+            color: '#5ec4c9',
+            target: [-0.48, 0.62, 0.04],
+            startOffset: [-2.2, 1.8, -0.8],
+            particleCount: Math.floor(60 * PARTICLE_MULT),
+        }, {
+            id: 'rarm',
+            label: '右臂',
+            color: '#f5c542',
+            target: [0.48, 0.62, 0.04],
+            startOffset: [2.2, 1.8, 0.8],
+            particleCount: Math.floor(60 * PARTICLE_MULT),
+        }, {
+            id: 'lleg',
+            label: '左腿',
+            color: '#e0556a',
+            target: [-0.16, -0.10, 0.02],
+            startOffset: [-1.4, -1.0, 1.8],
+            particleCount: Math.floor(70 * PARTICLE_MULT),
+        }, {
+            id: 'rleg',
+            label: '右腿',
+            color: '#3ef5a0',
+            target: [0.16, -0.10, 0.02],
+            startOffset: [1.4, -1.0, -1.8],
+            particleCount: Math.floor(70 * PARTICLE_MULT),
+        }, ];
+
+        const parts = [];
+        const partsGroup = new THREE.Group();
+        mainGroup.add(partsGroup);
+
+        let assembledParts = new Set();
+        let isAssembling = false;
+        let isAssembled = false;
+        let isTesting = false;
+        let testResults = {};
+
+        partConfigs.forEach((cfg, index) => {
+            const cloud = createParticlePart(cfg.color, cfg.particleCount);
+            const offset = cfg.startOffset;
+            cloud.position.set(offset[0], offset[1], offset[2]);
+            cloud.rotation.set(Math.random() * 0.3, Math.random() * 0.3, Math.random() * 0.3);
+            cloud.userData = {
+                id: cfg.id,
+                label: cfg.label,
+                color: cfg.color,
+                target: new THREE.Vector3(cfg.target[0], cfg.target[1], cfg.target[2]),
+                startPos: new THREE.Vector3(offset[0], offset[1], offset[2]),
+                assembled: false,
+                index: index,
+                floatPhase: Math.random() * Math.PI * 2,
+                floatAmp: 0.15 + Math.random() * 0.10,
+                floatSpeed: 0.5 + Math.random() * 0.5,
+                animProgress: 0,
+                isAnimating: false,
+                startAnimPos: new THREE.Vector3(offset[0], offset[1], offset[2]),
+                particleCount: cfg.particleCount,
+            };
+            partsGroup.add(cloud);
+            parts.push(cloud);
+        });
+
+        // 进度UI
+        function updateProgressUI() {
+            const total = partConfigs.length;
+            const done = assembledParts.size;
+            stepDots.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+                if (i < done) dot.classList.add('done');
+                else if (i === done && done < total) dot.classList.add('active');
+                stepDots.appendChild(dot);
+            }
+            progressCount.textContent = `${done}/${total}`;
+            if (done === total) {
+                progressLabel.textContent = '✅ 组装完成';
+                assembleProgress.classList.add('visible');
+                btnRunAll.disabled = false;
+                btnRunAll.classList.add('success');
+                isAssembled = true;
+                statusLabel.textContent = '✅ 组装完成，可进行测试';
+                flashUI(1.5);
+                setTimeout(() => {
+                    testPanel.classList.add('visible');
+                }, 600);
+            } else {
+                progressLabel.textContent = '🔧 组装进度';
+                btnRunAll.disabled = true;
+                btnRunAll.classList.remove('success');
+                isAssembled = false;
+            }
+        }
+
+        function assemblePart(partMesh, instant = false) {
+            if (partMesh.userData.assembled) return;
+            if (partMesh.userData.isAnimating) return;
+            const targetPos = partMesh.userData.target;
+            const startPos = partMesh.position.clone();
+            if (instant) {
+                partMesh.position.copy(targetPos);
+                partMesh.userData.assembled = true;
+                assembledParts.add(partMesh.userData.id);
+                const colAttr = partMesh.geometry.getAttribute('color');
+                const colArray = colAttr.array;
+                for (let i = 0; i < colArray.length; i++) { colArray[i] = Math.min(1, colArray[i] * 1.6); }
+                colAttr.needsUpdate = true;
+                updateProgressUI();
+                return;
+            }
+            partMesh.userData.isAnimating = true;
+            partMesh.userData.animProgress = 0;
+            partMesh.userData.startAnimPos.copy(startPos);
+            partMesh.userData.animTargetPos = targetPos.clone();
+            isAssembling = true;
+        }
+
+        function assembleAll() {
+            if (isAssembling || isAssembled) return;
+            const unassembled = parts.filter(p => !p.userData.assembled);
+            if (unassembled.length === 0) return;
+            unassembled.forEach((p, i) => {
+                setTimeout(() => {
+                    assemblePart(p, false);
+                }, i * 320);
+            });
+            statusLabel.textContent = '🔧 组装进行中...';
+            assembleProgress.classList.add('visible');
+        }
+
+        function resetAssembly() {
+            parts.forEach(p => {
+                p.userData.isAnimating = false;
+                p.userData.animProgress = 0;
+                p.userData.assembled = false;
+                p.position.copy(p.userData.startPos);
+                const colAttr = p.geometry.getAttribute('color');
+                const colArray = colAttr.array;
+                const color = new THREE.Color(p.userData.color);
+                for (let i = 0; i < colArray.length; i += 3) {
+                    const bright = 0.6 + Math.random() * 0.4;
+                    colArray[i] = color.r * bright;
+                    colArray[i + 1] = color.g * bright;
+                    colArray[i + 2] = color.b * bright;
+                }
+                colAttr.needsUpdate = true;
+                p.rotation.set(Math.random() * 0.3, Math.random() * 0.3, Math.random() * 0.3);
+            });
+            assembledParts.clear();
+            isAssembling = false;
+            isAssembled = false;
+            // 重置测试
+            resetAllTests();
+            testPanel.classList.remove('visible');
+            assembleProgress.classList.remove('visible');
+            btnRunAll.disabled = true;
+            btnRunAll.classList.remove('success');
+            statusLabel.textContent = '系统就绪';
+            robotPulseActive = false;
+            targetRotX = 0;
+            targetRotY = 0;
+            targetCameraDistance = 6.0;
+            ctx.clearRect(0, 0, diagramCanvas.width, diagramCanvas.height);
+            diagramLabel.textContent = '点击测试项目查看状态';
+        }
+
+        // ============================================================
+        //  交互式测试系统（可点击单项测试，多种状态图）
+        // ============================================================
+        const testDefinitions = [
+            { id: 'joint', label: '关节灵活性', icon: '🔄', duration: 1800 },
+            { id: 'balance', label: '动态平衡', icon: '⚖️', duration: 2000 },
+            { id: 'perception', label: '感知响应', icon: '👁️', duration: 1600 },
+            { id: 'communication', label: '通信延迟', icon: '📡', duration: 1400 },
+            { id: 'energy', label: '能耗效率', icon: '🔋', duration: 1500 },
+            { id: 'environment', label: '环境感知', icon: '🌐', duration: 1700 },
+        ];
+
+        // 状态存储
+        const testState = {};
+        let currentActiveTest = null; // 当前正在运行的测试id
+        let testRunning = false;
+
+        function resetAllTests() {
+            testDefinitions.forEach(t => {
+                testState[t.id] = { status: 'pending', result: null }; // pending, running, pass, fail
+                const el = document.getElementById(`test-${t.id}`);
+                if (el) {
+                    el.textContent = '等待';
+                    el.className = 'result pending';
+                }
+            });
+            testOverall.textContent = '未测试';
+            testOverall.className = 'result pending';
+            currentActiveTest = null;
+            testRunning = false;
+            ctx.clearRect(0, 0, diagramCanvas.width, diagramCanvas.height);
+            diagramLabel.textContent = '点击测试项目查看状态';
+        }
+
+        // 初始化测试状态
+        resetAllTests();
+
+        // 绘制状态图函数（根据测试id和进度）
+        function drawStatusDiagram(testId, progress) {
+            const w = diagramCanvas.width,
+                h = diagramCanvas.height;
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = 'rgba(0,0,0,0.2)';
+            ctx.roundRect(0, 0, w, h, 8);
+            ctx.fill();
+
+            const cx = w / 2,
+                cy = h / 2;
+
+            if (testId === 'joint') {
+                // 关节：旋转臂
+                const angle = progress * Math.PI * 2;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.strokeStyle = '#4da8da';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, 20, 0, angle);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(0, 0, 14, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fillStyle = '#4da8da';
+                ctx.beginPath();
+                ctx.arc(20 * Math.cos(angle), 20 * Math.sin(angle), 5, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.restore();
+                ctx.fillStyle = '#aac';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('关节转动', 10, 20);
+            } else if (testId === 'balance') {
+                // 水平仪
+                const tilt = (progress - 0.5) * 0.3;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.strokeStyle = '#f5c542';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, 20, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.fillStyle = '#f5c542';
+                ctx.fillRect(-15, -2 + tilt * 10, 30, 4);
+                ctx.restore();
+                ctx.fillStyle = '#aac';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('平衡状态', 10, 20);
+            } else if (testId === 'perception') {
+                // 雷达扫描
+                const sweep = progress * Math.PI * 2;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.strokeStyle = '#3ef5a0';
+                ctx.lineWidth = 1.5;
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 10 + i * 7, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(22 * Math.cos(sweep), 22 * Math.sin(sweep));
+                ctx.stroke();
+                ctx.fillStyle = '#3ef5a0';
+                ctx.beginPath();
+                ctx.arc(22 * Math.cos(sweep), 22 * Math.sin(sweep), 4, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.restore();
+                ctx.fillStyle = '#aac';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('感知扫描', 10, 20);
+            } else if (testId === 'communication') {
+                // 通信波形
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.strokeStyle = '#ffaa44';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let x = -30; x <= 30; x++) {
+                    const val = Math.sin(x * 0.5 + progress * 4) * 10 * (1 + 0.3 * Math.sin(x * 0.2 + progress * 2));
+                    if (x === -30) ctx.moveTo(x, val);
+                    else ctx.lineTo(x, val);
+                }
+                ctx.stroke();
+                ctx.restore();
+                ctx.fillStyle = '#aac';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('通信波形', 10, 20);
+            } else if (testId === 'energy') {
+                // 电池电量
+                const level = progress;
+                ctx.save();
+                ctx.translate(cx - 20, cy - 10);
+                ctx.strokeStyle = '#88dd88';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(0, 0, 40, 20);
+                ctx.fillStyle = '#88dd88';
+                ctx.fillRect(2, 2, 36 * level, 16);
+                ctx.fillStyle = '#aac';
+                ctx.font = '8px sans-serif';
+                ctx.fillText(`${Math.round(level*100)}%`, 12, 13);
+                ctx.restore();
+                ctx.fillStyle = '#aac';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('能耗效率', 10, 20);
+            } else if (testId === 'environment') {
+                // 环境点阵
+                const cols = 5,
+                    rows = 4;
+                const spacing = 10;
+                const offsetX = cx - (cols - 1) * spacing / 2;
+                const offsetY = cy - (rows - 1) * spacing / 2;
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        const val = Math.sin(c * 1.2 + r * 0.8 + progress * 3) * 0.5 + 0.5;
+                        const size = 3 + val * 4;
+                        ctx.fillStyle = `rgba(100,200,255,${0.3+val*0.6})`;
+                        ctx.beginPath();
+                        ctx.arc(offsetX + c * spacing, offsetY + r * spacing, size / 2, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+                }
+                ctx.fillStyle = '#aac';
+                ctx.font = '10px sans-serif';
+                ctx.fillText('环境感知', 10, 20);
+            } else {
+                // 空闲
+                ctx.fillStyle = '#667';
+                ctx.font = '12px sans-serif';
+                ctx.fillText('待测试', cx - 20, cy + 4);
+            }
+        }
+
+        // 运行单个测试
+        function runSingleTest(testId) {
+            if (testRunning) {
+                // 如果正在运行，忽略或重置？我们选择重置并开始新测试
+                // 停止当前测试（清空计时器）
+                if (window.currentTestInterval) {
+                    clearInterval(window.currentTestInterval);
+                    window.currentTestInterval = null;
+                }
+                // 将当前运行项置为等待
+                if (currentActiveTest) {
+                    const prev = testState[currentActiveTest];
+                    if (prev.status === 'running') {
+                        prev.status = 'pending';
+                        prev.result = null;
+                        const el = document.getElementById(`test-${currentActiveTest}`);
+                        if (el) { el.textContent = '等待';
+                            el.className = 'result pending'; }
+                    }
+                }
+                testRunning = false;
+                currentActiveTest = null;
+            }
+
+            // 检查组装是否完成
+            if (!isAssembled) {
+                statusLabel.textContent = '⚠️ 请先完成组装';
+                setTimeout(() => {
+                    if (isAssembled) statusLabel.textContent = '✅ 组装完成，可进行测试';
+                    else statusLabel.textContent = '系统就绪';
+                }, 1200);
+                return;
+            }
+
+            const testDef = testDefinitions.find(t => t.id === testId);
+            if (!testDef) return;
+
+            // 重置该项状态
+            testState[testId] = { status: 'running', result: null };
+            const el = document.getElementById(`test-${testId}`);
+            if (el) {
+                el.textContent = '运行中';
+                el.className = 'result running';
+            }
+            currentActiveTest = testId;
+            testRunning = true;
+            diagramLabel.textContent = `测试: ${testDef.label}`;
+
+            // 进度
+            let progress = 0;
+            const duration = testDef.duration;
+            const startTime = Date.now();
+
+            // 清除旧interval
+            if (window.currentTestInterval) {
+                clearInterval(window.currentTestInterval);
+                window.currentTestInterval = null;
+            }
+
+            window.currentTestInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                progress = Math.min(1, elapsed / duration);
+                drawStatusDiagram(testId, progress);
+
+                if (progress >= 1) {
+                    clearInterval(window.currentTestInterval);
+                    window.currentTestInterval = null;
+                    // 判定结果（模拟，90%通过率）
+                    const pass = Math.random() < 0.90;
+                    testState[testId].status = pass ? 'pass' : 'fail';
+                    testState[testId].result = pass;
+                    if (el) {
+                        el.textContent = pass ? '✅ 通过' : '⚠️ 需校准';
+                        el.className = `result ${pass ? 'pass' : 'fail'}`;
+                    }
+                    testRunning = false;
+                    currentActiveTest = null;
+                    // 更新总体状态
+                    updateOverallStatus();
+                    // 如果全部通过，触发脉冲
+                    if (pass) {
+                        flashUI(0.5);
+                    }
+                    diagramLabel.textContent = '测试完成';
+                    // 延迟重置图示
+                    setTimeout(() => {
+                        if (!testRunning) {
+                            drawStatusDiagram(testId, 1);
+                            diagramLabel.textContent = '点击测试项目查看状态';
+                        }
+                    }, 1500);
+                }
+            }, 30);
+        }
+
+        // 更新总体状态
+        function updateOverallStatus() {
+            const allTests = testDefinitions.map(t => testState[t.id]);
+            const total = allTests.length;
+            const passed = allTests.filter(t => t.status === 'pass').length;
+            const failed = allTests.filter(t => t.status === 'fail').length;
+            const pending = allTests.filter(t => t.status === 'pending').length;
+            if (pending === total) {
+                testOverall.textContent = '未测试';
+                testOverall.className = 'result pending';
+            } else if (failed === 0 && pending === 0) {
+                testOverall.textContent = `✅ 全部通过 (${passed}/${total})`;
+                testOverall.className = 'result pass';
+                // 全部通过触发大脉冲
+                if (passed === total) {
+                    setTimeout(() => triggerRobotPulse(), 300);
+                }
+            } else if (failed > 0) {
+                testOverall.textContent = `⚠️ ${failed}项需校准`;
+                testOverall.className = 'result fail';
+            } else {
+                testOverall.textContent = `⏳ ${passed}/${total} 通过`;
+                testOverall.className = 'result pending';
+            }
+        }
+
+        // 运行全部测试（顺序执行）
+        function runAllTests() {
+            if (testRunning) return;
+            if (!isAssembled) {
+                statusLabel.textContent = '⚠️ 请先完成组装';
+                return;
+            }
+            // 重置所有测试状态
+            resetAllTests();
+            // 获取所有测试id
+            const ids = testDefinitions.map(t => t.id);
+            let idx = 0;
+
+            function runNext() {
+                if (idx >= ids.length) {
+                    statusLabel.textContent = '✅ 全部测试完成';
+                    return;
+                }
+                const id = ids[idx];
+                // 运行单项，但需要等待它结束
+                // 由于runSingleTest是异步的，我们用setTimeout轮询检查状态
+                runSingleTest(id);
+                // 等待该测试结束
+                const checkInterval = setInterval(() => {
+                    if (!testRunning) {
+                        clearInterval(checkInterval);
+                        idx++;
+                        setTimeout(runNext, 300);
+                    }
+                }, 100);
+            }
+            runNext();
+            statusLabel.textContent = '▶ 运行全部测试...';
+        }
+
+        // ============================================================
+        //  脉冲特效
+        // ============================================================
+        let robotPulseActive = false;
+        let robotPulseStartTime = 0;
+        let audioCtx = null;
+
+        function triggerRobotPulse() {
+            robotPulseActive = true;
+            robotPulseStartTime = performance.now() * 0.001;
+            try {
+                if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.10, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.55);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.55);
+            } catch (e) {}
+            flashUI(1.6);
+            statusLabel.textContent = '⚡ 脉冲激活';
+            setTimeout(() => {
+                if (!isTesting && isAssembled) statusLabel.textContent = '✅ 组装完成，可进行测试';
+                else if (!isAssembled) statusLabel.textContent = '系统就绪';
+            }, 1500);
+        }
+
+        function playClickSound() {
+            try {
+                if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(700 + Math.random() * 400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.18);
+                osc.start(audioCtx.currentTime);
+                osc.stop(audioCtx.currentTime + 0.18);
+            } catch (e) {}
+        }
+
+        // ============================================================
+        //  交互控制（点击测试项）
+        // ============================================================
+        document.querySelectorAll('.test-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                const testId = item.dataset.testId;
+                if (testId) {
+                    runSingleTest(testId);
+                    playClickSound();
+                }
+            });
+        });
+
+        // ============================================================
+        //  3D交互（拖拽等）
+        // ============================================================
+        const raycaster = new THREE.Raycaster();
+        const mouseNDC = new THREE.Vector2();
+        let isDragging = false;
+        let dragPrevX = 0,
+            dragPrevY = 0;
+        let targetRotX = 0,
+            targetRotY = 0;
+        let mainGroupRotX = 0,
+            mainGroupRotY = 0;
+        let cameraDistance = 6.0;
+        let targetCameraDistance = 6.0;
+        const MIN_DIST = 2.8;
+        const MAX_DIST = 10;
+
+        function getPointerPos(e) {
+            const cx = e.touches ? e.touches[0].clientX : e.clientX;
+            const cy = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: cx, y: cy };
+        }
+
+        function getIntersection(clientX, clientY) {
+            mouseNDC.x = (clientX / window.innerWidth) * 2 - 1;
+            mouseNDC.y = -(clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouseNDC, camera);
+            const targets = [];
+            parts.forEach(p => {
+                if (!p.userData.assembled && !p.userData.isAnimating) {
+                    const hit = p.children.find(c => c.isMesh && c.material.transparent && c.material.opacity === 0);
+                    if (hit) targets.push(hit);
+                }
+            });
+            const intersects = raycaster.intersectObjects(targets);
+            if (intersects.length > 0) {
+                let parent = intersects[0].object.parent;
+                while (parent && !parts.includes(parent)) { parent = parent.parent; }
+                if (parent && parts.includes(parent)) return parent;
+            }
+            return null;
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            const { x, y } = getPointerPos(e);
+            if (isDragging) {
+                const dx = x - dragPrevX;
+                const dy = y - dragPrevY;
+                targetRotY += dx * 0.005;
+                targetRotX += dy * 0.005;
+                targetRotX = Math.max(-1.1, Math.min(1.1, targetRotX));
+                dragPrevX = x;
+                dragPrevY = y;
+            }
+        });
+
+        window.addEventListener('mousedown', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('.control-bar') || e.target.closest('.test-item'))
+            return;
+            if (e.button === 0) {
+                const hit = getIntersection(e.clientX, e.clientY);
+                if (hit && !isAssembling && !isTesting) {
+                    assemblePart(hit);
+                    playClickSound();
+                    return;
+                }
+                isDragging = true;
+                const { x, y } = getPointerPos(e);
+                dragPrevX = x;
+                dragPrevY = y;
+            }
+        });
+
+        window.addEventListener('mouseup', (e) => {
+            if (isDragging) {
+                const dx = Math.abs((getPointerPos(e).x || dragPrevX) - dragPrevX);
+                const dy = Math.abs((getPointerPos(e).y || dragPrevY) - dragPrevY);
+                if (dx < 4 && dy < 4) {}
+                isDragging = false;
+            }
+        });
+
+        window.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            targetCameraDistance += e.deltaY * 0.008;
+            targetCameraDistance = Math.max(MIN_DIST, Math.min(MAX_DIST, targetCameraDistance));
+        }, { passive: false });
+
+        window.addEventListener('keydown', (e) => {
+            switch (e.key.toLowerCase()) {
+                case 'r':
+                    targetRotX = 0;
+                    targetRotY = 0;
+                    targetCameraDistance = 6.0;
+                    statusLabel.textContent = '视角已重置';
+                    setTimeout(() => {
+                        if (isAssembled) statusLabel.textContent = '✅ 组装完成';
+                        else statusLabel.textContent = '系统就绪';
+                    }, 1200);
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    if (isAssembled) {
+                        triggerRobotPulse();
+                    } else {
+                        statusLabel.textContent = '⚠️ 请先完成组装';
+                        setTimeout(() => {
+                            if (isAssembled) statusLabel.textContent = '✅ 组装完成';
+                            else statusLabel.textContent = '系统就绪';
+                        }, 1200);
+                    }
+                    break;
+            }
+        });
+
+        // Touch events
+        window.addEventListener('touchstart', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('.control-bar') || e.target.closest('.test-item'))
+            return;
+            if (e.touches.length === 1) {
+                const hit = getIntersection(e.touches[0].clientX, e.touches[0].clientY);
+                if (hit && !isAssembling && !isTesting) {
+                    assemblePart(hit);
+                    playClickSound();
+                    return;
+                }
+                isDragging = true;
+                dragPrevX = e.touches[0].clientX;
+                dragPrevY = e.touches[0].clientY;
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isDragging && e.touches.length === 1) {
+                const dx = e.touches[0].clientX - dragPrevX;
+                const dy = e.touches[0].clientY - dragPrevY;
+                targetRotY += dx * 0.005;
+                targetRotX += dy * 0.005;
+                targetRotX = Math.max(-1.1, Math.min(1.1, targetRotX));
+                dragPrevX = e.touches[0].clientX;
+                dragPrevY = e.touches[0].clientY;
+            }
+        }, { passive: false });
+
+        window.addEventListener('touchend', (e) => {
+            if (isDragging) {
+                const dist = Math.abs((e.changedTouches[0]?.clientX || dragPrevX) - dragPrevX) +
+                    Math.abs((e.changedTouches[0]?.clientY || dragPrevY) - dragPrevY);
+                if (dist < 8) {}
+                isDragging = false;
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        });
+
+        // ============================================================
+        //  UI 闪烁
+        // ============================================================
+        function flashUI(intensity = 1) {
+            const btns = document.querySelectorAll('.control-bar button, .test-item');
+            btns.forEach(btn => {
+                btn.style.boxShadow = `0 0 ${20*intensity}px rgba(77,168,218,${0.15*intensity})`;
+                btn.style.borderColor = `rgba(77,168,218,${0.4*intensity})`;
+                setTimeout(() => {
+                    btn.style.boxShadow = '';
+                    btn.style.borderColor = '';
+                }, 400);
+            });
+        }
+
+        // ============================================================
+        //  按钮绑定
+        // ============================================================
+        btnAssemble.addEventListener('click', assembleAll);
+        btnRunAll.addEventListener('click', runAllTests);
+        btnReset.addEventListener('click', resetAssembly);
+
+        // ============================================================
+        //  动画主循环
+        // ============================================================
+        const clock = new THREE.Clock();
+
+        function animate(timestamp) {
+            requestAnimationFrame(animate);
+
+            const dt = Math.min(clock.getDelta(), 0.08);
+            const time = timestamp * 0.001;
+
+            // 平滑旋转
+            mainGroupRotX += (targetRotX - mainGroupRotX) * 0.08;
+            mainGroupRotY += (targetRotY - mainGroupRotY) * 0.08;
+            mainGroup.rotation.x = mainGroupRotX;
+            mainGroup.rotation.y = mainGroupRotY;
+
+            cameraDistance += (targetCameraDistance - cameraDistance) * 0.10;
+            camera.position.set(0, 1.4, cameraDistance);
+            camera.lookAt(0, 0.7, 0);
+
+            starGroup.rotation.y += dt * 0.035;
+            starGroup.rotation.x += dt * 0.012;
+
+            // 呼吸
+            const breathCycle = time * 1.5;
+            const breathAmp = 0.022;
+            const posAttr = robotGeo.getAttribute('position');
+            const arr = posAttr.array;
+            for (let i = 0; i < robotParticleCount; i++) {
+                const bx = robotPosBase[i * 3];
+                const by = robotPosBase[i * 3 + 1];
+                const bz = robotPosBase[i * 3 + 2];
+                const dist = Math.sqrt(bx * bx + (by - 0.7) * (by - 0.7) + bz * bz) + 0.001;
+                const nx = bx / dist;
+                const ny = (by - 0.7) / dist;
+                const nz = bz / dist;
+                const wave = Math.sin(breathCycle + i * 0.035) * breathAmp;
+                let pulseExtra = 0;
+                if (robotPulseActive) {
+                    const elapsed = time - robotPulseStartTime;
+                    if (elapsed < 0.6) {
+                        const decay = Math.exp(-elapsed * 5);
+                        pulseExtra = Math.sin(elapsed * 18 + i * 0.12) * 0.055 * decay;
+                    } else if (elapsed > 0.6 && elapsed < 1.5) {
+                        robotPulseActive = false;
+                    }
+                }
+                arr[i * 3] = bx + nx * (wave + pulseExtra);
+                arr[i * 3 + 1] = by + ny * (wave + pulseExtra);
+                arr[i * 3 + 2] = bz + nz * (wave + pulseExtra);
+            }
+            posAttr.needsUpdate = true;
+
+            // 轨道环
+            orbitalRings.forEach(ring => {
+                ring.rotation.y += dt * ring.userData.speed;
+            });
+
+            // 环境物体
+            envObjects.forEach(obj => {
+                const ud = obj.userData;
+                const offset = Math.sin(time * ud.floatSpeed + ud.floatOffset) * ud.floatAmp;
+                obj.position.y = ud.basePos[1] + offset;
+                obj.rotation.y += dt * ud.rotSpeed;
+                obj.rotation.x += dt * ud.rotSpeed * 0.3;
+            });
+
+            // 数据流
+            const dfArr = dfGeo.getAttribute('position').array;
+            for (let i = 0; i < dataFlowCount; i++) {
+                const meta = dfMeta[i];
+                meta.t += dt * meta.speed * (meta.forward ? 1 : -1);
+                if (meta.t > 1) { meta.t = 1;
+                    meta.forward = false; }
+                if (meta.t < 0) { meta.t = 0;
+                    meta.forward = true; }
+                const pos = new THREE.Vector3().lerpVectors(meta.src, meta.dst, meta.t);
+                dfArr[i * 3] = pos.x;
+                dfArr[i * 3 + 1] = pos.y;
+                dfArr[i * 3 + 2] = pos.z;
+            }
+            dfGeo.getAttribute('position').needsUpdate = true;
+
+            // 部件动画
+            parts.forEach(p => {
+                if (!p.visible) return;
+                if (!p.userData.assembled && !p.userData.isAnimating) {
+                    const phase = p.userData.floatPhase;
+                    const amp = p.userData.floatAmp;
+                    const speed = p.userData.floatSpeed;
+                    p.position.y += Math.sin(time * speed + phase) * amp * dt * 1.2;
+                    p.position.x += Math.cos(time * speed * 0.7 + phase * 0.5) * amp * 0.5 * dt * 1.2;
+                    p.position.z += Math.sin(time * speed * 0.8 + phase * 0.7) * amp * 0.5 * dt * 1.2;
+                    p.rotation.x += dt * 0.15;
+                    p.rotation.y += dt * 0.25;
+                    p.rotation.z += dt * 0.10;
+                }
+                if (p.userData.isAnimating) {
+                    const prog = p.userData.animProgress + dt * 1.6;
+                    p.userData.animProgress = Math.min(1, prog);
+                    const t = p.userData.animProgress;
+                    const c1 = 1.70158;
+                    const c3 = c1 + 1;
+                    const val = 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+                    const start = p.userData.startAnimPos;
+                    const target = p.userData.animTargetPos || p.userData.target;
+                    p.position.lerpVectors(start, target, val);
+                    p.rotation.x *= 0.92;
+                    p.rotation.y *= 0.92;
+                    p.rotation.z *= 0.92;
+                    const colAttr = p.geometry.getAttribute('color');
+                    const colArray = colAttr.array;
+                    const brightFactor = 1 + t * 0.8;
+                    const color = new THREE.Color(p.userData.color);
+                    for (let i = 0; i < colArray.length; i += 3) {
+                        const base = 0.6 + (i / colArray.length) * 0.4;
+                        colArray[i] = Math.min(1, color.r * base * brightFactor);
+                        colArray[i + 1] = Math.min(1, color.g * base * brightFactor);
+                        colArray[i + 2] = Math.min(1, color.b * base * brightFactor);
+                    }
+                    colAttr.needsUpdate = true;
+                    if (t >= 1) {
+                        p.position.copy(target);
+                        p.userData.isAnimating = false;
+                        p.userData.assembled = true;
+                        const colAttr2 = p.geometry.getAttribute('color');
+                        const colArray2 = colAttr2.array;
+                        const color2 = new THREE.Color(p.userData.color);
+                        for (let i = 0; i < colArray2.length; i += 3) {
+                            const base = 0.6 + (i / colArray2.length) * 0.4;
+                            colArray2[i] = Math.min(1, color2.r * base * 1.8);
+                            colArray2[i + 1] = Math.min(1, color2.g * base * 1.8);
+                            colArray2[i + 2] = Math.min(1, color2.b * base * 1.8);
+                        }
+                        colAttr2.needsUpdate = true;
+                        assembledParts.add(p.userData.id);
+                        playClickSound();
+                        updateProgressUI();
+                        if (assembledParts.size === partConfigs.length) {
+                            isAssembling = false;
+                            statusLabel.textContent = '✅ 组装完成！';
+                            flashUI(1.8);
+                            setTimeout(() => {
+                                triggerRobotPulse();
+                            }, 400);
+                        }
+                    }
+                }
+            });
+
+            pointLight1.intensity = 28 + Math.sin(time * 1.2) * 3;
+            pointLight2.intensity = 16 + Math.cos(time * 1.5) * 3;
+
+            renderer.render(scene, camera);
+        }
+
+        // ============================================================
+        //  启动
+        // ============================================================
+        updateProgressUI();
+        setTimeout(() => {
+            parts.forEach(p => { p.visible = true; });
+            assembleProgress.classList.add('visible');
+            statusLabel.textContent = '🔄 点击粒子部件组装 或 一键组装';
+            setTimeout(() => {
+                if (!isAssembled) {
+                    statusLabel.textContent = '点击彩色粒子云进行组装';
+                }
+            }, 2000);
+        }, 800);
+
+        // 初始绘制空闲图
+        drawStatusDiagram(null, 0);
+
+        requestAnimationFrame(animate);
+
+        console.log(`
+        ╔═══════════════════════════════════════════╗
+        ║  粒子智械 · 交互测试 v5.0               ║
+        ║  测试项目: 6项可点击，独立运行          ║
+        ║  状态图: 6种不同视觉反馈                ║
+        ║                                         ║
+        ║  🧩 点击粒子部件组装                    ║
+        ║  🧪 点击测试项目运行单项测试            ║
+        ║  ▶ 全部测试 → 顺序执行所有项目         ║
+        ║                                         ║
+        ║  🖱 拖拽旋转 · 滚轮缩放 · R重置视角    ║
+        ║  空格 → 脉冲（组装后）                 ║
+        ╚═══════════════════════════════════════════╝
+        `);
+    </script>
 </body>
 </html>
