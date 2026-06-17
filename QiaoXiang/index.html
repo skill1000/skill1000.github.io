@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>伴老网 —— 无子女老人的数字家人</title>
+    <title>伴老网 —— 核心功能模块演示</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -25,426 +25,397 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 scroll-smooth">
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
-    <nav class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-slate-200 z-50">
+    <!-- 顶部导航栏 -->
+    <nav class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16 items-center">
                 <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold text-primary flex items-center">
-                        <svg class="w-8 h-8 mr-1 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                        伴老网
+                    <span class="text-xl font-bold text-primary flex items-center">
+                        <svg class="w-6 h-6 mr-1 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        伴老网 · 官方全服务平台
                     </span>
-                    <span class="text-xs bg-teal-50 text-primary border border-teal-200 px-2 py-0.5 rounded-full font-medium hidden sm:inline">数字养老管家</span>
                 </div>
-                <div class="hidden md:flex space-x-8 text-sm font-medium">
-                    <a href="#insight" class="text-slate-600 hover:text-primary transition-colors">核心洞察</a>
-                    <a href="#position" class="text-slate-600 hover:text-primary transition-colors">平台定位</a>
-                    <a href="#modules" class="text-slate-600 hover:text-primary transition-colors">核心模块</a>
-                    <a href="#ai-demo" class="text-teal-600 font-bold hover:text-primary transition-colors flex items-center gap-1">✨ AI 互动演示</a>
-                    <a href="#tech" class="text-slate-600 hover:text-primary transition-colors">技术支撑</a>
-                    <a href="#business" class="text-slate-600 hover:text-primary transition-colors">商业模式</a>
-                </div>
-                <div>
-                    <a href="#ai-demo" class="bg-primary hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm shadow-teal-100">呼叫数字家人</a>
+                <div class="flex items-center gap-4">
+                    <span class="text-xs bg-teal-50 text-primary border border-teal-200 px-2.5 py-1 rounded-full font-medium">服务覆盖：全国12个核心城市</span>
+                    <span class="text-xs text-slate-400 font-mono">演示版 v2.5</span>
                 </div>
             </div>
         </div>
     </nav>
 
-    <header class="pt-32 pb-20 bg-gradient-to-b from-teal-50/50 via-white to-slate-50">
-        <div class="max-w-5xl mx-auto px-4 text-center">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 text-xs font-semibold mb-6 animate-pulse">
-                ✨ 填补市场空白 · 专注无家属支持系统人群与本地化 AI 隐私保护
-            </div>
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
-                无子女老人的 <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-teal-600">“数字家人”</span>
-            </h1>
-            <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-8">
-                用技术重建互助网络，用制度替代家庭功能，用商业实现可持续照护。依托本地算力安全架构，打造高情商的专属情感陪伴。
-            </p>
-            <div class="flex flex-wrap justify-center gap-4">
-                <a href="#ai-demo" class="px-6 py-3 bg-primary hover:bg-teal-700 text-white font-medium rounded-xl shadow-lg shadow-teal-600/10 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                    立即体验本地 AI 数字人
-                </a>
-                <a href="#modules" class="px-6 py-3 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-xl border border-slate-200 shadow-sm transition-all">了解商业闭环</a>
+    <!-- 分页/标签切换控制中心 -->
+    <div class="bg-slate-100 py-4 border-b border-slate-200 sticky top-16 z-40">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="flex p-1 bg-slate-200/80 rounded-xl gap-1 shadow-inner">
+                <button id="tab-btn-1" onclick="switchTab(1)" class="flex-1 text-center py-3 text-sm font-bold rounded-lg transition-all duration-200 bg-primary text-white shadow-sm">
+                    🤝 模块一：养老搭子服务
+                </button>
+                <button id="tab-btn-2" onclick="switchTab(2)" class="flex-1 text-center py-3 text-sm font-bold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900">
+                    🤵 模块二：法律意定监护
+                </button>
+                <button id="tab-btn-3" onclick="switchTab(3)" class="flex-1 text-center py-3 text-sm font-bold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900 flex items-center justify-center gap-1">
+                    ✨ 模块三：AI 精神家园
+                </button>
             </div>
         </div>
-    </header>
+    </div>
 
-    <section id="insight" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold text-slate-900">核心洞察：市场空白在哪里？</h2>
-                <div class="h-1 w-12 bg-primary mx-auto mt-4 rounded"></div>
-                <p class="text-slate-500 mt-4">当前养老市场繁荣背后的四大结构性硬伤与蓝海机遇</p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-teal-100 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold text-lg mb-4 group-hover:bg-red-100 transition-colors">01</div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">“家庭养老”的默认制度性排斥</h3>
-                    <p class="text-slate-600 leading-relaxed">现有模式皆假设老人有后代支持。养老院入住、重大手术急需<strong>子女/监护人签字</strong>，无子女老人面临严重的制度性脱节与无助。</p>
-                </div>
-                <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-teal-100 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-lg mb-4 group-hover:bg-amber-100 transition-colors">02</div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">互助养老行政化，商业化程度极低</h3>
-                    <p class="text-slate-600 leading-relaxed">如北京“邻里互助点”、河北肥乡“互助幸福院”，多依赖政府补贴或纯公益性质。因缺乏市场化驱动，造血能力弱，难以持续扩张。</p>
-                </div>
-                <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-teal-100 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg mb-4 group-hover:bg-blue-100 transition-colors">03</div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">智慧养老“重硬件、轻服务”</h3>
-                    <p class="text-slate-600 leading-relaxed">行业普遍陷入纯硬件铺设误区，缺乏后续的精细化日常运营与人文连接。导致设备闲置率极高，平台盈利困难。</p>
-                </div>
-                <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 hover:border-teal-100 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-lg mb-4 group-hover:bg-purple-100 transition-colors">04</div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2">高品质情感陪伴服务极度稀缺</h3>
-                    <p class="text-slate-600 leading-relaxed">无子女老人最易产生强烈的“社会边缘感”。海外如印度 Goodfellows 付费陪伴模式获得资本青睐，佐证了该细分市场极高的付费认可度。</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- 主体内容容器 -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-    <section id="position" class="py-20 bg-slate-900 text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#0d9488_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <span class="text-primary font-semibold text-sm tracking-wider uppercase bg-teal-950 px-3 py-1 rounded-full">定位 PROFILE</span>
-                    <h2 class="text-3xl font-bold tracking-tight mt-4 mb-6">中国首个专为“无家庭支持系统”老人打造的数字长效方案</h2>
-                    <p class="text-slate-400 text-lg leading-relaxed mb-6">
-                        伴老网跳出传统泛老思维，聚焦于缺乏强血缘传统支持的特定群体。通过“数字技术+法律契约+市场运营”三位一体，重构老人的晚年安全垫。
+        <!-- ==================== 模块一：养老搭子面板 ==================== -->
+        <section id="panel-1" class="space-y-12 animate-fadeIn">
+            <!-- 头部商业介绍 + 图 -->
+            <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold tracking-wider text-primary uppercase bg-teal-50 px-2.5 py-1 rounded">MATCHING SYSTEM</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900">寻找志同道合的「养老搭子」<br>告别孤独，抱团互助</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        针对无子女或独居老人，伴老网推出“互助养老搭子”配对引擎。我们不只是提供一个聊天群，而是基于地理位置、健康画像、生活作息及兴趣爱好，通过大数据帮您精准匹配1对1或3-5人的紧密生活互助小组，让日常有照应、紧急有响应。
                     </p>
                 </div>
-                <div class="bg-slate-800/60 backdrop-blur-sm border border-slate-700/60 p-8 rounded-2xl">
-                    <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="w-1.5 h-5 bg-secondary rounded"></span> 精准目标用户群
-                    </h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start gap-3">
-                            <div class="mt-1 bg-teal-500/20 text-teal-400 p-1 rounded">✔</div>
+                <div class="h-64 rounded-2xl overflow-hidden shadow-md">
+                    <img src="https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=800&q=80" alt="老年社交" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <!-- 为什么选择我们 -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 text-center flex items-center justify-center gap-2">
+                    <span class="h-px w-8 bg-slate-300"></span> 为什么选择伴老搭子？ <span class="h-px w-8 bg-slate-300"></span>
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-primary flex items-center justify-center mx-auto mb-4 font-bold text-lg">✓</div>
+                        <h4 class="font-bold text-slate-900 mb-2">100% 实名与背景审核</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">所有成员必须通过公安系统实名认证，并提交基础健康体检报告、无犯罪记录证明，确保社区纯净与人身安全。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-primary flex items-center justify-center mx-auto mb-4 font-bold text-lg">🕒</div>
+                        <h4 class="font-bold text-slate-900 mb-2">独创“时间银行”闭环</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">借鉴日本成熟的 NALC 互助模式。年轻、健康时照顾高龄搭子赚取“积分”，未来自己需要时可用积分免费兑换服务。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-primary flex items-center justify-center mx-auto mb-4 font-bold text-lg">🚨</div>
+                        <h4 class="font-bold text-slate-900 mb-2">三级梯队应急响应</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">一键紧急呼叫，5分钟内周边搭子率先赶到，15分钟内平台签约社区志愿者与专业客服介入并联络医院。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 价格方案 -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 text-center flex items-center justify-center gap-2">
+                    <span class="h-px w-8 bg-slate-300"></span> 服务方案与费用 <span class="h-px w-8 bg-slate-300"></span>
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+                    <!-- 方案一 -->
+                    <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-sm relative overflow-hidden">
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">大众互助版</h4>
+                            <p class="text-xs text-slate-400 mt-1">满足基础社交与日常串门需求</p>
+                            <div class="my-6">
+                                <span class="text-3xl font-extrabold text-slate-900">¥ 0</span> <span class="text-xs text-slate-400">/ 永久免费</span>
+                            </div>
+                            <ul class="space-y-3 text-xs text-slate-600 border-t border-slate-100 pt-4">
+                                <li class="flex items-center gap-2 text-green-600">✓ 身份实名认证与准入</li>
+                                <li class="flex items-center gap-2 text-green-600">✓ 参与社区日常线上/线下活动</li>
+                                <li class="flex items-center gap-2 text-green-600">✓ “时间银行”储蓄与兑换资格</li>
+                                <li class="text-slate-300 line-through">✕ 专属客服 1对1 深度人工牵线</li>
+                            </ul>
+                        </div>
+                        <button class="w-full mt-8 py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-colors">立即加入</button>
+                    </div>
+                    <!-- 方案二 -->
+                    <div class="bg-white border-2 border-primary rounded-3xl p-8 flex flex-col justify-between shadow-md relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-primary text-white text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-bl-xl">推荐</div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">尊享深度牵线会员</h4>
+                            <p class="text-xs text-teal-600 mt-1">针对孤老、极度注重品质与安全的老人</p>
+                            <div class="my-6">
+                                <span class="text-3xl font-extrabold text-primary">¥ 399</span> <span class="text-xs text-slate-400">/ 年度订阅</span>
+                            </div>
+                            <ul class="space-y-3 text-xs text-slate-600 border-t border-slate-100 pt-4">
+                                <li class="flex items-center gap-2 text-green-600">✓ 包含免费版全部基础权益</li>
+                                <li class="flex items-center gap-2 text-green-600">✓ **专属红娘级秘书 1对1 深度人工配对**</li>
+                                <li class="flex items-center gap-2 text-green-600">✓ 全套全方位深度背景/健康反查报告</li>
+                                <li class="flex items-center gap-2 text-green-600">✓ 赠送价值 ¥199 的物理紧急呼叫手环</li>
+                            </ul>
+                        </div>
+                        <button class="w-full mt-8 py-3 bg-primary hover:bg-teal-700 text-white rounded-xl font-bold text-xs transition-colors shadow-sm">升级尊享会员</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 模块二：监护人服务面板 ==================== -->
+        <section id="panel-2" class="space-y-12 hidden animate-fadeIn">
+            <!-- 头部商业介绍 + 图 -->
+            <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold tracking-wider text-amber-600 uppercase bg-amber-50 px-2.5 py-1 rounded">LEGAL GUARDIANSHIP</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900">破除制度障碍：「意定监护」与就医陪护</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        无子女老人最深层的恐惧，是当遭遇大病需要做手术时，**没有家属在“医疗知情同意书”上签字**。伴老网联合国内顶级律师事务所及公证处，提供合规、合法的“意定监护人”托管服务。同时，配合专业临床级陪诊员，实现从“生前规划”到“紧急签字”再到“全程陪护”的闭环。
+                    </p>
+                </div>
+                <div class="h-64 rounded-2xl overflow-hidden shadow-md">
+                    <img src="https://images.unsplash.com/photo-1450133064473-71024230f91b?auto=format&fit=crop&w=800&q=80" alt="法律合同" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <!-- 为什么选择我们 -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 text-center flex items-center justify-center gap-2">
+                    <span class="h-px w-8 bg-slate-300"></span> 我们的安全与合规壁垒 <span class="h-px w-8 bg-slate-300"></span>
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 font-bold text-lg">⚖</div>
+                        <h4 class="font-bold text-slate-900 mb-2">国家公证处全面留档</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">所有意定监护协议、医疗预嘱均由合作公证处出具正式法律公证书，具备最高法律效力，医院无条件认可。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 font-bold text-lg">🏥</div>
+                        <h4 class="font-bold text-slate-900 mb-2">三甲医院绿色通道陪诊</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">平台签约陪诊员均具备医学或护理背景，熟知各大三甲医院报销、挂号、缴费、住院流程，替您高效跑腿。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-4 font-bold text-lg">🛡</div>
+                        <h4 class="font-bold text-slate-900 mb-2">信托财产独立托管</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">专款专用。老人预存的医疗保证金全部进入银行第三方托管账户/养老信托，平台无权挪用，账目绝对透明。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 价格方案 -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 text-center flex items-center justify-center gap-2">
+                    <span class="h-px w-8 bg-slate-300"></span> 监护及陪诊服务价格 <span class="h-px w-8 bg-slate-300"></span>
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <!-- 方案一 -->
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h4 class="text-base font-bold text-slate-900">单次金牌医疗陪诊</h4>
+                            <p class="text-xs text-slate-400 mt-1">生病时需要靠谱的人跑前跑后</p>
+                            <div class="my-4">
+                                <span class="text-2xl font-extrabold text-slate-900">¥ 198</span> <span class="text-xs text-slate-400">/ 单次(4小时)</span>
+                            </div>
+                            <ul class="space-y-2 text-[11px] text-slate-600 border-t border-slate-100 pt-3">
+                                <li class="text-green-600">✓ 专业医护背景陪诊员上门接送</li>
+                                <li class="text-green-600">✓ 挂号、排队取药、打印病历全代办</li>
+                                <li class="text-green-600">✓ 遵医嘱医嘱代办与后期服药指导提醒</li>
+                            </ul>
+                        </div>
+                        <button class="w-full mt-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-colors">立即预约</button>
+                    </div>
+                    <!-- 方案二 -->
+                    <div class="bg-white border-2 border-amber-500 rounded-3xl p-6 flex flex-col justify-between shadow-md relative">
+                        <div class="absolute top-0 right-0 bg-amber-500 text-white text-[9px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-bl-lg">核心保障</div>
+                        <div>
+                            <h4 class="text-base font-bold text-slate-900">年度全时意定监护托管</h4>
+                            <p class="text-xs text-amber-600 mt-1">彻底解决突发重病、手术无家属签字的风险</p>
+                            <div class="my-4">
+                                <span class="text-2xl font-extrabold text-amber-600">¥ 2,999</span> <span class="text-xs text-slate-400">/ 年</span>
+                            </div>
+                            <ul class="space-y-2 text-[11px] text-slate-600 border-t border-slate-100 pt-3">
+                                <li class="text-green-600">✓ 专业律师团队1对1制定个性化《意定监护协议》</li>
+                                <li class="text-green-600">✓ **突发大病时，平台授权代表24小时无条件赶赴医院签署手术同意书**</li>
+                                <li class="text-green-600">✓ 每年赠送 4 次免费全流程三甲医院陪诊服务</li>
+                            </ul>
+                        </div>
+                        <button class="w-full mt-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-xs transition-colors shadow-sm">签约守护</button>
+                    </div>
+                    <!-- 方案三 -->
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm">
+                        <div>
+                            <h4 class="text-base font-bold text-slate-900">至尊百岁终老传承计划</h4>
+                            <p class="text-xs text-slate-400 mt-1">全周期资产信托、生前预嘱及身后事处理</p>
+                            <div class="my-4">
+                                <span class="text-2xl font-extrabold text-slate-900">¥ 19,999</span> <span class="text-xs text-slate-400">/ 终身统包</span>
+                            </div>
+                            <ul class="space-y-2 text-[11px] text-slate-600 border-t border-slate-100 pt-3">
+                                <li class="text-green-600">✓ 包含年度意定监护核心条款全部终身权益</li>
+                                <li class="text-green-600">✓ 财产合法信托托管与电子遗嘱永久留档</li>
+                                <li class="text-green-600">✓ 后续尊严善后服务（按老人遗愿定制尊严告别仪式）</li>
+                            </ul>
+                        </div>
+                        <button class="w-full mt-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-colors">预约专属律师</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 模块三：精神家园（成品核心演示） ==================== -->
+        <section id="panel-3" class="space-y-12 hidden animate-fadeIn">
+            <!-- 头部商业介绍 + 图 -->
+            <div class="grid md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-3xl border border-slate-200 shadow-sm">
+                <div class="space-y-4">
+                    <span class="text-xs font-bold tracking-wider text-secondary uppercase bg-amber-950 px-2.5 py-1 rounded text-amber-300">AI DIGITAL COMPANION</span>
+                    <h2 class="text-3xl font-extrabold text-slate-900">「小伴」数字家人 —— 24小时高情商情感陪护</h2>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        无子女独居老人面临的最大隐性杀手是持续性的“孤独感”。传统 AI 交互复杂、语气冰冷。伴老网精心调优推出“小伴”银发专属大模型。采用极简语音/大字交互，支持地方方言，具备极高强度的共情与倾听能力，不只陪聊天，更能科学管理用药提醒、科普解读、防诈预警。
+                    </p>
+                </div>
+                <div class="h-64 rounded-2xl overflow-hidden shadow-md">
+                    <img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=800&q=80" alt="科技助老" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <!-- 为什么选择我们 -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 text-center flex items-center justify-center gap-2">
+                    <span class="h-px w-8 bg-slate-300"></span> 技术核心与隐私优势 <span class="h-px w-8 bg-slate-300"></span>
+                </h3>
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-primary flex items-center justify-center mx-auto mb-4 font-bold text-lg">🔒</div>
+                        <h4 class="font-bold text-slate-900 mb-2">绝对的本地隐私保护</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">支持完全在本地（基于 Ollama）离线运行，老人的家长里短、隐私回忆绝不上传云端，彻底杜绝数据泄露风险。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-primary flex items-center justify-center mx-auto mb-4 font-bold text-lg">❤️</div>
+                        <h4 class="font-bold text-slate-900 mb-2">银发专属共情话术</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">经过海量老年人心理学文本定向微调。面对老人的抱怨、哀伤，AI 不生硬科普，而是像孝顺儿女般倾听、安慰。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-150 shadow-sm text-center">
+                        <div class="w-12 h-12 rounded-full bg-teal-50 text-primary flex items-center justify-center mx-auto mb-4 font-bold text-lg">🛡️</div>
+                        <h4 class="font-bold text-slate-900 mb-2">智能防诈骗实时甄别</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed">当老人向 AI 咨询理财、特效药等敏感话题时，AI 自动触发内置防诈骗规则库，用通俗语言帮老人排雷。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 商业价格与订阅方案 -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-bold text-slate-900 text-center flex items-center justify-center gap-2">
+                    <span class="h-px w-8 bg-slate-300"></span> 服务定价 <span class="h-px w-8 bg-slate-300"></span>
+                </h3>
+                <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+                    <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-base font-bold text-slate-900">网页软件端版</h4>
+                            <p class="text-xs text-slate-400 mt-1">适合有智能手机、会基本网购的老人</p>
+                            <div class="my-4">
+                                <span class="text-2xl font-extrabold text-slate-900">¥ 19</span> <span class="text-xs text-slate-400">/ 月</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 leading-relaxed border-t border-slate-100 pt-3">支持手机、平板、电脑多端无限制对话。包含云端算力节点加速支持。</p>
+                        </div>
+                        <button class="w-full mt-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-bold text-xs transition-colors">开通月卡</button>
+                    </div>
+                    <div class="bg-white border-2 border-teal-600 rounded-3xl p-6 shadow-md flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-base font-bold text-slate-900">小伴智慧一体机 (硬件盒)</h4>
+                            <p class="text-xs text-teal-600 mt-1">适合完全不会用手机的高龄独居老人</p>
+                            <div class="my-4">
+                                <span class="text-2xl font-extrabold text-teal-600">¥ 999</span> <span class="text-xs text-slate-400">/ 一次性买断</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 leading-relaxed border-t border-slate-100 pt-3">全物理金属外壳带大屏扬声器。**通电即用，全本地模型驱动，免配置，断网也能正常陪伴聊天**。</p>
+                        </div>
+                        <button class="w-full mt-6 py-2 bg-primary hover:bg-teal-700 text-white rounded-xl font-bold text-xs transition-colors shadow-sm">订购实体机</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 成品交互核心演示区（原有硬核功能） -->
+            <div class="space-y-4">
+                <div class="text-center">
+                    <h3 class="text-lg font-bold text-slate-900">🎮 下方可直接进行大模型成品交互测试</h3>
+                    <p class="text-xs text-slate-400 mt-1">您可以调用本地的 Ollama 网关测试“小伴”的反应速度和人设</p>
+                </div>
+                
+                <div class="grid lg:grid-cols-3 gap-8">
+                    <!-- 左栏：模式介绍与接口配置 -->
+                    <div class="bg-slate-900 text-white p-6 rounded-2xl border border-teal-800 space-y-4 shadow-lg flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <h3 class="font-bold text-base text-secondary flex items-center gap-1.5">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                                Ollama 节点配置
+                            </h3>
                             <div>
-                                <h4 class="font-medium text-slate-200">核心用户（强刚需群体）</h4>
-                                <p class="text-sm text-slate-400 mt-0.5">不育老人、不婚老人、失独老人、无配偶独居老人</p>
+                                <label class="block text-xs text-teal-300 font-medium mb-1">大模型接口网关</label>
+                                <input id="api-url-input" type="text" value="https://skill.fucku.top/api/chat" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-primary">
+                            </div>
+                            <hr class="border-teal-900">
+                            <h4 class="font-bold text-teal-300 text-xs uppercase tracking-wider">💡 模拟老人常用诉求测试：</h4>
+                            <div class="space-y-2">
+                                <button onclick="quickPreset('这个智慧手环测血氧是什么意思啊？我不懂。')" class="w-full text-left bg-slate-800/50 hover:bg-slate-800 border border-slate-700/40 p-2 rounded-lg text-xs transition-colors block text-slate-300 truncate">“手环测血氧是什么意思？”</button>
+                                <button onclick="quickPreset('今天膝盖有点疼，这老骨头真没用了。')" class="w-full text-left bg-slate-800/50 hover:bg-slate-800 border border-slate-700/40 p-2 rounded-lg text-xs transition-colors block text-slate-300 truncate">“今天膝盖有点疼，没用了...”</button>
+                                <button onclick="quickPreset('邻居张大爷今天去养老院了，我一个人有点发慌。')" class="w-full text-left bg-slate-800/50 hover:bg-slate-800 border border-slate-700/40 p-2 rounded-lg text-xs transition-colors block text-slate-300 truncate">“邻居去养老院了，我有点发慌。”</button>
                             </div>
                         </div>
-                        <div class="flex items-start gap-3">
-                            <div class="mt-1 bg-teal-500/20 text-teal-400 p-1 rounded">✔</div>
-                            <div>
-                                <h4 class="font-medium text-slate-200">延伸用户（潜在规划群体）</h4>
-                                <p class="text-sm text-slate-400 mt-0.5">子女常年定居海外的“空巢老人”、丁克家庭提前规划者（50-60岁群体）</p>
+
+                        <div class="bg-slate-950 p-4 rounded-xl border border-teal-950/60 text-[10px] text-slate-400">
+                            <span class="text-primary font-bold block mb-0.5">💡 提示：</span>
+                            路演展示时可点击上方快捷按钮进行秒级流式响应展示。
+                        </div>
+                    </div>
+
+                    <!-- 右栏：真正的AI交互界面成品 -->
+                    <div class="lg:col-span-2 bg-slate-950 text-white border border-slate-800 rounded-2xl flex flex-col h-[520px] overflow-hidden shadow-2xl">
+                        <div class="bg-slate-900 px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+                                <div>
+                                    <h3 class="font-bold text-sm">专属数字家人：小伴</h3>
+                                    <p class="text-[10px] text-green-400">大数模型驱动驱动 · 定制人设 <code>banlao_special</code></p>
+                                </div>
                             </div>
+                            <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-white transition-colors">清空对话</button>
+                        </div>
+
+                        <!-- 聊天会话视窗 -->
+                        <div id="chat-box" class="flex-1 p-6 overflow-y-auto space-y-4 no-scrollbar">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs shrink-0 text-white">伴</div>
+                                <div class="bg-slate-800/80 px-4 py-2.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-slate-100">
+                                    爷爷奶奶好！我是小伴。今天身体怎么样？有什么想和我说聊聊的，随时跟我说。
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 输入控制条 -->
+                        <div class="p-4 bg-slate-900 border-t border-slate-800 flex gap-2">
+                            <input id="chat-input" type="text" placeholder="用通俗的语言跟小伴聊聊吧..." class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary" onkeypress="if(event.keyCode==13) sendMessage()">
+                            <button id="send-btn" onclick="sendMessage()" class="bg-primary hover:bg-teal-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors shrink-0 flex items-center gap-1">
+                                发送
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="modules" class="py-20 bg-slate-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold text-slate-900">三大核心功能模块</h2>
-                <div class="h-1 w-12 bg-primary mx-auto mt-4 rounded"></div>
-                <p class="text-slate-500 mt-4">环环相扣，彻底解决日常照应、制度障碍与精神孤独</p>
-            </div>
+    </main>
 
-            <div class="space-y-16">
-                <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/50 p-8 lg:p-12">
-                    <div class="lg:flex gap-12">
-                        <div class="lg:w-1/3 mb-8 lg:mb-0">
-                            <span class="text-xs font-bold tracking-wider text-primary uppercase bg-teal-50 px-2.5 py-1 rounded">MODULE 01</span>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-3 mb-4">「养老搭子」<br><span class="text-lg font-medium text-slate-500">—— 互助匹配引擎</span></h3>
-                            <div class="bg-amber-50/60 text-amber-800 p-4 rounded-xl border border-amber-100 text-sm">
-                                <strong>💡 解决痛点：</strong>无子女老人最缺乏的是“日常有人照应”和“紧急突发情况有人处理”。
-                            </div>
-                        </div>
-                        <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">智能配对系统</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">基于精确地理位置、健康画像、兴趣习惯，匹配最优“养老搭子”（1对1或3-5人紧密小组）。</p>
-                                <p class="text-xs text-slate-400 mt-2">参考：日本“老—老”互助、重庆本地“搭子”养老实践经验。</p>
-                            </div>
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">“时间银行”积分体系</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">鼓励低龄健康老人帮扶高龄患病老人。提供服务可积攒时间积分，未来免费兑换他人服务。</p>
-                                <p class="text-xs text-slate-400 mt-2">参考：借鉴日本NALC模式（已有逾万名成熟成员）。</p>
-                            </div>
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">应急互助网</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">一键紧急呼叫 → 触发“附近搭子、社区志愿者、平台专业客服”三级梯队响应机制。</p>
-                            </div>
-                            <div class="bg-teal-50/30 p-5 rounded-xl border border-teal-50/80">
-                                <h4 class="font-bold text-primary mb-2">💰 模块商业模式</h4>
-                                <p class="text-sm text-slate-700 leading-relaxed">基础配对免费。高级匹配（包含全套健康评估、深度社会关系与背景调查）收取单次或年度会员费；时间银行积分可用于抵扣合作商家的助餐、体检。 </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/50 p-8 lg:p-12">
-                    <div class="lg:flex gap-12">
-                        <div class="lg:w-1/3 mb-8 lg:mb-0">
-                            <span class="text-xs font-bold tracking-wider text-primary uppercase bg-teal-50 px-2.5 py-1 rounded">MODULE 02</span>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-3 mb-4">「监护人服务」<br><span class="text-lg font-medium text-slate-500">—— 制度性替代方案</span></h3>
-                            <div class="bg-amber-50/60 text-amber-800 p-4 rounded-xl border border-amber-100 text-sm">
-                                <strong>💡 解决痛点：</strong>无子女老人面临的最大核心制度障碍是“医疗手术没有监护人签字”。
-                            </div>
-                        </div>
-                        <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">法律监护人托管</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">联合律所深度提供“意定监护”法律公证服务，允许老人提前指定平台或特定受托人，全面合规处理医疗签字、财产管理和养老决策。</p>
-                            </div>
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">全流程医疗陪同</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">配备签约陪诊员提供专业挂号、取药、住院陪护。打通合作医院绿色通道，确保平台监护身份在关键时刻获得医院认可。</p>
-                            </div>
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">一站式生前规划工具</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">在线电子遗嘱订立、意定监护协议留档、医疗预嘱（如DNR不作无谓抢救指示）管理，无缝对接下游财产托管与信托金融服务。</p>
-                            </div>
-                            <div class="bg-teal-50/30 p-5 rounded-xl border border-teal-50/80">
-                                <h4 class="font-bold text-primary mb-2">💰 模块商业模式</h4>
-                                <p class="text-sm text-slate-700 leading-relaxed">采用监护人长期服务年费制（走保险大数法则模式）。针对单次就医收取高品质陪诊服务费。与深度合作的律所、信托机构实行生态分佣。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/50 p-8 lg:p-12">
-                    <div class="lg:flex gap-12">
-                        <div class="lg:w-1/3 mb-8 lg:mb-0">
-                            <span class="text-xs font-bold tracking-wider text-primary uppercase bg-teal-50 px-2.5 py-1 rounded">MODULE 03</span>
-                            <h3 class="text-2xl font-bold text-slate-900 mt-3 mb-4">「精神家园」<br><span class="text-lg font-medium text-slate-500">—— 社交与情感支持</span></h3>
-                            <div class="bg-amber-50/60 text-amber-800 p-4 rounded-xl border border-amber-100 text-sm">
-                                <strong>💡 解决痛点：</strong>无子女老人缺乏“祖父母”类传统社交货币，极易遭遇严重的社会边缘化和孤独。
-                            </div>
-                        </div>
-                        <div class="lg:w-2/3 grid sm:grid-cols-2 gap-6">
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">高频次兴趣社群与旅居</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">线上建立读书、摄影等细分小组；线下高频组织同城社交、短途康养旅居及创新的“抱团养老”实体探索。</p>
-                            </div>
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">“青老共住”跨代际模式</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">借鉴日本LIVE&LIVE。平台严格筛选撮合高校大学生以低廉房租入住老人家中，作为对价需承担基础家务与高品质夜间陪伴职责。</p>
-                            </div>
-                            <div class="border border-slate-100 p-5 rounded-xl hover:bg-slate-50/50 transition-colors">
-                                <h4 class="font-bold text-slate-900 mb-2">高标准情感陪伴订阅</h4>
-                                <p class="text-sm text-slate-600 leading-relaxed">参考 Goodfellows 机制。对年轻人实行严苛的7级背景与心理审核（录取率仅2-3%）。提供按周高规格上门聊天、数字化教学和节日专职陪伴。</p>
-                            </div>
-                            <div class="bg-teal-50/30 p-5 rounded-xl border border-teal-50/80">
-                                <h4 class="font-bold text-primary mb-2">💰 模块商业模式</h4>
-                                <p class="text-sm text-slate-700 leading-relaxed">跨代际共住抽取撮合匹配费加按月平台管理费。情感陪伴采取按月/按年高客单价订阅制。兴趣社群活动向C端收报名费，向B端收冠名赞助。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="ai-demo" class="py-20 bg-teal-900 text-white relative">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-secondary font-semibold text-xs tracking-wider uppercase bg-amber-950 px-2.5 py-1 rounded-full">LIVE DEMO 公网映射节点</span>
-                <h2 class="text-3xl font-bold mt-3">呼叫“小伴”：无感守护 AI 体验馆</h2>
-                <p class="text-teal-200/80 text-sm mt-2">直接对接您的本地 Ollama <code>banlao_special</code> 模型</p>
-            </div>
-
-            <div class="grid lg:grid-cols-3 gap-8">
-                <div class="bg-slate-900/60 backdrop-blur-md p-6 rounded-2xl border border-teal-800/80 text-sm space-y-4">
-                    <h3 class="font-bold text-lg text-secondary flex items-center gap-1.5">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
-                        API 节点配置
-                    </h3>
-                    <div>
-                        <label class="block text-xs text-teal-300 font-medium mb-1">Ollama 接口 URL</label>
-                        <input id="api-url-input" type="text" value="https://skill.fucku.top/api/chat" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-primary">
-                    </div>
-                    <hr class="border-teal-900">
-                    <h4 class="font-bold text-teal-300 text-xs uppercase tracking-wider">💡 模拟老人常用话术：</h4>
-                    <div class="space-y-2">
-                        <button onclick="quickPreset('这个智慧手环测血氧是什么意思啊？我不懂。')" class="w-full text-left bg-slate-800/50 hover:bg-slate-800 border border-slate-700/40 p-2 rounded-lg text-xs transition-colors block text-slate-300 truncate">“手环测血氧是什么意思？”</button>
-                        <button onclick="quickPreset('今天膝盖有点疼，这老骨头真没用了。')" class="w-full text-left bg-slate-800/50 hover:bg-slate-800 border border-slate-700/40 p-2 rounded-lg text-xs transition-colors block text-slate-300 truncate">“今天膝盖有点疼，没用了...”</button>
-                        <button onclick="quickPreset('邻居张大爷今天去养老院了，我一个人有点发慌。')" class="w-full text-left bg-slate-800/50 hover:bg-slate-800 border border-slate-700/40 p-2 rounded-lg text-xs transition-colors block text-slate-300 truncate">“邻居去养老院了，我有点发慌。”</button>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-2 bg-slate-900 border border-teal-800 rounded-2xl flex flex-col h-[500px] overflow-hidden shadow-2xl">
-                    <div class="bg-slate-950 px-6 py-4 border-b border-teal-950 flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <div class="w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
-                            <div>
-                                <h3 class="font-bold text-sm">数字家人：小伴</h3>
-                                <p class="text-[10px] text-green-400">本地 4090 算力驱动 · <code>banlao_special</code></p>
-                            </div>
-                        </div>
-                        <button onclick="clearChat()" class="text-xs text-slate-400 hover:text-white transition-colors">清空对话</button>
-                    </div>
-
-                    <div id="chat-box" class="flex-1 p-6 overflow-y-auto space-y-4 no-scrollbar">
-                        <div class="flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs shrink-0">伴</div>
-                            <div class="bg-slate-800/80 px-4 py-2.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-slate-100">
-                                爷爷奶奶好！我是小伴。今天身体怎么样？有什么想和我说聊聊的，随时跟我说。
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-4 bg-slate-950 border-t border-teal-950 flex gap-2">
-                        <input id="chat-input" type="text" placeholder="用通俗的语言跟小伴聊聊吧..." class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-primary" onkeypress="if(event.keyCode==13) sendMessage()">
-                        <button id="send-btn" onclick="sendMessage()" class="bg-primary hover:bg-teal-700 text-white px-5 py-2.5 rounded-xl font-medium text-sm transition-colors shrink-0 flex items-center gap-1">
-                            发送
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="tech" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="p-8 lg:p-12 rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xl relative overflow-hidden">
-                <div class="absolute right-0 bottom-0 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
-                <div class="max-w-3xl">
-                    <span class="text-primary font-semibold text-xs tracking-wider uppercase bg-teal-950 px-2.5 py-1 rounded-full">技术赋能 TECHNICAL</span>
-                    <h2 class="text-3xl font-bold mt-4 mb-4">技术支撑：「无感守护」智能生态</h2>
-                    <p class="text-slate-400 mb-8">参考爱牵挂“1+1+N”成熟技术框架，在保障绝对隐私的前提下，构筑全天候响应的安全边界。</p>
-                    
-                    <div class="grid sm:grid-cols-3 gap-6">
-                        <div class="bg-slate-800/80 border border-slate-700 p-5 rounded-xl">
-                            <h4 class="font-bold text-primary mb-2">智能穿戴设备</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">实时精准体征监测、独创的跌倒物理检测算法、极限4秒一键呼救应急机制。</p>
-                        </div>
-                        <div class="bg-slate-800/80 border border-slate-700 p-5 rounded-xl">
-                            <h4 class="font-bold text-primary mb-2">居家环境感知</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">红外非接触式行为分析、水电异常使用逻辑判定，24小时无活动自动后台预警。</p>
-                        </div>
-                        <div class="bg-slate-800/80 border border-slate-700 p-5 rounded-xl">
-                            <h4 class="font-bold text-primary mb-2">AI 智能健康管家</h4>
-                            <p class="text-xs text-slate-400 leading-relaxed">多阶段慢性病精细管理、个性化用药自动提醒、三甲医院全天候在线问诊绿色对接。</p>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-8 p-4 bg-teal-950/40 border border-teal-800/60 rounded-xl flex items-start gap-3">
-                        <span class="text-primary font-bold">🔒 隐私重诺：</span>
-                        <p class="text-xs text-slate-300 leading-relaxed">针对无子女群体对“被监控”的敏感和抗拒心理，系统底层架构设计全面死守“多核心数据本地化无感处理”原则，强调用本地服务器算力进行隐形守护而非全景监控。</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="business" class="py-20 bg-slate-50">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <h2 class="text-3xl font-bold text-slate-900">商业模式与核心收入流</h2>
-                <div class="h-1 w-12 bg-primary mx-auto mt-4 rounded"></div>
-            </div>
-
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-900 text-white text-sm font-semibold">
-                                <th class="p-4 pl-6">收入流向</th>
-                                <th class="p-4">业务具体内容说明</th>
-                                <th class="p-4 pr-6 text-right">预估占比</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 text-sm">
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 pl-6 font-bold text-slate-900">会员订阅费</td>
-                                <td class="p-4 text-slate-600">阶梯式分级制度：基础会员（免费）、银卡/金卡/钻石会员（享受更高频的匹配服务与深度背景调查）。</td>
-                                <td class="p-4 pr-6 text-right font-semibold text-primary">30%</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 pl-6 font-bold text-slate-900">高频服务佣金</td>
-                                <td class="p-4 text-slate-600">线下刚需场景的撮合抽成：包括三甲就医专业陪诊、术后特护、日常家政服务的深度提成。</td>
-                                <td class="p-4 pr-6 text-right font-semibold text-primary">25%</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 pl-6 font-bold text-slate-900">大B端战略合作</td>
-                                <td class="p-4 text-slate-600">产业链协同：大型保险公司专属养老险年金险长尾对接、高端民营养老机构精准导流、三甲医院绿色通道打包方案。</td>
-                                <td class="p-4 pr-6 text-right font-semibold text-primary">25%</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 pl-6 font-bold text-slate-900">政府项目承接</td>
-                                <td class="p-4 text-slate-600">积极承接各地民政购买的基层居家养老服务、各级智慧养老示范落地工程包。</td>
-                                <td class="p-4 pr-6 text-right font-semibold text-primary">15%</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50/80 transition-colors">
-                                <td class="p-4 pl-6 font-bold text-slate-900">高净值增值服务</td>
-                                <td class="p-4 text-slate-600">高客单价法律与金融衍生：深度意定监护法律公证、高额财产信托架构对接、专业生前规划咨询。</td>
-                                <td class="p-4 pr-6 text-right font-semibold text-primary">5%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid md:grid-cols-2 gap-12">
-                <div class="space-y-6">
-                    <h3 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                        <span class="w-2 h-6 bg-teal-600 rounded"></span> 关键成功因素 (KSF)
-                    </h3>
-                    <ul class="space-y-4 text-sm text-slate-600">
-                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <strong class="text-slate-900 block mb-1">1. 坚不可摧的信任建设</strong>
-                            所有一线服务团队及陪伴人员建立死命令级别的准入制，严格执行类似Goodfellows的7级审核壁垒，平台在前期承担全额担保责任。
-                        </li>
-                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <strong class="text-slate-900 block mb-1">2. 极致的线下重运营模式</strong>
-                            坚决杜绝沦为纯线上轻资产平台。必须在重点核心城市建立稳固的线下全职轴心团队、网格化服务中心与高效突发应急响应实体网络。
-                        </li>
-                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <strong class="text-slate-900 block mb-1">3. 顶层政策跑通与合规</strong>
-                            深度与各地方民政、老龄委展开顶层合规试点合作，联手从机制上突破并固化“意定监护人签字”的医疗执行阻碍，争取各级政策绿灯。
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="space-y-6">
-                    <h3 class="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                        <span class="w-2 h-6 bg-amber-500 rounded"></span> 核心风险与严峻挑战
-                    </h3>
-                    <ul class="space-y-4 text-sm text-slate-600">
-                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <strong class="text-slate-900 block mb-1">1. 付费意愿的跨阶层破局</strong>
-                            我国老年群体传统上付费意愿严重偏低。需要前期耗费成本教育市场，通过极其刚需的“意定监护、手术签字”作为高转化漏斗的免费入口，撬动后端重度增值付费。
-                        </li>
-                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <strong class="text-slate-900 block mb-1">2. 极长的投资盈利周期</strong>
-                            传统重度养老产业具有前期资本与资源高投入、长尾回报极慢的特质。需要寻找并绑定具备高度耐心的长线资本、社会影响力基金参与孵化。
-                        </li>
-                        <li class="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                            <strong class="text-slate-900 block mb-1">3. 极其复杂的法律安全责任界定</strong>
-                            老人在互助或陪诊过程中若突发难以预测的恶性健康意外甚至伤亡，平台即便签署免责协议，其社会舆论与法律责任判定仍极度微妙与复杂。
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
-        <div class="max-w-4xl mx-auto px-4 text-center">
-            <p class="text-white text-lg font-medium italic mb-4">
-                “伴老网 = 无子女老人的‘数字家人’ —— 用技术重建互助网络，用制度替代家庭功能，用商业实现可持续照护。”
-            </p>
-            <div class="h-px w-16 bg-teal-800 mx-auto my-6"></div>
-            <p class="text-xs">© 2026 伴老网项目组. 基于 GitHub Pages 平台直接部署的商业计划演示站点</p>
-        </div>
+    <!-- 页脚 -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-400 mt-12">
+        <p>© 2026 伴老网项目组. 核心功能及高阶大模型组件多维分页路演环境</p>
     </footer>
 
+    <!-- 分页逻辑与AI数据驱动脚本 -->
     <script>
+        // ======= 页面分页切换逻辑 =======
+        function switchTab(tabIndex) {
+            document.getElementById('panel-1').classList.add('hidden');
+            document.getElementById('panel-2').classList.add('hidden');
+            document.getElementById('panel-3').classList.add('hidden');
+            
+            for(let i=1; i<=3; i++){
+                const btn = document.getElementById(`tab-btn-${i}`);
+                btn.className = "flex-1 text-center py-3 text-sm font-bold rounded-lg transition-all duration-200 text-slate-600 hover:text-slate-900";
+            }
+
+            document.getElementById(`panel-${tabIndex}`).classList.remove('hidden');
+            
+            const activeBtn = document.getElementById(`tab-btn-${tabIndex}`);
+            activeBtn.className = "flex-1 text-center py-3 text-sm font-bold rounded-lg transition-all duration-200 bg-primary text-white shadow-sm";
+        }
+
+        // ======= 模块三：AI 对话核心底层管道 =======
         let conversationHistory = [];
 
         function quickPreset(text) {
@@ -457,7 +428,7 @@
             const chatBox = document.getElementById('chat-box');
             chatBox.innerHTML = `
                 <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs shrink-0">伴</div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs shrink-0 text-white">伴</div>
                     <div class="bg-slate-800/80 px-4 py-2.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-slate-100">
                         对话已清空。爷爷奶奶，还有什么想跟小伴聊聊的吗？
                     </div>
@@ -490,13 +461,12 @@
             `;
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // 存入历史记录
             conversationHistory.push({ role: 'user', content: userText });
 
             const aiMessageId = 'ai-msg-' + Date.now();
             chatBox.innerHTML += `
                 <div class="flex items-start gap-3">
-                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs shrink-0">伴</div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-bold text-xs shrink-0 text-white">伴</div>
                     <div id="${aiMessageId}" class="bg-slate-800/80 px-4 py-2.5 rounded-2xl rounded-tl-none max-w-[85%] text-sm leading-relaxed text-slate-100 min-h-[40px] flex items-center">
                         <span class="inline-block w-2 h-4 bg-teal-400 animate-pulse"></span>
                     </div>
@@ -512,7 +482,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        model: 'banlao_special', // 模型名称
+                        model: 'banlao_special', 
                         messages: conversationHistory,
                         stream: true
                     })
@@ -545,7 +515,7 @@
                                 chatBox.scrollTop = chatBox.scrollHeight;
                             }
                         } catch (e) {
-                            console.warn("解析行失败: ", e);
+                            console.warn("流解析行失败: ", e);
                         }
                     }
                 }
@@ -555,7 +525,7 @@
 
             } catch (error) {
                 console.error("API 连接失败:", error);
-                aiMessageEl.innerHTML = `<span class="text-red-400">⚠️ 无法连接到本地 AI。请检查 1. Ollama 是否跨域启动；2. 浏览器是否拦截了 HTTP 混合内容请求（见下方注意事项）。</span>`;
+                aiMessageEl.innerHTML = `<span class="text-red-400 text-xs">⚠️ 无法连接到本地大模型。请检查：1. Ollama 服务是否已通过跨域指令启动；2. 如果使用的是内网穿透（如 ChmlFrp），请确保该隧道为 HTTPS 类型，否则会被浏览器混合内容机制拦截。</span>`;
             } finally {
                 inputEl.disabled = false;
                 sendBtn.disabled = false;
