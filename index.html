@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作业项目导航主页 - GitHub Pages 适配版</title>
+    <style>
+        :root {
+            --primary-color: #00adb5;
+            --primary-hover: #008c95;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --grid-item-bg: #141e30;
+            --warn-bg: #1e1b4b;
+            --warn-border: #312e81;
+            --warn-text: #a5b4fc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+            padding: 35px 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        header h1 {
+            font-size: 26px;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* 探测状态栏 */
+        .status-panel {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 50%;
+        }
+
+        .status-dot.active {
+            background-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .status-badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background-color: #0f172a;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+
+        /* 列表容器 */
+        .list-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .list-card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            color: #ffffff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .counter {
+            font-size: 13px;
+            background-color: #0f172a;
+            padding: 2px 10px;
+            border-radius: 20px;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .file-item {
+            background-color: var(--grid-item-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .file-item:hover {
+            transform: translateX(4px);
+            border-color: var(--primary-color);
+            background-color: #1e293b;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            font-size: 22px;
+            color: var(--primary-color);
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #f8fafc;
+            font-size: 15px;
+        }
+
+        .file-path {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .go-link {
+            font-size: 13px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .no-files {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            background-color: var(--grid-item-bg);
+            line-height: 1.8;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: var(--primary-color);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌐 作业项目在线导航系统</h1>
+        <p>全自动环境感知 · 支持 GitHub Pages 远程 API 目录嗅探与本地双重动态解析</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- 探测状态栏 -->
+        <div class="status-panel">
+            <div class="status-info">
+                <div id="statusDot" class="status-dot"></div>
+                <span id="statusText">正在初始化多端自适应探测引擎...</span>
+            </div>
+            <span class="status-badge" id="envBadge">检测环境中</span>
+        </div>
+
+        <!-- 导航列表卡片 -->
+        <div class="list-card">
+            <h2>
+                <span>📂 自动化检测结果</span>
+                <span class="counter" id="fileCount">0</span>
+            </h2>
+            <div class="file-grid" id="fileGrid">
+                <div class="loading">⏳ 正在智能分析当前宿主环境并扫描相对路径，请稍候...</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        async function smartScanHomework() {
+            const grid = document.getElementById('fileGrid');
+            const countEl = document.getElementById('fileCount');
+            const statusDot = document.getElementById('statusDot');
+            const statusText = document.getElementById('statusText');
+            const envBadge = document.getElementById('envBadge');
+
+            const hostname = window.location.hostname;
+            let detectedHtmlFiles = [];
+            let sourceMode = "";
+
+            // ==================== 🛠️ 场景 1: 部署在 GitHub Pages 环境 ====================
+            if (hostname.endsWith('github.io')) {
+                envBadge.innerText = "GitHub Pages 线上环境";
+                sourceMode = "GitHub 远程仓库";
+                
+                try {
+                    // 从 URL 动态解析出 GitHub 的用户名(owner)和项目仓库名(repo)
+                    const owner = hostname.split('.')[0];
+                    const pathParts = window.location.pathname.split('/').filter(Boolean);
+                    
+                    // 如果 pathParts 为空或第一个元素包含点(说明直接是文件)，则是用户/组织主页仓库 (owner.github.io)
+                    let repo = pathParts[0];
+                    if (!repo || repo.includes('.')) {
+                        repo = `${owner}.github.io`;
+                    }
+                    
+                    statusText.innerText = `正在通过 GitHub REST API 跨域盘点仓库资源...`;
+                    
+                    // 调用开源免鉴权的 GitHub Contents API 盘点 homework 文件夹
+                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/homework`;
+                    const response = await fetch(apiUrl);
+                    
+                    if (response.ok) {
+                        const filesData = await response.json();
+                        if (Array.isArray(filesData)) {
+                            filesData.forEach(item => {
+                                if (item.type === 'file' && item.name.endsWith('.html')) {
+                                    detectedHtmlFiles.push(item.name);
+                                }
+                            });
+                        }
+                    } else if (response.status === 404) {
+                        statusText.innerText = "GitHub Pages 探测完成：未在项目根目录下找到 homework 文件夹";
+                        renderEmptyUI(grid, countEl, "未在远程仓库根目录找到 homework 文件夹，请确认是否已提交并推送该目录。");
+                        return;
+                    }
+                } catch (apiError) {
+                    console.error("GitHub API 实时抓取发生异常:", apiError);
+                }
+            } 
+            // ==================== 💻 场景 2: 本地 Web 服务器环境 (Live Server / Python) ====================
+            else if (window.location.protocol !== 'file:') {
+                envBadge.innerText = "本地服务器环境";
+                sourceMode = "本地 Web 服务";
+                try {
+                    const response = await fetch('./homework/');
+                    if (response.ok) {
+                        const text = await response.text();
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(text, 'text/html');
+                        const links = doc.querySelectorAll('a');
+                        
+                        links.forEach(link => {
+                            const href = link.getAttribute('href');
+                            if (href && href.endsWith('.html')) {
+                                let cleanName = href.split('/').pop();
+                                if (cleanName && !cleanName.startsWith('..') && !detectedHtmlFiles.includes(cleanName)) {
+                                    detectedHtmlFiles.push(cleanName);
+                                }
+                            }
+                        });
+                    }
+                } catch (localServerError) {
+                    console.error("本地服务器目录列表解析失败:", localServerError);
+                }
+            } 
+            // ==================== 🔒 场景 3: 纯本地静态双击打开 (file://) ====================
+            else {
+                envBadge.innerText = "本地 FILE 协议";
+                statusText.innerText = "全自动扫描被浏览器安全沙箱拦截";
+                renderEmptyUI(grid, countEl, "⚠️ <b>由于现代浏览器底层隐私隔离限制：</b><br>在 <code>file://</code> 协议下（直接双击 HTML 文件），纯前端代码无权直接遍历本地磁盘。<br><br><b>💡 解决方案：</b><br>1. 请将其<b>推送到 GitHub Pages</b>，本页面将全自动激活 GitHub 专属嗅探引擎！<br>2. 或者在本地使用 VS Code 的 <b>Live Server</b> 插件打开本页面。");
+                return;
+            }
+
+            // ==================== 🎨 渲染动态检测结果 ====================
+            if (detectedHtmlFiles.length > 0) {
+                statusDot.classList.add('active');
+                statusText.innerText = `成功基于相对路径同步！数据源: [${sourceMode}]`;
+                
+                grid.innerHTML = '';
+                detectedHtmlFiles.forEach(fileName => {
+                    grid.innerHTML += `
+                        <a href="homework/${fileName}" class="file-item">
+                            <div class="file-info">
+                                <div class="file-icon">📄</div>
+                                <div>
+                                    <div class="file-name">${fileName}</div>
+                                    <div class="file-path">相对链接: homework/${fileName}</div>
+                                </div>
+                            </div>
+                            <div class="go-link">立即进入 ➔</div>
+                        </a>
+                    `;
+                });
+                countEl.innerText = detectedHtmlFiles.length;
+            } else {
+                statusText.innerText = `探测完成：[${sourceMode}] 下的 homework 文件夹内容为空`;
+                renderEmptyUI(grid, countEl, "📂 homework 文件夹当前未检测到任何有效网页文件，导航列表为空。");
+            }
+        }
+
+        function renderEmptyUI(gridElement, counterElement, messageHtml) {
+            gridElement.innerHTML = `<div class="no-files">${messageHtml}</div>`;
+            counterElement.innerText = '0';
+        }
+
+        window.addEventListener('DOMContentLoaded', smartScanHomework);
+    </script>
+</body>
+</html>
