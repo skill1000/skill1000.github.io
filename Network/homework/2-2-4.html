@@ -704,6 +704,8 @@ ip address 10.3.1.1 30
 ospf enable 1 area 0
 quit
 
+ip route-static 0.0.0.0 0.0.0.0 4.4.4.1
+
 quit
 
 save</code></pre>
@@ -723,7 +725,7 @@ save</code></pre>
                     <pre><code id="code-rt2">undo terminal monitor
 
 system-view
-sysname RT3_XingMing
+sysname RT2_XingMing
 
 ospf 1
 area 0
@@ -748,6 +750,8 @@ interface GigabitEthernet 4/0/0
 ip address 10.6.1.1 30
 ospf enable 1 area 0
 quit
+
+ip route-static 0.0.0.0 0.0.0.0 3.3.3.1
 
 quit
 
