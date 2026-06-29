@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作业项目导航主页 - 全景文件兼容版</title>
+    <title>作业项目导航主页</title>
     <style>
         :root {
             --primary-color: #00adb5;
@@ -28,15 +28,7 @@
         header h1 { font-size: 26px; color: #ffffff; margin-bottom: 8px; }
         header p { color: var(--text-muted); font-size: 13px; letter-spacing: 0.5px; }
         .container { max-width: 850px; margin: 35px auto; padding: 0 20px; }
-        .status-panel {
-            background-color: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 8px; padding: 15px 20px; margin-bottom: 25px; font-size: 14px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .status-info { display: flex; align-items: center; gap: 10px; }
-        .status-dot { width: 8px; height: 8px; background-color: #e2e8f0; border-radius: 50%; }
-        .status-dot.active { background-color: #10b981; box-shadow: 0 0 8px #10b981; }
-        .status-badge { font-size: 12px; padding: 2px 8px; border-radius: 4px; background-color: #0f172a; color: var(--text-muted); border: 1px solid var(--border-color); }
+        
         .list-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .list-card h2 { font-size: 18px; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); color: #ffffff; display: flex; justify-content: space-between; align-items: center; }
         .counter { font-size: 13px; background-color: #0f172a; padding: 2px 10px; border-radius: 20px; color: var(--primary-color); border: 1px solid var(--border-color); }
@@ -44,172 +36,62 @@
         .file-item { background-color: var(--grid-item-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s ease; text-decoration: none; color: inherit; }
         .file-item:hover { transform: translateX(4px); border-color: var(--primary-color); background-color: #1e293b; }
         .file-info { display: flex; align-items: center; gap: 12px; }
-        .file-icon { font-size: 24px; }
+        .file-icon { font-size: 24px; color: var(--primary-color); }
         .file-name { font-weight: 600; color: #f8fafc; font-size: 15px; }
         .file-path { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
         .go-link { font-size: 13px; color: var(--primary-color); display: flex; align-items: center; gap: 4px; font-weight: 500; }
-        .no-files { text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 14px; border: 1px dashed var(--border-color); border-radius: 6px; background-color: var(--grid-item-bg); line-height: 1.8; }
-        .loading { text-align: center; padding: 30px; color: var(--primary-color); font-size: 14px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>🌐 作业项目在线导航系统</h1>
-        <p>全景智能感知 · 支持万能文件类型展现与 GitHub Pages 深度适配</p>
+        <h1>🌐 个人作业项目在线导航</h1>
+        <p>静态强稳固构建 · 完美适配 GitHub Pages 线上环境</p>
     </header>
 
     <div class="container">
-        <div class="status-panel">
-            <div class="status-info">
-                <div id="statusDot" class="status-dot"></div>
-                <span id="statusText">正在初始化多端自适应探测引擎...</span>
-            </div>
-            <span class="status-badge" id="envBadge">检测环境中</span>
-        </div>
-
         <div class="list-card">
             <h2>
-                <span>📂 自动化检测结果</span>
+                <span>📂 作业列表</span>
                 <span class="counter" id="fileCount">0</span>
             </h2>
             <div class="file-grid" id="fileGrid">
-                <div class="loading">⏳ 正在智能分析当前宿主环境并扫描相对路径，请稍候...</div>
-            </div>
+                </div>
         </div>
     </div>
 
     <script>
-        // 【核心改进】扩展智能文件图标与类型描述，支持网络工程作业
-        function getFileInfo(fileName) {
-            const ext = fileName.split('.').pop().toLowerCase();
-            switch(ext) {
-                case 'html': case 'htm':
-                    return { icon: '🌐', type: 'HTML 网页' };
-                case 'txt': case 'cfg': case 'conf':
-                    return { icon: '📄', type: '网络设备配置/文本文件' };
-                case 'pkt': case 'topo':
-                    return { icon: '🛠️', type: '网络拓扑实验文件' };
-                case 'pdf':
-                    return { icon: '📕', type: 'PDF 文档' };
-                case 'doc': case 'docx':
-                    return { icon: '📘', type: 'Word 文档' };
-                case 'zip': case 'rar': case '7z':
-                    return { icon: '📦', type: '压缩包文件' };
-                default:
-                    return { icon: '📁', type: '作业附件' };
-            }
-        }
+        // ==========================================
+        // 💡 以后你每增加一个作业，只需要在这里加上文件名即可！
+        // ==========================================
+        const homeworkFiles = [
+            "2-2-4.html"
+        ];
 
-        async function smartScanHomework() {
+        function renderHomework() {
             const grid = document.getElementById('fileGrid');
             const countEl = document.getElementById('fileCount');
-            const statusDot = document.getElementById('statusDot');
-            const statusText = document.getElementById('statusText');
-            const envBadge = document.getElementById('envBadge');
+            
+            countEl.innerText = homeworkFiles.length;
+            grid.innerHTML = '';
 
-            const hostname = window.location.hostname;
-            let detectedFiles = [];
-            let sourceMode = "";
-            const ignoredFiles = ['.gitkeep', 'readme.md', '.ds_store'];
-
-            if (hostname.endsWith('github.io')) {
-                envBadge.innerText = "GitHub Pages 线上环境";
-                sourceMode = "GitHub 远程仓库";
-                
-                try {
-                    const owner = hostname.split('.')[0];
-                    const pathParts = window.location.pathname.split('/').filter(Boolean);
-                    let repo = pathParts[0];
-                    if (!repo || repo.includes('.')) { repo = `${owner}.github.io`; }
-                    
-                    statusText.innerText = `正在通过 GitHub REST API 跨域盘点仓库资源...`;
-                    const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/homework`;
-                    const response = await fetch(apiUrl);
-                    
-                    if (response.ok) {
-                        const filesData = await response.json();
-                        if (Array.isArray(filesData)) {
-                            filesData.forEach(item => {
-                                // 【核心改进】不再死卡 .html，只要是普通文件且不是系统废文件就全部抓取
-                                if (item.type === 'file' && !ignoredFiles.includes(item.name.toLowerCase())) {
-                                    detectedFiles.push(item.name);
-                                }
-                            });
-                        }
-                    } else {
-                        if (response.status === 403) {
-                            statusText.innerText = "⚠️ 触发 GitHub API 请求频率限制";
-                            renderEmptyUI(grid, countEl, `<b>⚠️ 触发 GitHub 接口频率限制：</b><br>由于短时间内刷新太快，GitHub 限制了匿名访问。请确认仓库中是否存在小写的 <code>homework</code> 文件夹，或稍后再试。`);
-                            return;
-                        } else if (response.status === 404) {
-                            statusText.innerText = "未在根目录找到 homework 文件夹";
-                            renderEmptyUI(grid, countEl, `📂 <b>未找到对应的目录：</b><br>请检查您的 GitHub 仓库根目录下，是否存在名为 <code>homework</code> (必须全小写) 的文件夹，且里面已提交文件。`);
-                            return;
-                        }
-                    }
-                } catch (apiError) { console.error(apiError); }
-            } 
-            else if (window.location.protocol !== 'file:') {
-                envBadge.innerText = "本地服务器环境";
-                sourceMode = "本地 Web 服务";
-                try {
-                    const response = await fetch('./homework/');
-                    if (response.ok) {
-                        const text = await response.text();
-                        const parser = new DOMParser();
-                        const doc = parser.parseFromString(text, 'text/html');
-                        const links = doc.querySelectorAll('a');
-                        links.forEach(link => {
-                            const href = link.getAttribute('href');
-                            if (href) {
-                                let cleanName = href.split('/').pop();
-                                if (cleanName && !cleanName.startsWith('..') && !ignoredFiles.includes(cleanName.toLowerCase()) && !detectedFiles.includes(cleanName)) {
-                                    detectedFiles.push(cleanName);
-                                }
-                            }
-                        });
-                    }
-                } catch (localServerError) { console.error(localServerError); }
-            } 
-            else {
-                envBadge.innerText = "本地 FILE 协议";
-                statusText.innerText = "全自动扫描被浏览器沙箱拦截";
-                renderEmptyUI(grid, countEl, "⚠️ <b>本地直接双击打开受限：</b><br>请使用 VS Code 的 <b>Live Server</b> 插件打开，或者直接把代码 <b>Push 到 GitHub 仓库</b>。");
-                return;
-            }
-
-            if (detectedFiles.length > 0) {
-                statusDot.classList.add('active');
-                statusText.innerText = `成功同步作业列表！数据源: [${sourceMode}]`;
-                grid.innerHTML = '';
-                detectedFiles.forEach(fileName => {
-                    const meta = getFileInfo(fileName);
-                    grid.innerHTML += `
-                        <a href="homework/${fileName}" class="file-item" target="_blank">
-                            <div class="file-info">
-                                <div class="file-icon">${meta.icon}</div>
-                                <div>
-                                    <div class="file-name">${fileName}</div>
-                                    <div class="file-path">类型: ${meta.type} | 路径: homework/${fileName}</div>
-                                </div>
+            homeworkFiles.forEach(fileName => {
+                grid.innerHTML += `
+                    <a href="homework/${fileName}" class="file-item" target="_blank">
+                        <div class="file-info">
+                            <div class="file-icon">🌐</div>
+                            <div>
+                                <div class="file-name">${fileName}</div>
+                                <div class="file-path">相对路径: homework/${fileName}</div>
                             </div>
-                            <div class="go-link">${fileName.endsWith('.html') ? '立即进入' : '查看/下载'} ➔</div>
-                        </a>
-                    `;
-                });
-                countEl.innerText = detectedFiles.length;
-            } else {
-                statusText.innerText = `探测完成：[${sourceMode}] 下的 homework 文件夹没有有效文件`;
-                renderEmptyUI(grid, countEl, "📂 <b>homework 文件夹当前为空：</b><br>系统已成功对接仓库，但没有在 <code>homework</code> 文件夹内发现任何有效的作业文件。<br>请往该文件夹里放入文件（如配置文本、拓扑等）并 <code>git push</code> 到 GitHub！");
-            }
+                        </div>
+                        <div class="go-link">立即进入 ➔</div>
+                    </a>
+                `;
+            });
         }
 
-        function renderEmptyUI(gridElement, counterElement, messageHtml) {
-            gridElement.innerHTML = `<div class="no-files">${messageHtml}</div>`;
-            counterElement.innerText = '0';
-        }
-        window.addEventListener('DOMContentLoaded', smartScanHomework);
+        window.addEventListener('DOMContentLoaded', renderHomework);
     </script>
 </body>
 </html>
