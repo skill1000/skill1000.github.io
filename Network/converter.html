@@ -76,12 +76,12 @@
             </div>
             <div class="flex-item">
                 <label>2. 脚本中默认使用的名字标识</label>
-                <input type="text" id="expName" value="QiaoXiang" placeholder="用于在前端被同学们输入的名字实时替换">
+                <input type="text" id="expName" value="" placeholder="用于在前端被同学们输入的名字实时替换">
             </div>
         </div>
 
         <label>3. 粘贴纯文本命令内容</label>
-        <textarea id="rawInput" placeholder="# FW1&#10;undo terminal monitor&#10;system-view&#10;sysname FW1_QiaoXiang&#10;...&#10;&#10;# RT1&#10;undo terminal monitor&#10;..."></textarea>
+        <textarea id="rawInput" placeholder="# FW1&#10;undo terminal monitor&#10;system-view&#10;sysname FW1_XingMing&#10;...&#10;&#10;# RT1&#10;undo terminal monitor&#10;..."></textarea>
 
         <div class="btn-container">
             <button class="btn" onclick="buildAndDownload()">🚀 一键生成并下载独立作业网页 (.html)</button>
@@ -93,7 +93,7 @@
             try {
                 const rawText = document.getElementById('rawInput').value;
                 const title = document.getElementById('expTitle').value.trim() || "未命名实验";
-                const defaultName = document.getElementById('expName').value.trim() || "QiaoXiang";
+                const defaultName = document.getElementById('expName').value.trim() || "XingMing";
 
                 if (!rawText.trim()) {
                     alert("请先粘贴一些原始命令内容！");
@@ -153,7 +153,6 @@
                                 role: meta.role,
                                 tag: { text: meta.tagText, class: meta.tagClass },
                                 highlights: meta.highlights,
-                                note: devNameCandidate.toUpperCase() === 'RT2' ? "⚠️ 注意：原配置命令中此设备的 sysname 为 RT3_QiaoXiang，现场实施时请确认。" : "",
                                 system: "HUAWEI VRP V5/V8",
                                 code: ""
                             };
