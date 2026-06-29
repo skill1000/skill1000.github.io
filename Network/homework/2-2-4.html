@@ -72,6 +72,44 @@
             padding: 0 20px;
         }
 
+        /* 新增：实时名字生成工具箱样式 */
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 22px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            border: 1px solid var(--primary-color);
+        }
+        .tool-card h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding-left: 10px;
+        }
+        .tool-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .tool-input {
+            width: 100%;
+            background-color: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .tool-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 173, 181, 0.2);
+        }
+
         /* 导航菜单 */
         .nav-box {
             background: var(--card-bg);
@@ -286,86 +324,92 @@
 
     <div class="container">
         
-        <!-- 设备快速导航 -->
-        <div class="nav-box">
-            <a href="#summary" class="nav-link">📋 设备摘要</a>
-            <a href="#fw1" class="nav-link">🛡️ FW1_QiaoXiang</a>
-            <a href="#fw2" class="nav-link">🛡️ FW2_QiaoXiang</a>
-            <a href="#fw3" class="nav-link">🛡️ FW3_QiaoXiang</a>
-            <a href="#fw4" class="nav-link">🛡️ FW4_QiaoXiang</a>
-            <a href="#rt1" class="nav-link">🛣️ RT1_QiaoXiang</a>
-            <a href="#rt2" class="nav-link">🛣️ RT2 (RT3_QiaoXiang)</a>
-            <a href="#rt3" class="nav-link">🛣️ RT3_QiaoXiang</a>
-            <a href="#ac" class="nav-link">📶 AC_QiaoXiang</a>
+        <div class="tool-card">
+            <h2>🛠️ 实验脚本 - 专属名字实时生成器</h2>
+            <p class="tool-desc">
+                💡 同学们好！本页面的网络配置默认使用我的名字拼音（<b>QiaoXiang</b>）。为了防止直接复制导致冲突，请在下方输入<strong>你自己的名字全拼</strong>（如: <i>ZhangSan</i>），页面中所有设备的系统命名（sysname）和复制代码块将<strong>实时自动同步修改</strong>，方便大家直接粘贴到 eNSP / 模拟器中使用！
+            </p>
+            <input type="text" id="nameInput" class="tool-input" placeholder="输入你的名字拼音全拼 (例如: ZhangSan，留空则默认还原为 QiaoXiang)" oninput="applyNameChange()">
         </div>
 
-        <!-- 摘要表格卡片 -->
-        <div id="summary" class="summary-card">
-            <h2>📋 设备清单与核心功能摘要</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>设备名称</th>
-                        <th>角色类型</th>
-                        <th>核心功能亮点</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>FW1_QiaoXiang</strong></td>
-                        <td>核心防火墙（主）</td>
-                        <td>OSPF 动态路由、VRRP 活性组、HRP 心跳同步、Eth-Trunk 链路聚合</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FW2_QiaoXiang</strong></td>
-                        <td>核心防火墙（备）</td>
-                        <td>OSPF 动态路由、VRRP 备份组、HRP 心跳同步</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FW3_QiaoXiang</strong></td>
-                        <td>边缘防火墙</td>
-                        <td>安全区域划分（Trust / Untrust）</td>
-                    </tr>
-                    <tr>
-                        <td><strong>FW4_QiaoXiang</strong></td>
-                        <td>边缘防火墙</td>
-                        <td>安全区域划分（Trust / Untrust）</td>
-                    </tr>
-                    <tr>
-                        <td><strong>RT1_QiaoXiang</strong></td>
-                        <td>骨干路由器</td>
-                        <td>OSPF 区域 0 多链路协同</td>
-                    </tr>
-                    <tr>
-                        <td><strong>RT3_QiaoXiang (RT2)</strong></td>
-                        <td>骨干路由器</td>
-                        <td>OSPF 区域 0 动态路由</td>
-                    </tr>
-                    <tr>
-                        <td><strong>RT3_QiaoXiang (RT3)</strong></td>
-                        <td>核心路由器</td>
-                        <td>OSPF 区域 0 动态路由</td>
-                    </tr>
-                    <tr>
-                        <td><strong>AC_QiaoXiang</strong></td>
-                        <td>无线控制器</td>
-                        <td>VLAN 划分、Trunk 骨干链路、全局 DHCP 地址池分配</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- FW1_QiaoXiang -->
-        <div id="fw1" class="device-card">
-            <div class="device-header">
-                <div class="device-title">🛡️ FW1_QiaoXiang <span class="device-tag tag-fw">主防火墙</span></div>
+        <div id="dynamic-content">
+            <div class="nav-box">
+                <a href="#summary" class="nav-link">📋 设备摘要</a>
+                <a href="#fw1" class="nav-link">🛡️ FW1_QiaoXiang</a>
+                <a href="#fw2" class="nav-link">🛡️ FW2_QiaoXiang</a>
+                <a href="#fw3" class="nav-link">🛡️ FW3_QiaoXiang</a>
+                <a href="#fw4" class="nav-link">🛡️ FW4_QiaoXiang</a>
+                <a href="#rt1" class="nav-link">🛣️ RT1_QiaoXiang</a>
+                <a href="#rt2" class="nav-link">🛣️ RT2 (RT3_QiaoXiang)</a>
+                <a href="#rt3" class="nav-link">🛣️ RT3_QiaoXiang</a>
+                <a href="#ac" class="nav-link">📶 AC_QiaoXiang</a>
             </div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-fw1', this)">一键复制</button>
+
+            <div id="summary" class="summary-card">
+                <h2>📋 设备清单与核心功能摘要</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>设备名称</th>
+                            <th>角色类型</th>
+                            <th>核心功能亮点</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>FW1_QiaoXiang</strong></td>
+                            <td>核心防火墙（主）</td>
+                            <td>OSPF 动态路由、VRRP 活性组、HRP 心跳同步、Eth-Trunk 链路聚合</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FW2_QiaoXiang</strong></td>
+                            <td>核心防火墙（备）</td>
+                            <td>OSPF 动态路由、VRRP 备份组、HRP 心跳同步</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FW3_QiaoXiang</strong></td>
+                            <td>边缘防火墙</td>
+                            <td>安全区域划分（Trust / Untrust）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>FW4_QiaoXiang</strong></td>
+                            <td>边缘防火墙</td>
+                            <td>安全区域划分（Trust / Untrust）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RT1_QiaoXiang</strong></td>
+                            <td>骨干路由器</td>
+                            <td>OSPF 区域 0 多链路协同</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RT3_QiaoXiang (RT2)</strong></td>
+                            <td>骨干路由器</td>
+                            <td>OSPF 区域 0 动态路由</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RT3_QiaoXiang (RT3)</strong></td>
+                            <td>核心路由器</td>
+                            <td>OSPF 区域 0 动态路由</td>
+                        </tr>
+                        <tr>
+                            <td><strong>AC_QiaoXiang</strong></td>
+                            <td>无线控制器</td>
+                            <td>VLAN 划分、Trunk 骨干链路、全局 DHCP 地址池分配</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="fw1" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">🛡️ FW1_QiaoXiang <span class="device-tag tag-fw">主防火墙</span></div>
                 </div>
-                <pre><code id="code-fw1">undo terminal monitor
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-fw1', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-fw1">undo terminal monitor
 
 system-view
 sysname FW1_QiaoXiang
@@ -454,20 +498,19 @@ quit
 quit
 
 save</code></pre>
-            </div>
-        </div>
-
-        <!-- FW2_QiaoXiang -->
-        <div id="fw2" class="device-card">
-            <div class="device-header">
-                <div class="device-title">🛡️ FW2_QiaoXiang <span class="device-tag tag-fw">备防火墙</span></div>
-            </div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-fw2', this)">一键复制</button>
                 </div>
-                <pre><code id="code-fw2">undo terminal monitor
+            </div>
+
+            <div id="fw2" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">🛡️ FW2_QiaoXiang <span class="device-tag tag-fw">备防火墙</span></div>
+                </div>
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-fw2', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-fw2">undo terminal monitor
 
 system-view
 sysname FW2_QiaoXiang
@@ -542,20 +585,19 @@ hrp enable
 quit
 
 save</code></pre>
-            </div>
-        </div>
-
-        <!-- FW3_QiaoXiang -->
-        <div id="fw3" class="device-card">
-            <div class="device-header">
-                <div class="device-title">🛡️ FW3_QiaoXiang <span class="device-tag tag-fw">边缘防火墙</span></div>
-            </div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-fw3', this)">一键复制</button>
                 </div>
-                <pre><code id="code-fw3">undo terminal monitor
+            </div>
+
+            <div id="fw3" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">🛡️ FW3_QiaoXiang <span class="device-tag tag-fw">边缘防火墙</span></div>
+                </div>
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-fw3', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-fw3">undo terminal monitor
 
 system-view
 sysname FW3_QiaoXiang
@@ -584,20 +626,19 @@ quit
 quit
 
 save</code></pre>
-            </div>
-        </div>
-
-        <!-- FW4_QiaoXiang -->
-        <div id="fw4" class="device-card">
-            <div class="device-header">
-                <div class="device-title">🛡️ FW4_QiaoXiang <span class="device-tag tag-fw">边缘防火墙</span></div>
-            </div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-fw4', this)">一键复制</button>
                 </div>
-                <pre><code id="code-fw4">undo terminal monitor
+            </div>
+
+            <div id="fw4" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">🛡️ FW4_QiaoXiang <span class="device-tag tag-fw">边缘防火墙</span></div>
+                </div>
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-fw4', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-fw4">undo terminal monitor
 
 system-view
 sysname FW4_QiaoXiang
@@ -621,20 +662,19 @@ quit
 quit
 
 save</code></pre>
-            </div>
-        </div>
-
-        <!-- RT1_QiaoXiang -->
-        <div id="rt1" class="device-card">
-            <div class="device-header">
-                <div class="device-title">🛣️ RT1_QiaoXiang <span class="device-tag tag-rt">路由器</span></div>
-            </div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-rt1', this)">一键复制</button>
                 </div>
-                <pre><code id="code-rt1">undo terminal monitor
+            </div>
+
+            <div id="rt1" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">🛣️ RT1_QiaoXiang <span class="device-tag tag-rt">路由器</span></div>
+                </div>
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-rt1', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-rt1">undo terminal monitor
 
 system-view
 sysname RT1_QiaoXiang
@@ -667,21 +707,20 @@ quit
 quit
 
 save</code></pre>
-            </div>
-        </div>
-
-        <!-- RT2_QiaoXiang -->
-        <div id="rt2" class="device-card">
-            <div class="device-header">
-                <div class="device-title">🛣️ RT2 (Sysname: RT3_QiaoXiang) <span class="device-tag tag-rt">路由器</span></div>
-            </div>
-            <div class="device-note">⚠️ 注意：原配置命令中此设备的 sysname 为 RT3_QiaoXiang，请在现场实施时确认是否需调整为 RT2_QiaoXiang。</div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-rt2', this)">一键复制</button>
                 </div>
-                <pre><code id="code-rt2">undo terminal monitor
+            </div>
+
+            <div id="rt2" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">🛣️ RT2 (Sysname: RT3_QiaoXiang) <span class="device-tag tag-rt">路由器</span></div>
+                </div>
+                <div class="device-note">⚠️ 注意：原配置命令中此设备的 sysname 为 RT3_QiaoXiang，请在现场实施时确认是否需调整为 RT2_QiaoXiang。</div>
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-rt2', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-rt2">undo terminal monitor
 
 system-view
 sysname RT3_QiaoXiang
@@ -713,20 +752,19 @@ quit
 quit
 
 save</code></pre>
-            </div>
-        </div>
-
-        <!-- RT3_QiaoXiang -->
-        <div id="rt3" class="device-card">
-            <div class="device-header">
-                <div class="device-title">🛣️ RT3_QiaoXiang <span class="device-tag tag-rt">核心/出口路由器</span></div>
-            </div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-rt3', this)">一键复制</button>
                 </div>
-                <pre><code id="code-rt3">undo terminal monitor
+            </div>
+
+            <div id="rt3" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">🛣️ RT3_QiaoXiang <span class="device-tag tag-rt">核心/出口路由器</span></div>
+                </div>
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-rt3', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-rt3">undo terminal monitor
 
 system-view
 sysname RT3_QiaoXiang
@@ -758,20 +796,19 @@ quit
 quit
 
 save</code></pre>
-            </div>
-        </div>
-
-        <!-- AC_QiaoXiang -->
-        <div id="ac" class="device-card">
-            <div class="device-header">
-                <div class="device-title">📶 AC_QiaoXiang <span class="device-tag tag-ac">无线控制器</span></div>
-            </div>
-            <div class="code-wrapper">
-                <div class="code-header">
-                    <span>HUAWEI VRP V5/V8</span>
-                    <button class="copy-btn" onclick="copyCode('code-ac', this)">一键复制</button>
                 </div>
-                <pre><code id="code-ac">undo terminal monitor
+            </div>
+
+            <div id="ac" class="device-card">
+                <div class="device-header">
+                    <div class="device-title">📶 AC_QiaoXiang <span class="device-tag tag-ac">无线控制器</span></div>
+                </div>
+                <div class="code-wrapper">
+                    <div class="code-header">
+                        <span>HUAWEI VRP V5/V8</span>
+                        <button class="copy-btn" onclick="copyCode('code-ac', this)">一键复制</button>
+                    </div>
+                    <pre><code id="code-ac">undo terminal monitor
 
 system-view
 sysname AC_QiaoXiang
@@ -801,12 +838,31 @@ quit
 quit
 
 save</code></pre>
+                </div>
             </div>
         </div>
 
     </div>
 
     <script>
+        // 【核心控制】备份最原始带有 QiaoXiang 的 HTML 结构内容
+        let originalContainerHtml = "";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            originalContainerHtml = document.getElementById('dynamic-content').innerHTML;
+        });
+
+        // 核心功能：当输入框输入时，实时批量替换整个展示区内的 QiaoXiang 关键字
+        function applyNameChange() {
+            const inputName = document.getElementById('nameInput').value.trim();
+            // 如果输入框有字就用输入框的字，没有就默认恢复为 QiaoXiang
+            const targetName = inputName ? inputName : "QiaoXiang";
+            
+            // 全局正则替换并刷入 dynamic-content 节点
+            document.getElementById('dynamic-content').innerHTML = originalContainerHtml.replace(/QiaoXiang/g, targetName);
+        }
+
+        // 一键复制代码块
         function copyCode(id, btn) {
             const codeText = document.getElementById(id).innerText;
             navigator.clipboard.writeText(codeText).then(() => {
@@ -818,7 +874,7 @@ save</code></pre>
                     btn.classList.remove('copied');
                 }, 2000);
             }).catch(err => {
-                // Fallback
+                // 兼容旧浏览器
                 const textarea = document.createElement('textarea');
                 textarea.value = codeText;
                 document.body.appendChild(textarea);
