@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏭 eNSP 交互式作业网页 - 全自动生成工厂（稳定修复版）</title>
+    <style>
+        :root {
+            --primary: #00adb5;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #e2e8f0;
+            --border: #334155;
+        }
+        body {
+            font-family: system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 { color: var(--primary); font-size: 26px; margin-bottom: 5px; text-align: center;}
+        p.subtitle { text-align: center; color: #94a3b8; margin-bottom: 30px; font-size: 14px;}
+        .box { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 25px; margin-bottom: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        label { font-size: 14px; margin-bottom: 6px; color: var(--primary); font-weight: bold; display: block;}
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            background: #0b0f19;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: #38bdf8;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+        input:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 5px rgba(0,173,181,0.4); }
+        textarea { min-height: 380px; resize: vertical; }
+        .flex-group { display: flex; gap: 20px; }
+        .flex-item { flex: 1; }
+        .btn-container { text-align: center; margin-top: 10px; }
+        .btn {
+            background: var(--primary);
+            color: #0f172a;
+            border: none;
+            padding: 14px 40px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .btn:hover { background: #008c95; transform: translateY(-1px); }
+        .btn:active { transform: translateY(1px); }
+        .hint { font-size: 13px; color: #94a3b8; line-height: 1.6; background: #141e30; padding: 15px; border-left: 4px solid var(--primary); border-radius: 4px; margin-bottom: 20px;}
+    </style>
+</head>
+<body>
+
+    <h1>🏭 eNSP 交互式作业网页 - 全自动生成工厂</h1>
+    <p class="subtitle">🚀 稳定修复版：杜绝嵌套冲突，支持一键本地全自动打包下载</p>
+    
+    <div class="hint">
+        💡 <b>格式提醒：</b>复制原本的纯文本命令贴在下方。每个设备的命令开头只要有 <code># 设备名</code> 即可自动切分（如 <code># FW1</code>、<code># RT1</code> ）。
+    </div>
+
+    <div class="box">
+        <div class="flex-group">
+            <div class="flex-item">
+                <label>1. 实验名称 / 网页主标题</label>
+                <input type="text" id="expTitle" value="2.2.4配置命令" placeholder="例如：2.3.1 静态路由实验">
+            </div>
+            <div class="flex-item">
+                <label>2. 脚本中默认使用的名字标识</label>
+                <input type="text" id="expName" value="QiaoXiang" placeholder="用于在前端被同学们输入的名字实时替换">
+            </div>
+        </div>
+
+        <label>3. 粘贴纯文本命令内容</label>
+        <textarea id="rawInput" placeholder="# FW1&#10;undo terminal monitor&#10;system-view&#10;sysname FW1_QiaoXiang&#10;...&#10;&#10;# RT1&#10;undo terminal monitor&#10;..."></textarea>
+
+        <div class="btn-container">
+            <button class="btn" onclick="buildAndDownload()">🚀 一键生成并下载独立作业网页 (.html)</button>
+        </div>
+    </div>
+
+    <script>
+        function buildAndDownload() {
+            try {
+                const rawText = document.getElementById('rawInput').value;
+                const title = document.getElementById('expTitle').value.trim() || "未命名实验";
+                const defaultName = document.getElementById('expName').value.trim() || "QiaoXiang";
+
+                if (!rawText.trim()) {
+                    alert("请先粘贴一些原始命令内容！");
+                    return;
+                }
+
+                // 1. 智能解析状态机
+                const lines = rawText.split(/\r?\n/);
+                const devices = [];
+                let currentDevice = null;
+                let currentCodeLines = [];
+
+                function getDeviceMetaData(name) {
+                    const upperName = name.toUpperCase();
+                    let role = "网络节点", tagClass = "tag-rt", tagText = "设备", highlights = "基础命令配置";
+                    if (upperName.includes("FW")) {
+                        role = upperName.includes("1") ? "核心防火墙（主）" : (upperName.includes("2") ? "核心防火墙（备）" : "边缘防火墙");
+                        tagClass = "tag-fw"; tagText = upperName.includes("1") ? "主防火墙" : (upperName.includes("2") ? "备防火墙" : "边缘防火墙");
+                        highlights = "安全区域、安全策略、高可靠性高可用部署";
+                    } else if (upperName.includes("RT") || upperName.includes("R")) {
+                        role = upperName.includes("3") ? "核心/出口路由器" : "骨干路由器";
+                        tagClass = "tag-rt"; tagText = "路由器";
+                        highlights = "OSPF 动态路由、接口 IP 路由部署";
+                    } else if (upperName.includes("AC")) {
+                        role = "无线控制器"; tagClass = "tag-ac"; tagText = "无线控制器";
+                        highlights = "VLAN 划分、全局 DHCP 地址池分配";
+                    } else if (upperName.includes("SW") || upperName.includes("S")) {
+                        role = "交换机"; tagClass = "tag-ac"; tagText = "交换机";
+                        highlights = "二层接入、VLAN Trunk 骨干链路";
+                    }
+                    return { role, tagText, tagClass, highlights };
+                }
+
+                lines.forEach(line => {
+                    const trimmed = line.trim();
+                    if (trimmed.startsWith('#') && !trimmed.startsWith('# /') && !trimmed.startsWith('#/')) {
+                        const devNameCandidate = trimmed.replace('#', '').trim();
+                        if (devNameCandidate.length > 0 && devNameCandidate.length < 20) {
+                            if (currentDevice) {
+                                currentDevice.code = currentCodeLines.join('\n').trim();
+                                devices.push(currentDevice);
+                            }
+                            const meta = getDeviceMetaData(devNameCandidate);
+                            let finalSysname = devNameCandidate + "_" + defaultName;
+                            if (devNameCandidate.toLowerCase() === 'ac') finalSysname = "AC_" + defaultName;
+
+                            let icon = "⚙️ ";
+                            if (meta.tagClass === 'tag-fw') icon = "🛡️ ";
+                            else if (meta.tagClass === 'tag-rt') icon = "🛣️ ";
+                            else if (meta.tagClass === 'tag-ac') icon = "📶 ";
+
+                            currentDevice = {
+                                id: devNameCandidate.toLowerCase(),
+                                navName: icon + finalSysname,
+                                tableName: finalSysname,
+                                cardTitle: icon + finalSysname,
+                                role: meta.role,
+                                tag: { text: meta.tagText, class: meta.tagClass },
+                                highlights: meta.highlights,
+                                note: devNameCandidate.toUpperCase() === 'RT2' ? "⚠️ 注意：原配置命令中此设备的 sysname 为 RT3_QiaoXiang，现场实施时请确认。" : "",
+                                system: "HUAWEI VRP V5/V8",
+                                code: ""
+                            };
+                            currentCodeLines = [];
+                            return;
+                        }
+                    }
+                    if (trimmed.startsWith('# /') || trimmed.startsWith('#/')) return;
+                    if (currentDevice) currentCodeLines.push(line);
+                });
+
+                if (currentDevice) {
+                    currentDevice.code = currentCodeLines.join('\n').trim();
+                    devices.push(currentDevice);
+                }
+
+                if (devices.length === 0) {
+                    alert("解析失败！未从文本中检测到形如 [# FW1] 的设备起始标记。");
+                    return;
+                }
+
+                // 2. 完美的单文件模板封装（彻底移除了可能导致冲突的内部反引号）
+                const generatedHTML = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${title}</title>
+    <style>
+        :root {
+            --primary-color: #00adb5;
+            --primary-hover: #008c95;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --code-bg: #0b0f19;
+            --code-text: #38bdf8;
+            --border-color: #334155;
+            --accent-warn: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding-bottom: 60px; }
+        header { background-color: #111827; color: white; padding: 20px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        header h1 { font-size: 22px; font-weight: 600; color: var(--primary-color); }
+        .back-home { color: var(--text-muted); text-decoration: none; font-size: 14px; }
+        .back-home:hover { color: var(--primary-color); }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .tool-card { background: var(--card-bg); border-radius: 8px; padding: 22px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--primary-color); }
+        .tool-card h2 { font-size: 18px; margin-bottom: 10px; color: var(--primary-color); border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        .tool-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; }
+        .tool-input { width: 100%; background-color: #0f172a; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px 16px; color: #ffffff; font-size: 14px; outline: none; transition: all 0.2s; }
+        .tool-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 173, 181, 0.2); }
+        .nav-box { background: var(--card-bg); border-radius: 8px; padding: 15px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); display: flex; flex-wrap: wrap; gap: 10px; border: 1px solid var(--border-color); }
+        .nav-link { display: inline-block; padding: 8px 16px; background-color: #1e293b; color: var(--text-color); text-decoration: none; border-radius: 4px; font-weight: 500; font-size: 13px; border: 1px solid var(--border-color); transition: all 0.2s; }
+        .nav-link:hover { background-color: var(--primary-color); color: #0f172a; border-color: var(--primary-color); font-weight: bold; }
+        .summary-card { background: var(--card-bg); border-radius: 8px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); }
+        .summary-card h2 { font-size: 18px; margin-bottom: 15px; color: var(--primary-color); border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid var(--border-color); padding: 12px 15px; text-align: left; }
+        th { background-color: #0f172a; color: var(--primary-color); font-weight: 600; }
+        tr:nth-child(even) { background-color: #1e293b; }
+        tr:nth-child(odd) { background-color: #141e30; }
+        .device-card { background: var(--card-bg); border-radius: 8px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); scroll-margin-top: 90px; }
+        .device-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .device-title { font-size: 18px; color: #f8fafc; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .device-tag { font-size: 12px; padding: 3px 8px; border-radius: 4px; }
+        .tag-fw { background-color: #7f1d1d; color: #fca5a5; border: 1px solid #991b1b; }
+        .tag-rt { background-color: #1e3a8a; color: #bfdbfe; border: 1px solid #1e40af; }
+        .tag-ac { background-color: #78350f; color: #fde68a; border: 1px solid #92400e; }
+        .device-note { font-size: 14px; color: var(--accent-warn); background-color: #451a03; padding: 10px 15px; border-left: 4px solid var(--accent-warn); margin-bottom: 15px; border-radius: 0 4px 4px 0; border: 1px solid #78350f; border-left-width: 4px; }
+        .code-wrapper { position: relative; background-color: var(--code-bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
+        .code-header { display: flex; justify-content: space-between; align-items: center; background-color: #0f172a; padding: 8px 16px; color: var(--text-muted); font-size: 12px; font-family: monospace; border-bottom: 1px solid var(--border-color); }
+        .copy-btn { background-color: #1e293b; color: #cbd5e1; border: 1px solid var(--border-color); padding: 4px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background-color: var(--primary-color); color: #0f172a; border-color: var(--primary-color); font-weight: bold; }
+        .copy-btn.copied { background-color: #10b981; color: white; border-color: #10b981; }
+        pre { margin: 0; padding: 16px; overflow-x: auto; }
+        code { font-family: Consolas, monospace; font-size: 14px; color: var(--code-text); display: block; white-space: pre; }
+        pre::-webkit-scrollbar { height: 8px; }
+        pre::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 4px; }
+        @media (max-width: 768px) { table { display: block; overflow-x: auto; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 id="page-header-title">📋 ${title}</h1>
+        <a href="../index.html" class="back-home">🔙 返回主导航</a>
+    </header>
+
+    <div class="container">
+        <div class="tool-card">
+            <h2>🛠️ 实验脚本 - 专属名字实时生成器</h2>
+            <p class="tool-desc">
+                💡 同学们好！页面默认配置使用（<b>${defaultName}</b>）。为了防止冲突，请在下方输入<strong>你自己的名字全拼</strong>（如: <i>ZhangSan</i>），页面所有配置将<strong>实时自动同步修改</strong>，方便直接粘贴到 eNSP 中使用！
+            </p>
+            <input type="text" id="nameInput" class="tool-input" placeholder="输入你的名字拼音全拼 (例如: ZhangSan，留空还原默认)" oninput="onNameInputChange()">
+        </div>
+
+        <div id="nav-container"></div>
+        <div id="summary-container"></div>
+        <div id="devices-container"></div>
+    </div>
+
+    <script>
+        const configData = {
+            title: "${title}",
+            defaultName: "${defaultName}",
+            devices: ${JSON.stringify(devices)}
+        };
+
+        function renderPage(currentName) {
+            const originName = configData.defaultName;
+            const targetName = currentName.trim() || originName;
+            const replaceText = function(str) { 
+                return str ? str.replace(new RegExp(originName, 'g'), targetName) : ""; 
+            };
+
+            document.title = replaceText(configData.title);
+            document.getElementById('page-header-title').innerText = "📋 " + replaceText(configData.title);
+
+            // 1. 渲染快速导航
+            let navHtml = '<div class="nav-box"><a href="#summary" class="nav-link">📋 设备摘要</a>';
+            configData.devices.forEach(function(dev) {
+                navHtml += '<a href="#' + dev.id + '" class="nav-link">' + replaceText(dev.navName) + '</a>';
+            });
+            navHtml += '</div>';
+            document.getElementById('nav-container').innerHTML = navHtml;
+
+            // 2. 渲染摘要表格
+            let rowsHtml = "";
+            configData.devices.forEach(function(dev) {
+                rowsHtml += '<tr><td><strong>' + replaceText(dev.tableName) + '</strong></td><td>' + replaceText(dev.role) + '</td><td>' + replaceText(dev.highlights) + '</td></tr>';
+            });
+            document.getElementById('summary-container').innerHTML = '<div id="summary" class="summary-card"><h2>📋 设备清单与核心功能摘要</h2><table><thead><tr><th>设备名称</th><th>角色类型</th><th>核心功能亮点</th></tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+
+            // 3. 渲染代码卡片
+            let devHtml = "";
+            configData.devices.forEach(function(dev) {
+                const noteSec = dev.note ? '<div class="device-note">' + replaceText(dev.note) + '</div>' : "";
+                devHtml += '<div id="' + dev.id + '" class="device-card">' +
+                    '<div class="device-header">' +
+                        '<div class="device-title">' + replaceText(dev.cardTitle) + ' <span class="device-tag ' + dev.tag.class + '">' + replaceText(dev.tag.text) + '</span></div>' +
+                    '</div>' +
+                    noteSec +
+                    '<div class="code-wrapper">' +
+                        '<div class="code-header">' +
+                            '<span>' + dev.system + '</span>' +
+                            '<button class="copy-btn" onclick="copyCode(this)">一键复制</button>' +
+                        '</div>' +
+                        '<pre><code>' + replaceText(dev.code) + '</code></pre>' +
+                    '</div>' +
+                '</div>';
+            });
+            document.getElementById('devices-container').innerHTML = devHtml;
+        }
+
+        function onNameInputChange() {
+            renderPage(document.getElementById('nameInput').value);
+        }
+
+        window.addEventListener('DOMContentLoaded', function() { renderPage(""); });
+
+        function copyCode(btn) {
+            const card = btn.closest('.device-card');
+            const codeText = card.querySelector('code').innerText;
+            navigator.clipboard.writeText(codeText).then(function() { triggerSuccess(btn); })
+            .catch(function() {
+                const ta = document.createElement('textarea'); ta.value = codeText; document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); triggerSuccess(btn); } catch(e) { alert('复制失败，请手动选择。'); }
+                document.body.removeChild(ta);
+            });
+        }
+        
+        function triggerSuccess(btn) {
+            const old = btn.innerText; btn.innerText = '已复制！'; btn.classList.add('copied');
+            setTimeout(function() { btn.innerText = old; btn.classList.remove('copied'); }, 2000);
+        }
+    <\/script>
+</body>
+</html>`;
+
+                // 3. 触发安全的 Blob 下载
+                const blob = new Blob([generatedHTML], { type: 'text/html;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = title + ".html";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            } catch (err) {
+                alert("❌ 糟糕，网页生成过程中发生严重错误：\n" + err.message + "\n请打开浏览器 F12 控制台查看具体详情。");
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
