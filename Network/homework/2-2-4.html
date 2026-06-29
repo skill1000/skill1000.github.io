@@ -327,22 +327,22 @@
         <div class="tool-card">
             <h2>🛠️ 实验脚本 - 专属名字实时生成器</h2>
             <p class="tool-desc">
-                💡 同学们好！本页面的网络配置默认使用我的名字拼音（<b>QiaoXiang</b>）。为了防止直接复制导致冲突，请在下方输入<strong>你自己的名字全拼</strong>（如: <i>ZhangSan</i>），页面中所有设备的系统命名（sysname）和复制代码块将<strong>实时自动同步修改</strong>，方便大家直接粘贴到 eNSP / 模拟器中使用！
+                💡 为了防止直接复制导致冲突，请在下方输入<strong>你自己的名字全拼</strong>（如: <i>ZhangSan</i>），页面中所有设备的系统命名（sysname）和复制代码块将<strong>实时自动同步修改</strong>，方便大家直接粘贴到 eNSP / 模拟器中使用！
             </p>
-            <input type="text" id="nameInput" class="tool-input" placeholder="输入你的名字拼音全拼 (例如: ZhangSan，留空则默认还原为 QiaoXiang)" oninput="applyNameChange()">
+            <input type="text" id="nameInput" class="tool-input" placeholder="输入你的名字拼音全拼 (例如: ZhangSan，留空则默认还原为 XingMing)" oninput="applyNameChange()">
         </div>
 
         <div id="dynamic-content">
             <div class="nav-box">
                 <a href="#summary" class="nav-link">📋 设备摘要</a>
-                <a href="#fw1" class="nav-link">🛡️ FW1_QiaoXiang</a>
-                <a href="#fw2" class="nav-link">🛡️ FW2_QiaoXiang</a>
-                <a href="#fw3" class="nav-link">🛡️ FW3_QiaoXiang</a>
-                <a href="#fw4" class="nav-link">🛡️ FW4_QiaoXiang</a>
-                <a href="#rt1" class="nav-link">🛣️ RT1_QiaoXiang</a>
-                <a href="#rt2" class="nav-link">🛣️ RT2 (RT3_QiaoXiang)</a>
-                <a href="#rt3" class="nav-link">🛣️ RT3_QiaoXiang</a>
-                <a href="#ac" class="nav-link">📶 AC_QiaoXiang</a>
+                <a href="#fw1" class="nav-link">🛡️ FW1_XingMing</a>
+                <a href="#fw2" class="nav-link">🛡️ FW2_XingMing</a>
+                <a href="#fw3" class="nav-link">🛡️ FW3_XingMing</a>
+                <a href="#fw4" class="nav-link">🛡️ FW4_XingMing</a>
+                <a href="#rt1" class="nav-link">🛣️ RT1_XingMing</a>
+                <a href="#rt2" class="nav-link">🛣️ RT2 (RT3_XingMing)</a>
+                <a href="#rt3" class="nav-link">🛣️ RT3_XingMing</a>
+                <a href="#ac" class="nav-link">📶 AC_XingMing</a>
             </div>
 
             <div id="summary" class="summary-card">
@@ -357,42 +357,42 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>FW1_QiaoXiang</strong></td>
+                            <td><strong>FW1_XingMing</strong></td>
                             <td>核心防火墙（主）</td>
                             <td>OSPF 动态路由、VRRP 活性组、HRP 心跳同步、Eth-Trunk 链路聚合</td>
                         </tr>
                         <tr>
-                            <td><strong>FW2_QiaoXiang</strong></td>
+                            <td><strong>FW2_XingMing</strong></td>
                             <td>核心防火墙（备）</td>
                             <td>OSPF 动态路由、VRRP 备份组、HRP 心跳同步</td>
                         </tr>
                         <tr>
-                            <td><strong>FW3_QiaoXiang</strong></td>
+                            <td><strong>FW3_XingMing</strong></td>
                             <td>边缘防火墙</td>
                             <td>安全区域划分（Trust / Untrust）</td>
                         </tr>
                         <tr>
-                            <td><strong>FW4_QiaoXiang</strong></td>
+                            <td><strong>FW4_XingMing</strong></td>
                             <td>边缘防火墙</td>
                             <td>安全区域划分（Trust / Untrust）</td>
                         </tr>
                         <tr>
-                            <td><strong>RT1_QiaoXiang</strong></td>
+                            <td><strong>RT1_XingMing</strong></td>
                             <td>骨干路由器</td>
                             <td>OSPF 区域 0 多链路协同</td>
                         </tr>
                         <tr>
-                            <td><strong>RT3_QiaoXiang (RT2)</strong></td>
+                            <td><strong>RT3_XingMing (RT2)</strong></td>
                             <td>骨干路由器</td>
                             <td>OSPF 区域 0 动态路由</td>
                         </tr>
                         <tr>
-                            <td><strong>RT3_QiaoXiang (RT3)</strong></td>
+                            <td><strong>RT3_XingMing (RT3)</strong></td>
                             <td>核心路由器</td>
                             <td>OSPF 区域 0 动态路由</td>
                         </tr>
                         <tr>
-                            <td><strong>AC_QiaoXiang</strong></td>
+                            <td><strong>AC_XingMing</strong></td>
                             <td>无线控制器</td>
                             <td>VLAN 划分、Trunk 骨干链路、全局 DHCP 地址池分配</td>
                         </tr>
@@ -402,7 +402,7 @@
 
             <div id="fw1" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">🛡️ FW1_QiaoXiang <span class="device-tag tag-fw">主防火墙</span></div>
+                    <div class="device-title">🛡️ FW1_XingMing <span class="device-tag tag-fw">主防火墙</span></div>
                 </div>
                 <div class="code-wrapper">
                     <div class="code-header">
@@ -412,7 +412,7 @@
                     <pre><code id="code-fw1">undo terminal monitor
 
 system-view
-sysname FW1_QiaoXiang
+sysname FW1_XingMing
 
 ospf 1
 
@@ -483,7 +483,7 @@ hrp enable
 
 security-policy
 
-rule name trust-untrust_QiaoXiang
+rule name trust-untrust_XingMing
 source-zone trust
 destination-zone untrust
 action permit
@@ -503,7 +503,7 @@ save</code></pre>
 
             <div id="fw2" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">🛡️ FW2_QiaoXiang <span class="device-tag tag-fw">备防火墙</span></div>
+                    <div class="device-title">🛡️ FW2_XingMing <span class="device-tag tag-fw">备防火墙</span></div>
                 </div>
                 <div class="code-wrapper">
                     <div class="code-header">
@@ -513,7 +513,7 @@ save</code></pre>
                     <pre><code id="code-fw2">undo terminal monitor
 
 system-view
-sysname FW2_QiaoXiang
+sysname FW2_XingMing
 
 ospf 1
 
@@ -590,7 +590,7 @@ save</code></pre>
 
             <div id="fw3" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">🛡️ FW3_QiaoXiang <span class="device-tag tag-fw">边缘防火墙</span></div>
+                    <div class="device-title">🛡️ FW3_XingMing <span class="device-tag tag-fw">边缘防火墙</span></div>
                 </div>
                 <div class="code-wrapper">
                     <div class="code-header">
@@ -600,7 +600,7 @@ save</code></pre>
                     <pre><code id="code-fw3">undo terminal monitor
 
 system-view
-sysname FW3_QiaoXiang
+sysname FW3_XingMing
 
 interface GigabitEthernet 1/0/1
 ip address 100.1.1.8 24
@@ -631,7 +631,7 @@ save</code></pre>
 
             <div id="fw4" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">🛡️ FW4_QiaoXiang <span class="device-tag tag-fw">边缘防火墙</span></div>
+                    <div class="device-title">🛡️ FW4_XingMing <span class="device-tag tag-fw">边缘防火墙</span></div>
                 </div>
                 <div class="code-wrapper">
                     <div class="code-header">
@@ -641,7 +641,7 @@ save</code></pre>
                     <pre><code id="code-fw4">undo terminal monitor
 
 system-view
-sysname FW4_QiaoXiang
+sysname FW4_XingMing
 
 interface GigabitEthernet 1/0/1
 ip address 20.20.1.8 24
@@ -667,7 +667,7 @@ save</code></pre>
 
             <div id="rt1" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">🛣️ RT1_QiaoXiang <span class="device-tag tag-rt">路由器</span></div>
+                    <div class="device-title">🛣️ RT1_XingMing <span class="device-tag tag-rt">路由器</span></div>
                 </div>
                 <div class="code-wrapper">
                     <div class="code-header">
@@ -677,7 +677,7 @@ save</code></pre>
                     <pre><code id="code-rt1">undo terminal monitor
 
 system-view
-sysname RT1_QiaoXiang
+sysname RT1_XingMing
 
 ospf 1
 area 0
@@ -712,9 +712,9 @@ save</code></pre>
 
             <div id="rt2" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">🛣️ RT2 (Sysname: RT3_QiaoXiang) <span class="device-tag tag-rt">路由器</span></div>
+                    <div class="device-title">🛣️ RT2 (Sysname: RT3_XingMing) <span class="device-tag tag-rt">路由器</span></div>
                 </div>
-                <div class="device-note">⚠️ 注意：原配置命令中此设备的 sysname 为 RT3_QiaoXiang，请在现场实施时确认是否需调整为 RT2_QiaoXiang。</div>
+                <div class="device-note">⚠️ 注意：原配置命令中此设备的 sysname 为 RT3_XingMing，请在现场实施时确认是否需调整为 RT2_XingMing。</div>
                 <div class="code-wrapper">
                     <div class="code-header">
                         <span>HUAWEI VRP V5/V8</span>
@@ -723,7 +723,7 @@ save</code></pre>
                     <pre><code id="code-rt2">undo terminal monitor
 
 system-view
-sysname RT3_QiaoXiang
+sysname RT3_XingMing
 
 ospf 1
 area 0
@@ -757,7 +757,7 @@ save</code></pre>
 
             <div id="rt3" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">🛣️ RT3_QiaoXiang <span class="device-tag tag-rt">核心/出口路由器</span></div>
+                    <div class="device-title">🛣️ RT3_XingMing <span class="device-tag tag-rt">核心/出口路由器</span></div>
                 </div>
                 <div class="code-wrapper">
                     <div class="code-header">
@@ -767,7 +767,7 @@ save</code></pre>
                     <pre><code id="code-rt3">undo terminal monitor
 
 system-view
-sysname RT3_QiaoXiang
+sysname RT3_XingMing
 
 ospf 1
 area 0
@@ -801,7 +801,7 @@ save</code></pre>
 
             <div id="ac" class="device-card">
                 <div class="device-header">
-                    <div class="device-title">📶 AC_QiaoXiang <span class="device-tag tag-ac">无线控制器</span></div>
+                    <div class="device-title">📶 AC_XingMing <span class="device-tag tag-ac">无线控制器</span></div>
                 </div>
                 <div class="code-wrapper">
                     <div class="code-header">
@@ -811,7 +811,7 @@ save</code></pre>
                     <pre><code id="code-ac">undo terminal monitor
 
 system-view
-sysname AC_QiaoXiang
+sysname AC_XingMing
 
 vlan batch 10 40 2000 4000 4001
 dhcp enable
@@ -845,21 +845,21 @@ save</code></pre>
     </div>
 
     <script>
-        // 【核心控制】备份最原始带有 QiaoXiang 的 HTML 结构内容
+        // 【核心控制】备份最原始带有 XingMing 的 HTML 结构内容
         let originalContainerHtml = "";
 
         window.addEventListener('DOMContentLoaded', () => {
             originalContainerHtml = document.getElementById('dynamic-content').innerHTML;
         });
 
-        // 核心功能：当输入框输入时，实时批量替换整个展示区内的 QiaoXiang 关键字
+        // 核心功能：当输入框输入时，实时批量替换整个展示区内的 XingMing 关键字
         function applyNameChange() {
             const inputName = document.getElementById('nameInput').value.trim();
-            // 如果输入框有字就用输入框的字，没有就默认恢复为 QiaoXiang
-            const targetName = inputName ? inputName : "QiaoXiang";
+            // 如果输入框有字就用输入框的字，没有就默认恢复为 XingMing
+            const targetName = inputName ? inputName : "XingMing";
             
             // 全局正则替换并刷入 dynamic-content 节点
-            document.getElementById('dynamic-content').innerHTML = originalContainerHtml.replace(/QiaoXiang/g, targetName);
+            document.getElementById('dynamic-content').innerHTML = originalContainerHtml.replace(/XingMing/g, targetName);
         }
 
         // 一键复制代码块
