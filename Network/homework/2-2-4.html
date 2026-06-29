@@ -437,6 +437,20 @@ hrp mirror session enable
 hrp interface Eth-Trunk0 remote 10.10.10.2
 hrp enable
 
+security-policy
+
+rule name trust-untrust
+source-zone trust
+destination-zone untrust
+action permit
+rule name untrust-trust
+source-zone untrust
+destination-zone trust
+action permit
+quit
+
+quit
+
 quit
 
 save</code></pre>
