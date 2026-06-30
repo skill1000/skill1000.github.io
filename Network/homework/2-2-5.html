@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2.2.5配置命令</title>
+    <style>
+        :root {
+            --primary-color: #00adb5;
+            --primary-hover: #008c95;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #e2e8f0;
+            --text-muted: #94a3b8;
+            --code-bg: #0b0f19;
+            --code-text: #38bdf8;
+            --border-color: #334155;
+            --accent-warn: #f59e0b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; padding-bottom: 60px; }
+        header { background-color: #111827; color: white; padding: 20px 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        header h1 { font-size: 22px; font-weight: 600; color: var(--primary-color); }
+        .back-home { color: var(--text-muted); text-decoration: none; font-size: 14px; }
+        .back-home:hover { color: var(--primary-color); }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .tool-card { background: var(--card-bg); border-radius: 8px; padding: 22px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--primary-color); }
+        .tool-card h2 { font-size: 18px; margin-bottom: 10px; color: var(--primary-color); border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        .tool-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; }
+        .tool-input { width: 100%; background-color: #0f172a; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px 16px; color: #ffffff; font-size: 14px; outline: none; transition: all 0.2s; }
+        .tool-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 173, 181, 0.2); }
+        .nav-box { background: var(--card-bg); border-radius: 8px; padding: 15px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); display: flex; flex-wrap: wrap; gap: 10px; border: 1px solid var(--border-color); }
+        .nav-link { display: inline-block; padding: 8px 16px; background-color: #1e293b; color: var(--text-color); text-decoration: none; border-radius: 4px; font-weight: 500; font-size: 13px; border: 1px solid var(--border-color); transition: all 0.2s; }
+        .nav-link:hover { background-color: var(--primary-color); color: #0f172a; border-color: var(--primary-color); font-weight: bold; }
+        .summary-card { background: var(--card-bg); border-radius: 8px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); }
+        .summary-card h2 { font-size: 18px; margin-bottom: 15px; color: var(--primary-color); border-left: 4px solid var(--primary-color); padding-left: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
+        th, td { border: 1px solid var(--border-color); padding: 12px 15px; text-align: left; }
+        th { background-color: #0f172a; color: var(--primary-color); font-weight: 600; }
+        tr:nth-child(even) { background-color: #1e293b; }
+        tr:nth-child(odd) { background-color: #141e30; }
+        .device-card { background: var(--card-bg); border-radius: 8px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); scroll-margin-top: 90px; }
+        .device-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .device-title { font-size: 18px; color: #f8fafc; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .device-tag { font-size: 12px; padding: 3px 8px; border-radius: 4px; }
+        .tag-fw { background-color: #7f1d1d; color: #fca5a5; border: 1px solid #991b1b; }
+        .tag-rt { background-color: #1e3a8a; color: #bfdbfe; border: 1px solid #1e40af; }
+        .tag-ac { background-color: #78350f; color: #fde68a; border: 1px solid #92400e; }
+        .device-note { font-size: 14px; color: var(--accent-warn); background-color: #451a03; padding: 10px 15px; border-left: 4px solid var(--accent-warn); margin-bottom: 15px; border-radius: 0 4px 4px 0; border: 1px solid #78350f; border-left-width: 4px; }
+        .code-wrapper { position: relative; background-color: var(--code-bg); border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); }
+        .code-header { display: flex; justify-content: space-between; align-items: center; background-color: #0f172a; padding: 8px 16px; color: var(--text-muted); font-size: 12px; font-family: monospace; border-bottom: 1px solid var(--border-color); }
+        .copy-btn { background-color: #1e293b; color: #cbd5e1; border: 1px solid var(--border-color); padding: 4px 12px; font-size: 12px; border-radius: 4px; cursor: pointer; transition: all 0.2s; }
+        .copy-btn:hover { background-color: var(--primary-color); color: #0f172a; border-color: var(--primary-color); font-weight: bold; }
+        .copy-btn.copied { background-color: #10b981; color: white; border-color: #10b981; }
+        pre { margin: 0; padding: 16px; overflow-x: auto; }
+        code { font-family: Consolas, monospace; font-size: 14px; color: var(--code-text); display: block; white-space: pre; }
+        pre::-webkit-scrollbar { height: 8px; }
+        pre::-webkit-scrollbar-thumb { background-color: #334155; border-radius: 4px; }
+        @media (max-width: 768px) { table { display: block; overflow-x: auto; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 id="page-header-title">📋 2.2.5配置命令</h1>
+        <a href="../index.html" class="back-home">🔙 返回主导航</a>
+    </header>
+
+    <div class="container">
+        <div class="tool-card">
+            <h2>🛠️ 实验脚本 - 专属名字实时生成器</h2>
+            <p class="tool-desc">
+                💡 同学们好！页面默认配置使用（<b>XingMing</b>）。为了防止冲突，请在下方输入<strong>你自己的名字全拼</strong>（如: <i>ZhangSan</i>），页面所有配置将<strong>实时自动同步修改</strong>，方便直接粘贴到 eNSP 中使用！
+            </p>
+            <input type="text" id="nameInput" class="tool-input" placeholder="输入你的名字拼音全拼 (例如: ZhangSan，留空还原默认)" oninput="onNameInputChange()">
+        </div>
+
+        <div id="nav-container"></div>
+        <div id="summary-container"></div>
+        <div id="devices-container"></div>
+    </div>
+
+    <script>
+        const configData = {
+            title: "2.2.5配置命令",
+            defaultName: "XingMing",
+            devices: [{"id":"fw3","navName":"🛡️ FW3_XingMing","tableName":"FW3_XingMing","cardTitle":"🛡️ FW3_XingMing","role":"边缘防火墙","tag":{"text":"边缘防火墙","class":"tag-fw"},"highlights":"安全区域、安全策略、高可靠性高可用部署","system":"HUAWEI VRP V5/V8","code":"system-view\n\nvsys enable\nresource-class r1\nresource-item-limit session reserved-number 100 maximum 500\nresource-item-limit policy reserved-number 30\nresource-item-limit bandwidth 2 entire\nquit\n\nundo ip vpn-instance vsysa\ny\nvsys name vsysa\nassign resource-class r1\nassign interface GigabitEthernet 1/0/2\nquit\n\nundo ip vpn-instance vsysb\ny\nvsys name vsysb\nassign resource-class r1\nassign interface GigabitEthernet 1/0/3\nquit\n\ninterface GigabitEthernet 1/0/1\nip address 100.1.1.8 24\nquit\n\ninterface Virtual-if 0\nip address 172.16.0.1 24\nquit\n\nfirewall zone trust\nadd interface Virtual-if 0\nquit\n\nfirewall zone untrust\nadd interface GigabitEthernet 1/0/1\nquit\n\nip route-static 0.0.0.0 0.0.0.0 100.1.1.1\n\nsecurity-policy\n\nrule name PC5-trust-to-untrust_XingMing\nsource-zone trust\nsource-address 172.16.50.0 mask 255.255.255.0\ndestination-zone untrust\naction permit\nquit\n\nquit\n\nnat-policy\n\nrule name nat1_XingMing\nsource-zone trust\nsource-address 172.16.50.0 24\negress-interface GigabitEthernet 1/0/1\naction source-nat easy-ip\nquit\n\nquit\n\nswitch vsys vsysa\n\nsystem-view\n\ninterface GigabitEthernet 1/0/2\nip address 172.16.40.1 255.255.255.0\nquit\n\ninterface Virtual-if 1\nip address 172.16.1.1 255.255.255.0\nquit\n\nfirewall zone trust\nadd interface GigabitEthernet 1/0/2\nquit\n\nfirewall zone untrust\nadd interface Virtual-if 1\nquit\n\nip route-static 0.0.0.0 0.0.0.0 public\n\nsecurity-policy\n\nrule name to_HQ_allow_XingMing\nsource-zone trust\nsource-address 172.16.40.0 mask 255.255.255.0\ndestination-zone untrust\ndestination-address 172.16.60.0 mask 255.255.255.0\naction permit\nquit\n\nrule name allow_HQ-in_XingMing\nsource-zone untrust\nsource-address 172.16.60.0 mask 255.255.255.0\ndestination-zone trust\ndestination-address 172.16.40.0 mask 255.255.255.0\naction permit\nquit\n\nquit\n\nquit\n\nquit\n\nswitch vsys vsysb\n\nsystem-view\n\ninterface GigabitEthernet 1/0/3\nip address 172.16.50.1 255.255.255.0\nquit\n\ninterface Virtual-if 2\nip address 172.16.2.1 255.255.255.0\nquit\n\nfirewall zone trust\nadd interface GigabitEthernet 1/0/3\nquit\n\nfirewall zone untrust\nadd interface Virtual-if 2\nquit\n\nip route-static 0.0.0.0 0.0.0.0 public\n\nsecurity-policy\n\nrule name to_internet_allow\nsource-zone trust\ndestination-zone untrust\naction permit\nquit\n\nquit\n\nquit\n\nquit\n\nquit\n\nsave"}]
+        };
+
+        function renderPage(currentName) {
+            const originName = configData.defaultName;
+            const targetName = currentName.trim() || originName;
+            const replaceText = function(str) { 
+                return str ? str.replace(new RegExp(originName, 'g'), targetName) : ""; 
+            };
+
+            document.title = replaceText(configData.title);
+            document.getElementById('page-header-title').innerText = "📋 " + replaceText(configData.title);
+
+            // 1. 渲染快速导航
+            let navHtml = '<div class="nav-box"><a href="#summary" class="nav-link">📋 设备摘要</a>';
+            configData.devices.forEach(function(dev) {
+                navHtml += '<a href="#' + dev.id + '" class="nav-link">' + replaceText(dev.navName) + '</a>';
+            });
+            navHtml += '</div>';
+            document.getElementById('nav-container').innerHTML = navHtml;
+
+            // 2. 渲染摘要表格
+            let rowsHtml = "";
+            configData.devices.forEach(function(dev) {
+                rowsHtml += '<tr><td><strong>' + replaceText(dev.tableName) + '</strong></td><td>' + replaceText(dev.role) + '</td><td>' + replaceText(dev.highlights) + '</td></tr>';
+            });
+            document.getElementById('summary-container').innerHTML = '<div id="summary" class="summary-card"><h2>📋 设备清单与核心功能摘要</h2><table><thead><tr><th>设备名称</th><th>角色类型</th><th>核心功能亮点</th></tr></thead><tbody>' + rowsHtml + '</tbody></table></div>';
+
+            // 3. 渲染代码卡片
+            let devHtml = "";
+            configData.devices.forEach(function(dev) {
+                const noteSec = dev.note ? '<div class="device-note">' + replaceText(dev.note) + '</div>' : "";
+                devHtml += '<div id="' + dev.id + '" class="device-card">' +
+                    '<div class="device-header">' +
+                        '<div class="device-title">' + replaceText(dev.cardTitle) + ' <span class="device-tag ' + dev.tag.class + '">' + replaceText(dev.tag.text) + '</span></div>' +
+                    '</div>' +
+                    noteSec +
+                    '<div class="code-wrapper">' +
+                        '<div class="code-header">' +
+                            '<span>' + dev.system + '</span>' +
+                            '<button class="copy-btn" onclick="copyCode(this)">一键复制</button>' +
+                        '</div>' +
+                        '<pre><code>' + replaceText(dev.code) + '</code></pre>' +
+                    '</div>' +
+                '</div>';
+            });
+            document.getElementById('devices-container').innerHTML = devHtml;
+        }
+
+        function onNameInputChange() {
+            renderPage(document.getElementById('nameInput').value);
+        }
+
+        window.addEventListener('DOMContentLoaded', function() { renderPage(""); });
+
+        function copyCode(btn) {
+            const card = btn.closest('.device-card');
+            const codeText = card.querySelector('code').innerText;
+            navigator.clipboard.writeText(codeText).then(function() { triggerSuccess(btn); })
+            .catch(function() {
+                const ta = document.createElement('textarea'); ta.value = codeText; document.body.appendChild(ta); ta.select();
+                try { document.execCommand('copy'); triggerSuccess(btn); } catch(e) { alert('复制失败，请手动选择。'); }
+                document.body.removeChild(ta);
+            });
+        }
+        
+        function triggerSuccess(btn) {
+            const old = btn.innerText; btn.innerText = '已复制！'; btn.classList.add('copied');
+            setTimeout(function() { btn.innerText = old; btn.classList.remove('copied'); }, 2000);
+        }
+    </script>
+</body>
+</html>
