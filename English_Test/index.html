@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>单词背题器</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📖</text></svg>">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --glass-bg:rgba(255,255,255,.08);
+  --glass-border:rgba(255,255,255,.18);
+  --glass-hover:rgba(255,255,255,.15);
+  --text-primary:#fff;
+  --text-secondary:rgba(255,255,255,.65);
+  --accent:#7c6ff0;
+  --accent2:#4ecdc4;
+  --correct:#34d399;
+  --wrong:#f87171;
+  --radius:20px;
+}
+html{font-size:16px}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif;
+  min-height:100vh;min-height:100dvh;
+  background:#0f0c29;
+  color:var(--text-primary);
+  overflow-x:hidden;
+  position:relative;
+}
+/* 动态渐变背景 */
+body::before{
+  content:'';position:fixed;inset:0;z-index:-2;
+  background:linear-gradient(135deg,#0f0c29,#302b63,#24243e,#1a1a4e,#0f0c29);
+  background-size:400% 400%;
+  animation:gradientShift 15s ease infinite;
+}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+body::after{
+  content:'';position:fixed;inset:0;z-index:-1;
+  background:
+    radial-gradient(ellipse at 20% 20%,rgba(124,111,240,.25) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 80%,rgba(78,205,196,.2) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 50%,rgba(236,72,153,.1) 0%,transparent 60%);
+  pointer-events:none;
+}
+/* 玻璃通用 */
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter:blur(24px) saturate(1.4);
+  -webkit-backdrop-filter:blur(24px) saturate(1.4);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+}
+/* 视图切换 */
+.view{display:none;min-height:100vh;min-height:100dvh;flex-direction:column;align-items:center;justify-content:center;padding:24px;animation:fadeIn .4s ease}
+.view.active{display:flex}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== 首页 ===== */
+.home-title{
+  font-size:clamp(1.8rem,6vw,3rem);font-weight:800;
+  background:linear-gradient(135deg,#fff,rgba(255,255,255,.7));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:8px;text-align:center;
+}
+.home-sub{font-size:clamp(.9rem,3vw,1.1rem);color:var(--text-secondary);margin-bottom:48px;text-align:center}
+.btn-group{display:flex;flex-direction:column;gap:16px;width:100%;max-width:340px}
+.btn-glass{
+  padding:18px 32px;font-size:1.1rem;font-weight:600;
+  color:var(--text-primary);cursor:pointer;
+  background:var(--glass-bg);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--glass-border);border-radius:16px;
+  transition:all .25s ease;text-align:center;
+}
+.btn-glass:hover{background:var(--glass-hover);transform:translateY(-2px);box-shadow:0 8px 32px rgba(124,111,240,.3)}
+.btn-glass:active{transform:translateY(0) scale(.98)}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent),#a855f7);
+  border:none;box-shadow:0 4px 24px rgba(124,111,240,.4);
+}
+.btn-primary:hover{box-shadow:0 8px 32px rgba(124,111,240,.6);background:linear-gradient(135deg,#8b7ff5,#b866ff)}
+.btn-secondary{
+  background:var(--glass-bg);
+}
+.btn-hint{
+  font-size:.9rem;padding:10px 20px;border-radius:12px;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  color:var(--text-secondary);cursor:pointer;transition:all .2s;
+}
+.btn-hint:hover{color:var(--text-primary);background:var(--glass-hover)}
+.btn-next{
+  padding:14px 40px;font-size:1.05rem;font-weight:600;
+  background:linear-gradient(135deg,var(--accent2),#38bdf8);
+  border:none;border-radius:14px;color:#fff;cursor:pointer;
+  box-shadow:0 4px 20px rgba(78,205,196,.4);transition:all .25s;
+}
+.btn-next:hover{box-shadow:0 8px 28px rgba(78,205,196,.6);transform:translateY(-2px)}
+
+/* ===== 自定义数量 ===== */
+.input-count{
+  width:200px;padding:16px;font-size:1.2rem;text-align:center;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  border-radius:16px;color:#fff;outline:none;
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+}
+.input-count::placeholder{color:var(--text-secondary)}
+.input-count:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,111,240,.2)}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* ===== 答题页 ===== */
+.quiz-container{width:100%;max-width:600px;display:flex;flex-direction:column;gap:20px}
+.progress-bar{width:100%;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s ease;width:0%}
+.progress-text{font-size:.85rem;color:var(--text-secondary);text-align:right}
+.word-card{
+  padding:36px 24px;text-align:center;
+}
+.word-en{
+  font-size:clamp(1.5rem,5vw,2.2rem);font-weight:700;
+  line-height:1.4;word-break:break-word;
+}
+.hint-area{min-height:28px;text-align:center;font-size:.9rem;color:var(--accent2);margin-top:8px}
+.options{display:flex;flex-direction:column;gap:12px}
+.option-btn{
+  padding:16px 20px;font-size:1rem;text-align:left;
+  background:var(--glass-bg);border:1px solid var(--glass-border);
+  border-radius:14px;color:var(--text-primary);cursor:pointer;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  transition:all .25s ease;display:flex;align-items:center;gap:12px;
+}
+.option-btn:hover:not(:disabled){background:var(--glass-hover);border-color:rgba(255,255,255,.3);transform:translateX(4px)}
+.option-btn:disabled{cursor:default}
+.option-btn.correct{background:rgba(52,211,153,.2);border-color:var(--correct);color:var(--correct)}
+.option-btn.wrong{background:rgba(248,113,113,.2);border-color:var(--wrong);color:var(--wrong)}
+.option-btn.dim{opacity:.45}
+.option-label{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:600;flex-shrink:0;
+}
+.option-btn.correct .option-label{background:var(--correct);color:#000}
+.option-btn.wrong .option-label{background:var(--wrong);color:#fff}
+.feedback-bar{
+  text-align:center;padding:12px;border-radius:12px;font-weight:600;font-size:1rem;
+  display:none;
+}
+.feedback-bar.show{display:block;animation:fadeIn .3s ease}
+.feedback-bar.good{background:rgba(52,211,153,.15);color:var(--correct)}
+.feedback-bar.bad{background:rgba(248,113,113,.15);color:var(--wrong)}
+.quiz-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* ===== 结果页 ===== */
+.score-circle{
+  width:160px;height:160px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:conic-gradient(var(--accent) var(--pct,0%),rgba(255,255,255,.1) 0);
+  position:relative;margin-bottom:24px;
+}
+.score-circle::before{
+  content:'';position:absolute;inset:8px;border-radius:50%;
+  background:#1a1a3e;
+}
+.score-inner{position:relative;z-index:1;text-align:center}
+.score-num{font-size:2.2rem;font-weight:800}
+.score-label{font-size:.8rem;color:var(--text-secondary)}
+.result-stats{display:flex;gap:24px;margin-bottom:32px}
+.stat-item{text-align:center}
+.stat-num{font-size:1.5rem;font-weight:700}
+.stat-label{font-size:.8rem;color:var(--text-secondary)}
+
+/* ===== 回顾页 ===== */
+.review-list{width:100%;max-width:600px;display:flex;flex-direction:column;gap:10px;max-height:70vh;overflow-y:auto;padding:4px}
+.review-item{
+  padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;
+}
+.review-item .en{font-weight:600;font-size:.95rem}
+.review-item .cn{font-size:.85rem;color:var(--text-secondary);text-align:right}
+.review-icon{flex-shrink:0;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700}
+.review-icon.right{background:rgba(52,211,153,.2);color:var(--correct)}
+.review-icon.miss{background:rgba(248,113,113,.2);color:var(--wrong)}
+
+/* 手机适配 */
+@media(max-width:480px){
+  .view{padding:16px}
+  .word-card{padding:24px 16px}
+  .btn-glass{padding:16px 24px;font-size:1rem}
+  .option-btn{padding:14px 16px;font-size:.95rem}
+  .result-stats{gap:16px}
+}
+/* 滚动条美化 */
+.review-list::-webkit-scrollbar{width:4px}
+.review-list::-webkit-scrollbar-track{background:transparent}
+.review-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- ===== 首页 ===== -->
+<div id="view-home" class="view active">
+  <h1 class="home-title">单词背题器</h1>
+  <p class="home-sub">北京高职升本 · 高频词组 241 条</p>
+  <div class="btn-group">
+    <button class="btn-glass btn-primary" onclick="showCustom()">自定义刷题数量</button>
+    <button class="btn-glass btn-secondary" onclick="startQuiz(241)">全量刷题（241题）</button>
+  </div>
+</div>
+
+<!-- ===== 自定义数量 ===== -->
+<div id="view-custom" class="view">
+  <h2 class="home-title" style="font-size:1.6rem;margin-bottom:24px">选择刷题数量</h2>
+  <input type="number" class="input-count" id="count-input" placeholder="输入数量（1-241）" min="1" max="241" value="20">
+  <div class="btn-group" style="margin-top:24px;max-width:200px">
+    <button class="btn-glass btn-primary" onclick="startCustom()">开始</button>
+    <button class="btn-glass" onclick="showView('view-home')">返回</button>
+  </div>
+</div>
+
+<!-- ===== 答题页 ===== -->
+<div id="view-quiz" class="view">
+  <div class="quiz-container">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="progress-text" id="progress-text">1 / 10</span>
+      <span class="progress-text" id="score-text" style="color:var(--correct)">0 正确</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="glass word-card">
+      <div class="word-en" id="word-en">—</div>
+      <div class="hint-area" id="hint-area"></div>
+    </div>
+    <div class="options" id="options"></div>
+    <div class="feedback-bar" id="feedback"></div>
+    <div class="quiz-footer">
+      <button class="btn-hint" onclick="showHint()">提示</button>
+      <button class="btn-next" id="btn-next" style="display:none" onclick="nextQuestion()">下一题 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 结果页 ===== -->
+<div id="view-result" class="view">
+  <h2 class="home-title" style="font-size:1.8rem;margin-bottom:24px">测验完成</h2>
+  <div class="score-circle" id="score-circle">
+    <div class="score-inner">
+      <div class="score-num" id="score-num">0%</div>
+      <div class="score-label">正确率</div>
+    </div>
+  </div>
+  <div class="result-stats">
+    <div class="stat-item"><div class="stat-num" id="stat-total">0</div><div class="stat-label">总题数</div></div>
+    <div class="stat-item"><div class="stat-num" style="color:var(--correct)" id="stat-correct">0</div><div class="stat-label">正确</div></div>
+    <div class="stat-item"><div class="stat-num" style="color:var(--wrong)" id="stat-wrong">0</div><div class="stat-label">错误</div></div>
+  </div>
+  <div class="btn-group" style="max-width:300px">
+    <button class="btn-glass btn-primary" onclick="showReview()">查看题目详情</button>
+    <button class="btn-glass" onclick="showView('view-home')">返回首页</button>
+  </div>
+</div>
+
+<!-- ===== 回顾页 ===== -->
+<div id="view-review" class="view">
+  <h2 class="home-title" style="font-size:1.5rem;margin-bottom:16px">答题详情</h2>
+  <div class="review-list" id="review-list"></div>
+  <div style="margin-top:20px;display:flex;gap:12px">
+    <button class="btn-glass" onclick="showView('view-result')">返回结果</button>
+    <button class="btn-glass btn-primary" onclick="showView('view-home')">回首页</button>
+  </div>
+</div>
+
+<script>
+// ===== 数据 =====
+const RAW = [
+["a great deal of","大量的"],["a handful of","少量的"],["a large number of","大量的"],["a load of","大量,许多"],
+["a net gain","纯利润"],["according to","根据"],["account for","解释,说明"],["adapt to","适应"],
+["adjust to","适应"],["ahead of time","提前"],["all sorts(kinds)of","各种各样的"],["apart from","除了"],
+["appeal to","吸引"],["apply for","申请"],["arrive at the conclusion","得出结论"],["as a result","结果"],
+["as far as...is concerned","就……而言,关于"],["as if","好像"],["as long as","只要;和……一样长"],["as many as possible","尽可能多的"],
+["as soon as","一……就……"],["as though","好像"],["as well as","也,和;以及"],["at least","至少"],
+["at present","目前"],["at the same time","同时"],["back and forth","来回"],["be able to","能够"],
+["be aware of","意识到……"],["be based on","以……为基础"],["be concerned about","关心"],["be concerned with","和……有关"],
+["be curious about","对……好奇"],["be exposed to","暴露于"],["be good at","擅长"],["be intended to","意图做某事"],
+["be lack of","缺少,缺乏"],["be likely to do","可能做某事"],["be made of","由……制成"],["be proud of","以……为骄傲"],
+["be ready to do","准备做某事"],["be related to","和……有关"],["be responsible for","对某事负责"],["be short of","简称"],
+["be subject to","受制于"],["be supposed to do","应该做某事"],["be sure of","确信"],["be unwilling to do","不愿意做某事"],
+["be used to doing","习惯做某事"],["be worth doing","值得做某事"],["belong to","属于"],["better off","富裕"],
+["break off","中断"],["break up","打碎;结束;分手"],["break up with","分手"],["bring down","减低,减少;打倒"],
+["bring up","抚养"],["by nature","天生地"],["call one's attention","引起某人的注意力"],["carry out","执行"],
+["catch fire","着火"],["cheer up","使……高兴"],["combine with","与……结合"],["come out","出来;传出;长出"],
+["come to the conclusion","下结论"],["come up","出现,发生;走上前来"],["compare with","与……相比"],["concentrate on","集中精力于"],
+["consider doing","考虑做某事"],["contribute to","贡献;促成;有助于"],["cover letter","附信;自荐信"],["cure sb. of...","治疗某人某种疾病"],
+["cut across","径直穿过"],["cut down","削减;砍倒"],["cut in","插入,打断"],["cut out","删去"],
+["deal with","处理;应对"],["depend on","依赖于"],["devote to","献身于……;致力于……"],["differ from","与……不同"],
+["do harm to","对……产生危害"],["dozens of","很多个,十几个"],["draw a conclusion","下结论"],["drop in","拜访"],
+["due to","因为"],["each other","相互"],["either...or...","或者……或者"],["engage in","从事,参加"],
+["even if","即使"],["except for","除了;要不是"],["fail to do","未能做某事"],["feel like doing","想要做……"],
+["fight for","为……而斗争"],["figure out","想出;理解;弄明白"],["find out","找出;查明;发现"],["focus on","集中精力于;关注于"],
+["for a while","暂时,一时"],["for fear of","害怕"],["for instance","例如"],["for the time being","暂时;眼下"],
+["free of charge","免费"],["gaze at","盯着看"],["get married","结婚"],["get rid of","摆脱"],
+["get used to doing","习惯做某事"],["give up","放弃"],["go wrong","有问题"],["hand in","递交"],
+["hand on","传递"],["hand out","分发,散发"],["hand over","交出,移交"],["have a great impact on","有巨大的影响"],
+["have sth. to do with","与……有关系"],["have little to do","没什么关系"],["hold up","举起;阻挡"],["human beings","人类"],
+["hurry off","匆忙走开"],["in a row","接连不断地"],["in a short time","在短时间内"],["in addition","此外"],
+["in addition to","除了……之外"],["in advance","提前"],["in case","万一"],["in case of","如果发生"],
+["in charge of","负责"],["in contrast","相反;相比之下"],["in fact","事实上"],["in favor of","赞成,同意"],
+["in honor of","为纪念"],["in need of","需要"],["in one's twenties","二十多岁"],["in part","部分地"],
+["in place of","代替,取代"],["in terms of","按照;从……方面来说"],["in turn","轮流"],["insist on","坚持"],
+["instead of","替代,而不是"],["intend to","想要,打算"],["It goes without saying","不用说"],["It's high time","正是……的时候"],
+["job hunting","求职"],["job offer","提供的工作"],["keep fit","保持健康"],["keep healthy","保持健康"],
+["keep on doing","持续做某事"],["keep up","保持"],["keep up with","跟上"],["lack of","缺少"],
+["lead to","导致"],["long for","渴望"],["look after","照料"],["look for","寻找"],
+["look into","调查"],["look around","环顾四周"],["make a profit","赚取利润;获利"],["make an appointment","约会"],
+["make fortune","创造财富,赚钱"],["make friends","交朋友"],["make full use of","充分利用"],["make fun of","取笑"],
+["make mistakes","犯错误"],["make sense","有意义,说得通"],["make up","组成"],["make use of","利用"],
+["meet one's need","满足某人需求"],["meet requirement","满足要求"],["no sooner...than","一……就……"],["not only...but also...","不仅……而且"],
+["now and then","不时地"],["on a large scale","大规模地,大范围地"],["on behalf of","代表……"],["on the other hand","另一方面"],
+["on the part of","在……方面,就……而言"],["out of date","过时"],["owing to","由于;因为"],["pass on","传递"],
+["pay attention to","关注;注意"],["pick up","拿起;学会"],["play a role","扮演角色"],["prefer to","更喜欢"],
+["prepare for","为……准备"],["prevent from","阻止"],["provided that","假如"],["put away","收好;储存"],
+["put down","记下;镇压"],["put forward","提出"],["put off","推迟"],["put on","穿上;上演;增加(体重)"],
+["put out","熄灭"],["put up","张贴"],["raise a claim","提出要求"],["rather than","而不是"],
+["raw material","原材料"],["reach the conclusion","得出结论"],["regardless of","不管,不顾"],["rely on","依赖,依靠"],
+["result from","起因于"],["result in","导致"],["run after","追赶;追求;寻求"],["run into","遭遇;偶然碰见"],
+["run through","贯穿"],["see off","送行,送别"],["see over","检查,视察"],["see through","看穿"],
+["set record","创造纪录"],["set up","建立;创立"],["show up","暴露,显露"],["side effect","副作用"],
+["step by step","一步接一步"],["stock trader","股票交易员"],["stop doing","停止做某事"],["strive to do sth.","努力做某事"],
+["struggle for","为……而奋斗"],["suffer from","遭受"],["take action","采取行动"],["take care of","照顾"],
+["take down","拆卸;记下"],["take in","吸收"],["take measures","采取措施"],["take off","脱下;起飞"],
+["take over","接收,接管"],["take place","发生"],["take sth. for granted","认为……理所当然"],["take the responsibility","承担负责"],
+["take turns","轮流"],["take up","开始从事;着手处理;占据"],["tend to","倾向于"],["the same as","和……一样"],
+["to be frank","坦白说"],["to one's regret","令某人遗憾的是"],["too...to...","太……而不能……"],["turn down","调低;拒绝"],
+["turn into","变成"],["turn out","结果是"],["turn up","出现;(声音)调大"],["used to be","过去常常"],
+["wake up","叫醒"],["when it comes to","当说到,谈到"],["with regard to","关于,就……而论"],["would rather","宁愿"],
+["yield to","屈服于"]
+];
+
+// ===== 状态 =====
+let questions = [];
+let currentIdx = 0;
+let correctCount = 0;
+let answered = false;
+let results = []; // {en, cn, userPick, isCorrect}
+
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showCustom(){ showView('view-custom'); }
+
+function startCustom(){
+  const n = parseInt(document.getElementById('count-input').value) || 20;
+  const count = Math.max(1, Math.min(241, n));
+  startQuiz(count);
+}
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function startQuiz(count){
+  const shuffled = shuffle(RAW);
+  questions = shuffled.slice(0, count).map(([en,cn])=>({en,cn}));
+  currentIdx = 0;
+  correctCount = 0;
+  results = [];
+  showView('view-quiz');
+  renderQuestion();
+}
+
+function getOptions(q){
+  const correct = q.cn;
+  const others = shuffle(RAW.filter(r=>r[1]!==correct)).slice(0,3).map(r=>r[1]);
+  return shuffle([correct, ...others]);
+}
+
+function renderQuestion(){
+  answered = false;
+  const q = questions[currentIdx];
+  document.getElementById('progress-text').textContent = `${currentIdx+1} / ${questions.length}`;
+  document.getElementById('score-text').textContent = `${correctCount} 正确`;
+  document.getElementById('progress-fill').style.width = ((currentIdx)/questions.length*100)+'%';
+  document.getElementById('word-en').textContent = q.en;
+  document.getElementById('hint-area').textContent = '';
+  document.getElementById('feedback').className = 'feedback-bar';
+  document.getElementById('feedback').textContent = '';
+  document.getElementById('btn-next').style.display = 'none';
+
+  const opts = getOptions(q);
+  const box = document.getElementById('options');
+  box.innerHTML = '';
+  const labels = ['A','B','C','D'];
+  opts.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-label">${labels[i]}</span><span>${opt}</span>`;
+    btn.onclick = ()=>selectAnswer(opt, btn);
+    box.appendChild(btn);
+  });
+}
+
+function selectAnswer(picked, btnEl){
+  if(answered) return;
+  answered = true;
+  const q = questions[currentIdx];
+  const isCorrect = picked === q.cn;
+  if(isCorrect) correctCount++;
+
+  // 标记所有选项
+  const allBtns = document.querySelectorAll('.option-btn');
+  allBtns.forEach(b=>{
+    b.disabled = true;
+    const text = b.querySelector('span:last-child').textContent;
+    if(text === q.cn){
+      b.classList.add('correct');
+    } else if(b === btnEl){
+      b.classList.add('wrong');
+    } else {
+      b.classList.add('dim');
+    }
+  });
+
+  // 反馈
+  const fb = document.getElementById('feedback');
+  if(isCorrect){
+    fb.className = 'feedback-bar show good';
+    fb.textContent = '回答正确！';
+  } else {
+    fb.className = 'feedback-bar show bad';
+    fb.textContent = `答错了，正确答案是：${q.cn}`;
+  }
+
+  results.push({en:q.en, cn:q.cn, userPick:picked, isCorrect});
+  document.getElementById('score-text').textContent = `${correctCount} 正确`;
+
+  if(isCorrect){
+    setTimeout(()=>nextQuestion(), 900);
+  } else {
+    document.getElementById('btn-next').style.display = 'inline-block';
+  }
+}
+
+function showHint(){
+  const q = questions[currentIdx];
+  const cn = q.cn;
+  // 提示：首字 + 字数
+  const firstChar = cn.charAt(0);
+  const len = cn.replace(/[，。；、……]/g,'').length;
+  document.getElementById('hint-area').textContent = `提示：释义以"${firstChar}"开头，共约${len}字`;
+}
+
+function nextQuestion(){
+  currentIdx++;
+  if(currentIdx >= questions.length){
+    showResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResult(){
+  document.getElementById('progress-fill').style.width = '100%';
+  const total = questions.length;
+  const wrong = total - correctCount;
+  const pct = Math.round(correctCount/total*100);
+  document.getElementById('score-num').textContent = pct + '%';
+  document.getElementById('score-circle').style.setProperty('--pct', pct+'%');
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-correct').textContent = correctCount;
+  document.getElementById('stat-wrong').textContent = wrong;
+  showView('view-result');
+}
+
+function showReview(){
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  results.forEach((r,i)=>{
+    const item = document.createElement('div');
+    item.className = 'glass review-item';
+    const icon = r.isCorrect
+      ? '<span class="review-icon right">✓</span>'
+      : '<span class="review-icon miss">✗</span>';
+    item.innerHTML = `
+      <div style="flex:1;min-width:0">
+        <div class="en">${i+1}. ${r.en}</div>
+        <div class="cn">${r.cn}${!r.isCorrect?`<br><span style="color:var(--wrong)">你的选择：${r.userPick}</span>`:''}</div>
+      </div>
+      ${icon}
+    `;
+    list.appendChild(item);
+  });
+  showView('view-review');
+}
+</script>
+</body>
+</html>
