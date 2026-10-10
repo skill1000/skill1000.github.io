@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e20">
+<meta name="color-scheme" content="dark">
+<title>高频词组背题器</title>
+<style>
+  :root{
+    --glass-bg: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+    --glass-border: rgba(255,255,255,.30);
+    --text-dim: rgba(255,255,255,.78);
+    --ok:#2ee6a6; --bad:#ff6b81;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ height:100%; }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    color:#fff; background:#0a0e20; overflow-x:hidden;
+    min-height:100vh; min-height:100dvh;
+  }
+
+  /* ---------- animated liquid background ---------- */
+  .bg{ position:fixed; inset:0; z-index:-1;
+    background: linear-gradient(160deg,#0a0e20 0%, #141b3f 55%, #1d1440 100%); }
+  .blob{ position:absolute; border-radius:50%; filter:blur(90px); opacity:.55; will-change:transform; }
+  .b1{ width:60vmax; height:60vmax; top:-20vmax; left:-18vmax; background:#4f5dff; animation:float1 17s ease-in-out infinite alternate; }
+  .b2{ width:50vmax; height:50vmax; bottom:-16vmax; right=-14vmax; background:#ff5ba8; animation:float2 21s ease-in-out infinite alternate; }
+  .b3{ width:40vmax; height:40vmax; top:30%; left:45%; background:#2fd8ff; opacity:.35; animation:float3 19s ease-in-out infinite alternate; }
+  @keyframes float1{ to{ transform:translate(22%,16%) scale(1.18); } }
+  @keyframes float2{ to{ transform:translate(-18%,-14%) scale(1.12) rotate(30deg); } }
+  @keyframes float3{ to{ transform:translate(-25%,10%) scale(.9); } }
+
+  /* ---------- glass primitives ---------- */
+  .glass{ background:var(--glass-bg); border:1px solid var(--glass-border);
+    backdrop-filter:blur(18px) saturate(160%); -webkit-backdrop-filter:blur(18px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 14px 34px rgba(0,0,0,.32); }
+  .glass-pill{ display:inline-flex; align-items:center; gap:.5rem; padding:.55rem 1.05rem; border-radius:999px;
+    font-size:.86rem; color:var(--text-dim); user-select:none; white-space:nowrap; }
+
+  /* ---------- screens ---------- */
+  .screen{ display:none; min-height:100vh; min-height:100dvh; padding:24px 18px calc(26px + env(safe-area-inset-bottom)); }
+  .screen.active{ display:flex; align-items:center; justify-content:center; animation:screenIn .5s ease both; }
+  @keyframes screenIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+
+  /* ---------- home ---------- */
+  #screen-home{ flex-direction:column; text-align:center; gap:20px; }
+  .logo-chip{ width:86px; height:86px; border-radius:24px; display:flex; align-items:center; justify-content:center; font-size:2.3rem; margin:0 auto; }
+  .app-title{ font-size:clamp(1.7rem,6vw,2.5rem); font-weight:800; letter-spacing:.06em;
+    background:linear-gradient(90deg,#fff 30%, #cfd4ff 70%); -webkit-background-clip:text; background-clip:text; }
+  .subtitle{ color:var(--text-dim); font-size:.95rem; letter-spacing:.12em; }
+  .home-actions{ display:flex; flex-direction:column; gap:14px; width:min(400px,100%); margin-top:6px; }
+  .cta-btn{ display:flex; flex-direction:column; align-items:center; gap:6px; padding:20px 26px; border-radius:20px;
+    font-size:1.18rem; font-weight:700; letter-spacing:.04em; cursor:pointer; transition:.25s; color:#fff; }
+  .cta-btn small{ font-size:.8rem; font-weight:400; opacity:.85; letter-spacing:.03em; }
+  .cta-btn.primary{ background:linear-gradient(135deg,#7b6cff, #39c0ff); border:1px solid rgba(255,255,255,.4);
+    box-shadow: 0 12px 30px rgba(86,120,255,.42), inset 0 1px 0 rgba(255,255,255,.5); }
+  .cta-btn.secondary{ background:var(--glass-bg); border:1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 10px 26px rgba(0,0,0,.28); }
+  .cta-btn:hover{ transform:translateY(-2px) scale(1.01); }
+  .cta-btn:active{ transform:scale(.985); }
+  .hint-note{ font-size:.83rem; color:var(--text-dim); opacity:.75; }
+
+  /* ---------- quiz ---------- */
+  #screen-quiz{ flex-direction:column; align-items:center; justify-content:flex-start; padding-top:max(20px, env(safe-area-inset-top)); }
+  .quiz-wrap{ width:min(760px,100%); display:flex; flex-direction:column; gap:clamp(14px,3vh,24px); min-height:calc(100dvh - 2*max(20px, env(safe-area-inset-top)) - 2*env(safe-area-inset-bottom)); }
+  .quiz-header{ display:flex; justify-content:space-between; align-items:center; }
+  .ghost-btn{ cursor:pointer; font-size:.9rem; }
+  #counter{ font-weight:600; letter-spacing:.05em; }
+  .progress-track{ height:8px; border-radius:99px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18); overflow:hidden; }
+  .progress-fill{ height:100%; width:0%; border-radius:99px; background:linear-gradient(90deg,#7b6cff,#39c0ff); transition:width .45s ease; }
+  .quiz-main{ display:flex; flex-direction:column; align-items:center; gap:18px; width:100%; justify-content:center; flex:1; }
+  .word-card{ padding:clamp(26px,6vh,44px) clamp(20px,5vw,48px); border-radius:26px; text-align:center; max-width:760px; width:100%; }
+  .word-label{ font-size:.8rem; letter-spacing:.22em; color:var(--text-dim); margin-bottom:14px; }
+  #wordText{ font-size:clamp(1.35rem,5.4vw,2.25rem); font-weight:700; line-height:1.4; overflow-wrap:anywhere; }
+  .divider{ width:64px; height:3px; margin:22px auto 0; border-radius:99px; background:linear-gradient(90deg,#7b6cff,#39c0ff); opacity:.85; }
+  #hintBtn{ cursor:pointer; font-size:.9rem; }
+  #hintBtn.used{ opacity:.45; pointer-events:none; }
+
+  .choices{ display:grid; gap:12px; width:100%; max-width:760px; }
+  @media (min-width:700px){ .choices{ grid-template-columns:1fr 1fr; } }
+  .choice{ position:relative; text-align:left; display:flex; align-items:center; gap:12px;
+    padding:15px 18px; border-radius:18px; font-size:clamp(.98rem,3.6vw,1.08rem); line-height:1.45; cursor:pointer;
+    color:#fff; background:var(--glass-bg); border:1px solid var(--glass-border);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 6px 18px rgba(0,0,0,.18); transition:.2s; user-select:none; touch-action:manipulation; }
+  .choice:hover{ transform:translateY(-2px); }
+  .choice:active{ transform:scale(.99); }
+  .tag{ flex:none; width:34px; height:34px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.85rem; background:rgba(255,255,255,.16); }
+  .mark{ margin-left:auto; font-weight:800; opacity:0; width:1.1em; text-align:center; flex:none; }
+  .choice.dim{ opacity:.38; filter:saturate(.4); pointer-events:none; }
+  .choice.eliminated{ opacity:.26; filter:saturate(.3); pointer-events:none; }
+  .choice.correct{ border-color:var(--ok); background:linear-gradient(135deg, rgba(46,230,166,.38), rgba(46,230,166,.10)); box-shadow:0 0 24px rgba(46,230,166,.30); }
+  .choice.correct .tag{ background:#2ee6a6; color:#06281d; }
+  .choice.correct .mark{ opacity:1; color:var(--ok); }
+  .choice.wrong{ border-color:var(--bad); background:linear-gradient(135deg, rgba(255,107,129,.34), rgba(255,107,129,.10)); box-shadow:0 0 24px rgba(255,107,129,.28); animation:shake .4s; }
+  .choice.wrong .tag{ background:#ff6b81; color:#3a0a12; }
+  .choice.wrong .mark{ opacity:1; color:var(--bad); }
+  @keyframes shake{ 0%,100%{ transform:translateX(0) } 25%{ transform:translateX(-6px) } 60%{ transform:translateX(5px) } }
+
+  .next-slot{ height:74px; display:flex; align-items:center; justify-content:center; }
+  #btnNext{ padding:14px 44px; border-radius:999px; font-size:1.05rem; letter-spacing:.06em; cursor:pointer; }
+
+  /* ---------- result ---------- */
+  .result-card{ width:min(620px,100%); padding:clamp(28px,7vw,54px) clamp(20px,6vw,52px); border-radius:28px; text-align:center; }
+  .result-title{ font-size:.95rem; color:var(--text-dim); letter-spacing:.2em; margin-bottom:10px; }
+  #pctText{ font-size:clamp(4rem,22vw,6.4rem); font-weight:800; line-height:1.1; letter-spacing:-.02em;
+    background:linear-gradient(90deg,#7b6cff,#39c0ff 55%,#fff); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  #resultMsg{ font-size:clamp(1rem,4.4vw,1.25rem); margin-top:8px; min-height:1.6em; }
+  .stats-row{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:18px 0 26px; }
+  .stat-pill{ padding:.45rem .95rem; border-radius:999px; font-size:.85rem; color:var(--text-dim); background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.2); }
+  .result-btns{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .btn-round{ padding:.8rem 1.4rem; border-radius:999px; font-size:.95rem; letter-spacing:.03em; cursor:pointer; }
+  .btn-round.primary{ background:linear-gradient(135deg,#7b6cff,#39c0ff); border:1px solid rgba(255,255,255,.4); font-weight:600; box-shadow:0 8px 22px rgba(86,120,255,.4); }
+  .btn-round.glassy{ background:var(--glass-bg); border:1px solid var(--glass-border); color:#fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.38), 0 6px 16px rgba(0,0,0,.24); }
+
+  /* ---------- details sheet ---------- */
+  .sheet{ position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center; padding:18px; visibility:hidden; opacity:0; transition:.3s; background:transparent; }
+  .sheet.open{ visibility:visible; opacity:1; }
+  .sheet-backdrop{ position:absolute; inset:0; background:rgba(6,8,24,.55); backdrop-filter:blur(16px) saturate(140%); -webkit-backdrop-filter:blur(16px) saturate(140%); }
+  .sheet-panel{ position:relative; width:min(720px,100%); max-height:calc(100dvh - 36px); border-radius:24px; display:flex; flex-direction:column; overflow:hidden; }
+  .sheet.open .sheet-panel{ transform:none; }
+  .sheet-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid rgba(255,255,255,.16); flex:none; }
+  .sheet-body{ overflow:auto; overscroll-behavior:contain; padding:6px 20px 20px; }
+  #btnCloseDetails{ cursor:pointer; }
+
+  /* ---------- generic modal ---------- */
+  .modal{ position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:18px; visibility:hidden; opacity:0; transition:.25s; background:transparent; }
+  .modal.open{ visibility:visible; opacity:1; }
+  .modal-backdrop{ position:absolute; inset:0; background:rgba(6,8,24,.5); backdrop-filter:blur(14px) saturate(140%); -webkit-backdrop-filter:blur(14px) saturate(140%); }
+  .modal-panel{ position:relative; width:min(380px,100%); padding:26px 24px; border-radius:24px; text-align:center; display:flex; flex-direction:column; gap:14px; animation:none; }
+  .modal.open .modal-panel{ transform:none; }
+  .modal-title{ font-size:1.15rem; font-weight:700; letter-spacing:.03em; }
+  #countInput{ width:100%; padding:14px 16px; border-radius:14px; font-size:1.2rem; text-align:center; color:#fff; background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.3); outline:none; }
+  #countInput:focus{ border-color:#7b6cff; }
+  .chips{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; }
+  .chip{ cursor:pointer; padding:.4rem .9rem; border-radius:999px; font-size:.85rem; color:var(--text-dim); background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.22); }
+  .chip.active{ color:#fff; background:linear-gradient(135deg,#7b6cff,#39c0ff); border-color:transparent; font-weight:600; }
+  .modal-btns{ display:flex; gap:10px; }
+  .modal-btns .btn-round{ flex:1; }
+
+  /* ---------- detail rows ---------- */
+  .detail-row{ display:flex; align-items:center; gap:12px; padding:13px 4px; border-bottom:1px solid rgba(255,255,255,.10); font-size:.92rem; }
+  .d-idx{ flex:none; width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:.74rem; font-weight:700; background:rgba(255,255,255,.12); color:var(--text-dim); }
+  .d-main{ min-width:0; }
+  .d-en{ font-weight:600; overflow-wrap:anywhere; }
+  .d-zh{ margin-top:3px; font-size:.84rem; display:flex; gap:10px; flex-wrap:wrap; color:var(--text-dim); align-items:center; }
+  .ok-tag,.bad-tag{ padding:.15em .55em; border-radius:6px; font-size:.82rem; white-space:nowrap; }
+  .ok-tag{ background:rgba(46,230,166,.16); color:#7df0c9; border:1px solid rgba(46,230,166,.45); }
+  .bad-tag{ background:rgba(255,107,129,.14); color:#ffb3be; border:1px solid rgba(255,107,129,.45); }
+  .hint-mark{ font-size:.8rem; opacity:.8; white-space:nowrap; }
+
+  @media (min-width:700px){ body{ min-height:100vh; } }
+  @media (prefers-reduced-motion:reduce){ .blob,.screen,.progress-fill{ animation:none !important; transition:none !important; } .choice.wrong{ animation:none; } }
+</style>
+</head>
+<body>
+
+<div class="bg"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+<!-- ============ 首页 ============ -->
+<section id="screen-home" class="screen">
+  <div class="logo-chip glass">📚</div>
+  <h1 class="app-title">高频词组背题器</h1>
+  <p class="subtitle">北京市高职升本 · 招生统一考试</p>
+  <span id="homeCount" class="glass-pill"></span>
+  <div class="home-actions">
+    <button id="btnCustom" class="cta-btn primary">自定义刷题数量<small id="customSub">自选题量，随机出题</small></button>
+    <button id="btnFull" class="cta-btn secondary">全量刷题<small id="fullSub">覆盖全部词组</small></button>
+  </div>
+  <p class="hint-note">💡 每题可点「提示」排除错误选项，共两次机会</p>
+</section>
+
+<!-- ============ 做题界面 ============ -->
+<section id="screen-quiz" class="screen">
+  <div class="quiz-wrap">
+    <header class="quiz-header">
+      <button id="btnExit" class="glass-pill ghost-btn">‹ 首页</button>
+      <span id="counter" class="glass-pill"></span>
+    </header>
+    <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+    <div class="quiz-main">
+      <div class="word-card glass">
+        <div class="word-label">选择正确的中文释义</div>
+        <h2 id="wordText"></h2>
+        <div class="divider"></div>
+      </div>
+      <button id="hintBtn" class="glass-pill">💡 提示（剩余 2）</button>
+    </div>
+    <div id="choices" class="choices"></div>
+    <div class="next-slot"><button id="btnNext" class="cta-btn primary">下一题 →</button></div>
+  </div>
+</section>
+
+<!-- ============ 成绩界面 ============ -->
+<section id="screen-result" class="screen">
+  <div class="result-card glass">
+    <p class="result-title">本 轮 成 绩</p>
+    <div id="pctText"></div>
+    <p id="resultMsg"></p>
+    <div class="stats-row">
+      <span class="stat-pill" id="statScore"></span>
+      <span class="stat-pill" id="statTime"></span>
+    </div>
+    <div class="result-btns">
+      <button id="btnDetails" class="glass-pill btn-round glassy">📋 查看详情</button>
+      <button id="btnAgain" class="btn-round primary">再来一次</button>
+      <button id="btnHome2" class="glass-pill btn-round glassy">返回首页</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 答题详情浮层 ============ -->
+<div id="sheetDetails" class="sheet">
+  <div class="sheet-backdrop"></div>
+  <div class="sheet-panel glass">
+    <header class="sheet-head">
+      <span style="font-weight:700;letter-spacing:.05em">答题详情</span>
+      <button id="btnCloseDetails" class="glass-pill ghost-btn">✕ 关闭</button>
+    </header>
+    <div class="sheet-body" id="detailList"></div>
+  </div>
+</div>
+
+<!-- ============ 弹窗：自定义数量 / 退出确认 ============ -->
+<div id="modalCount" class="modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-panel glass">
+    <p class="modal-title">选择刷题数量</p>
+    <input id="countInput" type="number" min="1" max="241" inputmode="numeric" value="20">
+    <div class="chips">
+      <button data-n="10" class="chip">10</button><button data-n="20" class="chip active">20</button>
+      <button data-n="50" class="chip">50</button><button data-n="100" class="chip">100</button>
+    </div>
+    <div class="modal-btns">
+      <button id="countCancel" class="glass-pill btn-round glassy">取消</button>
+      <button id="countOk" class="btn-round primary">开始刷题</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalExit" class="modal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-panel glass">
+    <p class="modal-title">中途退出？</p>
+    <p style="font-size:.9rem;color:var(--text-dim)">本轮进度将不保存</p>
+    <div class="modal-btns">
+      <button id="exitStay" class="glass-pill btn-round glassy">继续刷题</button>
+      <button id="exitGo" class="btn-round primary">退出</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = [{"en": "a great deal of", "zh": "大量的"}, {"en": "a handful of", "zh": "少量的"}, {"en": "a large number of", "zh": "大量的"}, {"en": "a load of", "zh": "大量,许多"}, {"en": "a net gain", "zh": "纯利润"}, {"en": "according to", "zh": "根据"}, {"en": "account for", "zh": "解释,说明"}, {"en": "adapt to", "zh": "适应"}, {"en": "adjust to", "zh": "适应"}, {"en": "ahead of time", "zh": "提前"}, {"en": "all sorts(kinds)of", "zh": "各种各样的"}, {"en": "apart from", "zh": "除了"}, {"en": "appeal to", "zh": "吸引"}, {"en": "apply for", "zh": "申请"}, {"en": "arrive at the conclusion", "zh": "得出结论"}, {"en": "as a result", "zh": "结果"}, {"en": "as far as...is concerned", "zh": "就……而言,关于"}, {"en": "as if", "zh": "好像"}, {"en": "as long as", "zh": "只要;和……一样长"}, {"en": "as many as possible", "zh": "尽可能多的"}, {"en": "as soon as", "zh": "一……就……"}, {"en": "as though", "zh": "好像"}, {"en": "as well as", "zh": "也,和;以及"}, {"en": "at least", "zh": "至少"}, {"en": "at present", "zh": "目前"}, {"en": "at the same time", "zh": "同时"}, {"en": "back and forth", "zh": "来回"}, {"en": "be able to", "zh": "能够"}, {"en": "be aware of", "zh": "意识到……"}, {"en": "be based on", "zh": "以……为基础"}, {"en": "be concerned about", "zh": "关心"}, {"en": "be concerned with", "zh": "和……有关"}, {"en": "be curious about", "zh": "对……好奇"}, {"en": "be exposed to", "zh": "暴露于"}, {"en": "be good at", "zh": "擅长"}, {"en": "be intended to", "zh": "意图做某事"}, {"en": "be lack of", "zh": "缺少,缺乏"}, {"en": "be likely to do", "zh": "可能做某事"}, {"en": "be made of", "zh": "由……制成"}, {"en": "be proud of", "zh": "以……为骄傲"}, {"en": "be ready to do", "zh": "准备做某事"}, {"en": "be related to", "zh": "和……有关"}, {"en": "be responsible for", "zh": "对某事负责"}, {"en": "be short of", "zh": "简称"}, {"en": "be subject to", "zh": "受制于"}, {"en": "be supposed to do", "zh": "应该做某事"}, {"en": "be sure of", "zh": "确信"}, {"en": "be unwilling to do", "zh": "不愿意做某事"}, {"en": "be used to doing", "zh": "习惯做某事"}, {"en": "be worth doing", "zh": "值得做某事"}, {"en": "belong to", "zh": "属于"}, {"en": "better off", "zh": "富裕"}, {"en": "break off", "zh": "中断"}, {"en": "break up", "zh": "打碎;结束;分手"}, {"en": "break up with", "zh": "分手"}, {"en": "bring down", "zh": "减低,减少;打倒"}, {"en": "bring up", "zh": "抚养"}, {"en": "by nature", "zh": "天生地"}, {"en": "call one's attention", "zh": "引起某人的注意力"}, {"en": "carry out", "zh": "执行"}, {"en": "catch fire", "zh": "着火"}, {"en": "cheer up", "zh": "使……高兴"}, {"en": "combine with", "zh": "与……结合"}, {"en": "come out", "zh": "出来;传出;长出"}, {"en": "come to the conclusion", "zh": "下结论"}, {"en": "come up", "zh": "出现,发生;走上前来"}, {"en": "compare with", "zh": "与……相比"}, {"en": "concentrate on", "zh": "集中精力于"}, {"en": "consider doing", "zh": "考虑做某事"}, {"en": "contribute to", "zh": "贡献;促成;有助于"}, {"en": "cover letter", "zh": "附信;自荐信"}, {"en": "cure sb. of...", "zh": "治疗某人某种疾病"}, {"en": "cut across", "zh": "径直穿过"}, {"en": "cut down", "zh": "削减;砍倒"}, {"en": "cut in", "zh": "插入,打断"}, {"en": "cut out", "zh": "删去"}, {"en": "deal with", "zh": "处理;应对"}, {"en": "depend on", "zh": "依赖于"}, {"en": "devote to", "zh": "献身于……;致力于……"}, {"en": "differ from", "zh": "与……不同"}, {"en": "do harm to", "zh": "对……产生危害"}, {"en": "dozens of", "zh": "很多个,十几个"}, {"en": "draw a conclusion", "zh": "下结论"}, {"en": "drop in", "zh": "拜访"}, {"en": "due to", "zh": "因为"}, {"en": "each other", "zh": "相互"}, {"en": "either...or...", "zh": "或者……或者"}, {"en": "engage in", "zh": "从事,参加"}, {"en": "even if", "zh": "即使"}, {"en": "except for", "zh": "除了;要不是"}, {"en": "fail to do", "zh": "未能做某事"}, {"en": "feel like doing", "zh": "想要做……"}, {"en": "fight for", "zh": "为……而斗争"}, {"en": "figure out", "zh": "想出;理解;弄明白"}, {"en": "find out", "zh": "找出;查明;发现"}, {"en": "focus on", "zh": "集中精力于;关注于"}, {"en": "for a while", "zh": "暂时,一时"}, {"en": "for fear of", "zh": "害怕"}, {"en": "for instance", "zh": "例如"}, {"en": "for the time being", "zh": "暂时;眼下"}, {"en": "free of charge", "zh": "免费"}, {"en": "gaze at", "zh": "盯着看"}, {"en": "get married", "zh": "结婚"}, {"en": "get rid of", "zh": "摆脱"}, {"en": "get used to doing", "zh": "习惯做某事"}, {"en": "give up", "zh": "放弃"}, {"en": "go wrong", "zh": "有问题"}, {"en": "hand in", "zh": "递交"}, {"en": "hand on", "zh": "传递"}, {"en": "hand out", "zh": "分发,散发"}, {"en": "hand over", "zh": "交出,移交"}, {"en": "have a great impact on", "zh": "有巨大的影响"}, {"en": "have sth. to do with", "zh": "与……有关系"}, {"en": "have little to do", "zh": "没什么关系"}, {"en": "hold up", "zh": "举起;阻挡"}, {"en": "human beings", "zh": "人类"}, {"en": "hurry off", "zh": "匆忙走开"}, {"en": "in a row", "zh": "接连不断地"}, {"en": "in a short time", "zh": "在短时间内"}, {"en": "in addition", "zh": "此外"}, {"en": "in addition to", "zh": "除了……之外"}, {"en": "in advance", "zh": "提前"}, {"en": "in case", "zh": "万一"}, {"en": "in case of", "zh": "如果发生"}, {"en": "in charge of", "zh": "负责"}, {"en": "in contrast", "zh": "相反;相比之下"}, {"en": "in fact", "zh": "事实上"}, {"en": "in favor of", "zh": "赞成,同意"}, {"en": "in honor of", "zh": "为纪念"}, {"en": "in need of", "zh": "需要"}, {"en": "in one's twenties", "zh": "二十多岁"}, {"en": "in part", "zh": "部分地"}, {"en": "in place of", "zh": "代替,取代"}, {"en": "in terms of", "zh": "按照;从……方面来说"}, {"en": "in turn", "zh": "轮流"}, {"en": "insist on", "zh": "坚持"}, {"en": "instead of", "zh": "替代,而不是"}, {"en": "intend to", "zh": "想要,打算"}, {"en": "It goes without saying", "zh": "不用说"}, {"en": "It's high time", "zh": "正是……的时候"}, {"en": "job hunting", "zh": "求职"}, {"en": "job offer", "zh": "提供的工作"}, {"en": "keep fit", "zh": "保持健康"}, {"en": "keep healthy", "zh": "保持健康"}, {"en": "keep on doing", "zh": "持续做某事"}, {"en": "keep up", "zh": "保持"}, {"en": "keep up with", "zh": "跟上"}, {"en": "lack of", "zh": "缺少"}, {"en": "lead to", "zh": "导致"}, {"en": "long for", "zh": "渴望"}, {"en": "look after", "zh": "照料"}, {"en": "look for", "zh": "寻找"}, {"en": "look into", "zh": "调查"}, {"en": "look around", "zh": "环顾四周"}, {"en": "make a profit", "zh": "赚取利润;获利"}, {"en": "make an appointment", "zh": "约会"}, {"en": "make fortune", "zh": "创造财富,赚钱"}, {"en": "make friends", "zh": "交朋友"}, {"en": "make full use of", "zh": "充分利用"}, {"en": "make fun of", "zh": "取笑"}, {"en": "make mistakes", "zh": "犯错误"}, {"en": "make sense", "zh": "有意义,说得通"}, {"en": "make up", "zh": "组成"}, {"en": "make use of", "zh": "利用"}, {"en": "meet one's need", "zh": "满足某人需求"}, {"en": "meet requirement", "zh": "满足要求"}, {"en": "no sooner...than", "zh": "一……就……"}, {"en": "not only...but also...", "zh": "不仅……而且"}, {"en": "now and then", "zh": "不时地"}, {"en": "on a large scale", "zh": "大规模地,大范围地"}, {"en": "on behalf of", "zh": "代表……"}, {"en": "on the other hand", "zh": "另一方面"}, {"en": "on the part of", "zh": "在……方面,就……而言"}, {"en": "out of date", "zh": "过时"}, {"en": "owing to", "zh": "由于;因为"}, {"en": "pass on", "zh": "传递"}, {"en": "pay attention to", "zh": "关注;注意"}, {"en": "pick up", "zh": "拿起;学会"}, {"en": "play a role", "zh": "扮演角色"}, {"en": "prefer to", "zh": "更喜欢"}, {"en": "prepare for", "zh": "为……准备"}, {"en": "prevent from", "zh": "阻止"}, {"en": "provided that", "zh": "假如"}, {"en": "put away", "zh": "收好;储存"}, {"en": "put down", "zh": "记下;镇压"}, {"en": "put forward", "zh": "提出"}, {"en": "put off", "zh": "推迟"}, {"en": "put on", "zh": "穿上;上演;增加(体重)"}, {"en": "put out", "zh": "熄灭"}, {"en": "put up", "zh": "张贴"}, {"en": "raise a claim", "zh": "提出要求"}, {"en": "rather than", "zh": "而不是"}, {"en": "raw material", "zh": "原材料"}, {"en": "reach the conclusion", "zh": "得出结论"}, {"en": "regardless of", "zh": "不管,不顾"}, {"en": "rely on", "zh": "依赖,依靠"}, {"en": "result from", "zh": "起因于"}, {"en": "result in", "zh": "导致"}, {"en": "run after", "zh": "追赶;追求;寻求"}, {"en": "run into", "zh": "遭遇;偶然碰见"}, {"en": "run through", "zh": "贯穿"}, {"en": "see off", "zh": "送行,送别"}, {"en": "see over", "zh": "检查,视察"}, {"en": "see through", "zh": "看穿"}, {"en": "set record", "zh": "创造纪录"}, {"en": "set up", "zh": "建立;创立"}, {"en": "show up", "zh": "暴露,显露"}, {"en": "side effect", "zh": "副作用"}, {"en": "step by step", "zh": "一步接一步"}, {"en": "stock trader", "zh": "股票交易员"}, {"en": "stop doing", "zh": "停止做某事"}, {"en": "strive to do sth.", "zh": "努力做某事"}, {"en": "struggle for", "zh": "为……而奋斗"}, {"en": "suffer from", "zh": "遭受"}, {"en": "take action", "zh": "采取行动"}, {"en": "take care of", "zh": "照顾"}, {"en": "take down", "zh": "拆卸;记下"}, {"en": "take in", "zh": "吸收"}, {"en": "take measures", "zh": "采取措施"}, {"en": "take off", "zh": "脱下;起飞"}, {"en": "take over", "zh": "接收,接管"}, {"en": "take place", "zh": "发生"}, {"en": "take sth. for granted", "zh": "认为……理所当然"}, {"en": "take the responsibility", "zh": "承担负责"}, {"en": "take turns", "zh": "轮流"}, {"en": "take up", "zh": "开始从事;着手处理;占据"}, {"en": "tend to", "zh": "倾向于"}, {"en": "the same as", "zh": "和……一样"}, {"en": "to be frank", "zh": "坦白说"}, {"en": "to one's regret", "zh": "令某人遗憾的是"}, {"en": "too...to...", "zh": "太……而不能……"}, {"en": "turn down", "zh": "调低;拒绝"}, {"en": "turn into", "zh": "变成"}, {"en": "turn out", "zh": "结果是"}, {"en": "turn up", "zh": "出现;(声音)调大"}, {"en": "used to be", "zh": "过去常常"}, {"en": "wake up", "zh": "叫醒"}, {"en": "when it comes to", "zh": "当说到,谈到"}, {"en": "with regard to", "zh": "关于,就……而论"}, {"en": "would rather", "zh": "宁愿"}, {"en": "yield to", "zh": "屈服于"}];
+const TOTAL = DATA.length;
+const ZH_POOL = Array.from(new Set(DATA.map(d => d.zh)));
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=(Math.random()*(i+1))|0; const t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+const $ = id => document.getElementById(id);
+
+/* ---------- 组卷：随机抽取 + 四选一选项 ---------- */
+function sampleItems(n){
+  const src = DATA.slice();
+  for(let i=0;i<n;i++){ const j=(Math.random()*(src.length-i))|0; const t=src[i]; src[i]=src[j]; src[j]=t; }
+  return src.slice(0,n);
+}
+function makeQuestions(n){
+  const items = n>=TOTAL ? DATA.slice() : sampleItems(n);
+  shuffle(items);
+  return items.map(item=>{
+    const wrongs = shuffle(ZH_POOL.filter(z=>z!==item.zh)).slice(0,3);
+    const options = shuffle([item.zh].concat(wrongs));
+    return { item:item, options:options, answerIdx:options.indexOf(item.zh) };
+  });
+}
+
+/* ---------- 状态 ---------- */
+let quiz=null, locked=false, revealTimer=null, hintLeft=2;
+
+function startQuiz(n){
+  clearTimeout(revealTimer);
+  quiz = { questions:makeQuestions(n), idx:0, score:0, answers:[], hints:Array(n).fill(false) };
+  quiz.startedAt = Date.now();
+  renderQuestion(); showScreen('screen-quiz');
+}
+
+function showScreen(id){
+  ['screen-home','screen-quiz','screen-result'].forEach(s=>$(s).classList.toggle('active', s===id));
+  window.scrollTo(0,0);
+}
+
+/* ---------- 渲染一题 ---------- */
+function renderQuestion(){
+  clearTimeout(revealTimer);
+  const q=quiz.questions[quiz.idx];
+  locked=false;
+  $('counter').textContent='第 '+(quiz.idx+1)+' / '+quiz.questions.length;
+  $('progressFill').style.width=(quiz.idx/quiz.questions.length*100)+'%';
+  $('wordText').textContent=q.item.en;
+  const box=$('choices');
+  box.innerHTML='';
+  q.options.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='choice';
+    const tag=document.createElement('span'); tag.className='tag'; tag.textContent='ABCD'[i];
+    const text=document.createElement('span'); text.className='text'; text.textContent=opt;
+    const mark=document.createElement('span'); mark.className='mark';
+    b.appendChild(tag); b.appendChild(text); b.appendChild(mark);
+    b.onclick=()=>onChoice(i);
+    box.appendChild(b);
+  });
+  hintLeft=2;
+  $('hintBtn').disabled=false; $('hintBtn').style.opacity=''; updateHintBtn();
+  $('btnNext').style.display='none';
+}
+
+function updateHintBtn(){
+  const btn=$('hintBtn');
+  if(hintLeft<=0){ btn.textContent='💡 提示已用完'; }
+  else { btn.textContent='💡 提示（剩余 '+hintLeft+'）'; }
+}
+
+/* ---------- 答题 ---------- */
+function onChoice(i){
+  if(locked) return;
+  locked=true;
+  const q=quiz.questions[quiz.idx];
+  const ok = i===q.answerIdx;
+  if(ok) quiz.score++;
+  quiz.answers.push({ en:q.item.en, zh:q.item.zh, chosen:q.options[i], ok:ok });
+  reveal(i);
+}
+
+function reveal(chosen){
+  const q=quiz.questions[quiz.idx];
+  const ok = (chosen===q.answerIdx);
+  const btns=$('choices').children;
+  for(let j=0;j<btns.length;j++){
+    if(j===q.answerIdx){ btns[j].classList.add('correct'); btns[j].querySelector('.mark').textContent='✓'; }
+    else if(j===chosen){ btns[j].classList.add('wrong'); btns[j].querySelector('.mark').textContent='✗'; }
+    else { btns[j].classList.add('dim'); }
+  }
+  const hb=$('hintBtn'); hb.disabled=true; hb.style.opacity='0.35';
+  $('progressFill').style.width=((quiz.idx+1)/quiz.questions.length*100)+'%';
+
+  const last = quiz.idx===quiz.questions.length-1;
+  const advance = ()=>{ if(last){ finishQuiz(); } else { quiz.idx++; renderQuestion(); } };
+  if(ok){ revealTimer=setTimeout(advance,950); }
+  else {
+    $('btnNext').textContent = last ? '查看成绩' : '下一题 →';
+    $('btnNext').onclick=advance;
+    $('btnNext').style.display='';
+  }
+}
+
+/* ---------- 提示：排除一个错误选项 ---------- */
+function useHint(){
+  if(locked||hintLeft<=0) return;
+  const q=quiz.questions[quiz.idx];
+  const btns=$('choices').children;
+  const wrongs=[];
+  for(let j=0;j<btns.length;j++){ if(j!==q.answerIdx && !btns[j].classList.contains('eliminated')) wrongs.push(j); }
+  if(!wrongs.length) return;
+  btns[wrongs[(Math.random()*wrongs.length)|0]].classList.add('eliminated');
+  quiz.hints[quiz.idx]=true;
+  hintLeft--;
+  updateHintBtn();
+}
+
+/* ---------- 结算 ---------- */
+function finishQuiz(){
+  clearTimeout(revealTimer);
+  const N=quiz.questions.length;
+  const sec=Math.floor((Date.now()-quiz.startedAt)/1000);
+  const pct=Math.round(quiz.score/N*100);
+  $('pctText').textContent=pct+'%';
+  $('resultMsg').textContent=msgFor(pct);
+  $('statScore').textContent='答对 '+quiz.score+' / '+N;
+  $('statTime').textContent='用时 '+fmt(sec);
+  showScreen('screen-result');
+}
+function msgFor(p){
+  if(p>=95) return '稳操胜券，词组全熟！';
+  if(p>=85) return '表现优秀，继续保持！';
+  if(p>=70) return '不错！再巩固一下即可。';
+  if(p>=50) return '已有基础，继续加油！';
+  return '别灰心，多练几遍就熟了。';
+}
+function fmt(sec){ const m=Math.floor(sec/60), s=sec%60; return m>0 ? m+'分'+String(s).padStart(2,'0')+'秒' : s+'秒'; }
+
+/* ---------- 详情 / 弹窗 ---------- */
+function showDetails(){
+  const list=$('detailList');
+  list.innerHTML='';
+  quiz.questions.forEach((q,i)=>{
+    const a=quiz.answers[i]; if(!a) return;
+    const row=document.createElement('div');
+    row.className='detail-row';
+    row.style.borderLeft='3px solid '+(a.ok?'#2ee6a6':'rgba(255,107,129,.8)');
+    const idx=document.createElement('span'); idx.className='d-idx'; idx.textContent=i+1;
+    const main=document.createElement('div'); main.className='d-main';
+    const en=document.createElement('div'); en.className='d-en'; en.textContent=q.item.en;
+    const zhLine=document.createElement('div'); zhLine.className='d-zh';
+    const okTag=document.createElement('span'); okTag.className='ok-tag'; okTag.textContent='✓ '+q.item.zh;
+    zhLine.appendChild(okTag);
+    if(!a.ok){ const bad=document.createElement('span'); bad.className='bad-tag'; bad.textContent='你选了：'+a.chosen; zhLine.appendChild(bad); }
+    if(quiz.hints[i]){ const mk=document.createElement('span'); mk.className='hint-mark'; mk.textContent='💡已用提示'; zhLine.appendChild(mk); }
+    main.appendChild(en); main.appendChild(zhLine);
+    row.appendChild(idx); row.appendChild(main);
+    list.appendChild(row);
+  });
+  $('sheetDetails').classList.add('open');
+}
+
+function openModal(id){ $(id).classList.add('open'); }
+function closeModal(id){ $(id).classList.remove('open'); }
+
+/* ---------- 初始化 ---------- */
+$('homeCount').textContent='共 '+TOTAL+' 个词组 · 中文释义四选一';
+$('fullSub').textContent='覆盖全部 '+TOTAL+' 个词组';
+$('countInput').max=TOTAL;
+
+$('btnCustom') .onclick=()=>{ $('countInput').value=Math.min(20,TOTAL); openModal('modalCount'); };
+$('btnFull').onclick=()=>startQuiz(TOTAL);
+$('countOk').onclick=()=>{
+  let n=parseInt($('countInput').value,10)||1;
+  n=Math.max(1,Math.min(n,TOTAL));
+  closeModal('modalCount'); startQuiz(n);
+};
+$('countCancel').onclick=()=>closeModal('modalCount');
+document.querySelectorAll('.chip').forEach(c=>{
+  c.onclick=()=>{ $('countInput').value=c.dataset.n; syncChips(); };
+});
+function syncChips(){ document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active', c.dataset.n===$('countInput').value)); }
+$('countInput').addEventListener('input',syncChips);
+
+$('hintBtn').onclick=useHint;
+
+$('btnExit') .onclick=()=>openModal('modalExit');
+$('exitStay') .onclick=()=>closeModal('modalExit');
+$('exitGo')   .onclick=()=>{ closeModal('modalExit'); clearTimeout(revealTimer); showScreen('screen-home'); };
+$('btnHome2').onclick=()=>showScreen('screen-home');
+$('btnAgain').onclick=()=>startQuiz(quiz.questions.length);
+$('btnDetails').onclick=showDetails;
+$('btnCloseDetails') .onclick=()=>$('sheetDetails').classList.remove('open');
+document.querySelector('.sheet-backdrop').onclick=()=>$('sheetDetails').classList.remove('open');
+document.querySelectorAll('.modal-backdrop').forEach(b=>b.onclick=()=>b.closest('.modal').classList.remove('open'));
+
+if(location.hash==='#quiz'){ startQuiz(5); }
+else if(location.hash==='#reveal'){ startQuiz(3); const q=quiz.questions[0]; onChoice((q.answerIdx+1)%4); }
+else if(location.hash==='#result'){ startQuiz(2); {const q=quiz.questions[0]; onChoice((q.answerIdx+1)%4); $('btnNext').onclick(); const q2=quiz.questions[1]; onChoice(q2.answerIdx);} }
+else if(location.hash==='#vis'){ startQuiz(2); const qv=quiz.questions[0]; onChoice((qv.answerIdx+1)%4); document.title='VIS='+getComputedStyle($('btnNext')).visibility; }
+else if(location.hash==='#test'){
+  const fails=[], passes=[];
+  function T(name,cond){ (cond?passes:fails).push(name); }
+  T('total=241', TOTAL===241);
+  startQuiz(2);
+  T('quizLen', quiz.questions.length===2);
+  let okAll=true; quiz.questions.forEach(q=>{ if(new Set(q.options).size!==4) okAll=false; if(q.options[q.answerIdx]!==q.item.zh) okAll=false; });
+  T('optionsUnique+correct', okAll);
+  const q=quiz.questions[0];
+  T('wordShown', $('wordText').textContent===q.item.en);
+  T('fourChoices',$('choices').children.length===4);
+  T('counterText', $('counter').textContent==='第 1 / 2');
+  useHint();
+  T('hintEliminated',[...$('choices').children].some(b=>b.classList.contains('eliminated')));
+  const wrongIdx=(q.answerIdx+1)%4;
+  onChoice(wrongIdx);
+  T('wrongMarked', $('choices').children[wrongIdx].classList.contains('wrong'));
+  T('correctHighlighted',$('choices').children[q.answerIdx].classList.contains('correct'));
+  T('nextShown',$('btnNext').style.display!=='none');
+  T('nextVisible',getComputedStyle($('btnNext')).visibility==='visible');
+  T('scoreAfterWrong',quiz.score===0);
+  $('btnNext').onclick();
+  const q2=quiz.questions[1];
+  onChoice(q2.answerIdx);
+  T('scoreNow1',quiz.score===1);
+  setTimeout(()=>{
+    T('finishedAtResult',$('screen-result').classList.contains('active'));
+    T('pct50',$('pctText').textContent==='50%');
+    showDetails();
+    T('detailsRows',$('detailList').children.length===2);
+    $('sheetDetails').classList.remove('open');
+    const rep=document.createElement('div'); rep.id='testreport';
+    rep.textContent='TESTREPORT '+(fails.length?'FAIL ':'PASS ')+'fail='+JSON.stringify(fails)+' passCount='+passes.length;
+    document.body.appendChild(rep);
+  },1500);
+}
+else { showScreen('screen-home'); }
+</script>
+</body></html>
